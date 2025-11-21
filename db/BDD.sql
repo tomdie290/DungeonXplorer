@@ -1,3 +1,12 @@
+-- NOUVEAU: Création de la table Account (Compte utilisateur pour la connexion/sauvegarde)
+CREATE TABLE Account (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE, -- Nom d'utilisateur unique
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL, -- Stockage sécurisé du mot de passe
+    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Création de la table Class (Classe des personnages)
 CREATE TABLE Class (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,10 +54,11 @@ CREATE TABLE Monster_Loot (
     UNIQUE (monster_id, item_id) -- Un seul type d'objet par monstre dans cette table
 );
 
--- Création de la table Hero (Personnage principal)
+-- MODIFIÉ: Création de la table Hero (Personnage principal)
 -- Les équipements (armor, primary_weapon, etc.) font référence à des Items.
 CREATE TABLE Hero (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    account_id INT, -- Clé étrangère vers Account
     name VARCHAR(50) NOT NULL,
     class_id INT, -- Relation avec Class
     image VARCHAR(255),
@@ -67,6 +77,7 @@ CREATE TABLE Hero (
     xp INT NOT NULL,
     current_level INT DEFAULT 1,
     
+    FOREIGN KEY (account_id) REFERENCES Account(id), -- Clé étrangère vers Account
     FOREIGN KEY (class_id) REFERENCES Class(id),
     FOREIGN KEY (armor_item_id) REFERENCES Items(id),
     FOREIGN KEY (primary_weapon_item_id) REFERENCES Items(id),
