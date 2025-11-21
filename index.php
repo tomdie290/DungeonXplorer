@@ -6,6 +6,5 @@
     <title>Document</title>
 </head>
 <body>
-    echo "Hello, World!";
 </body>
 </html>

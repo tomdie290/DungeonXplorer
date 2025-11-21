@@ -1,3 +1,31 @@
+
+
+-- Suppression des tables existantes (pour un re-déploiement propre)
+DROP TABLE IF EXISTS Hero_Progress;
+DROP TABLE IF EXISTS Links;
+DROP TABLE IF EXISTS Inventory;
+DROP TABLE IF EXISTS Encounter;
+DROP TABLE IF EXISTS Chapter_Treasure;
+DROP TABLE IF EXISTS Chapter;
+DROP TABLE IF EXISTS Level;
+DROP TABLE IF EXISTS Hero;
+DROP TABLE IF EXISTS Monster_Loot;
+DROP TABLE IF EXISTS Monster;
+DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS Class;
+DROP TABLE IF EXISTS Account; -- La nouvelle table en premier pour le DROP
+
+
+
+-- Création de la table Account (Compte Utilisateur) - NOUVEAU
+CREATE TABLE Account (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL, -- Hachage du mot de passe
+    email VARCHAR(100) UNIQUE,
+    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Création de la table Class (Classe des personnages)
 CREATE TABLE Class (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,7 +46,6 @@ CREATE TABLE Items (
     item_type VARCHAR(50) NOT NULL -- Ex: 'Arme', 'Armure', 'Potion', etc.
 );
 
-
 -- Création de la table Monster (Monstres rencontrés dans l'histoire)
 CREATE TABLE Monster (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,27 +56,16 @@ CREATE TABLE Monster (
     strength INT NOT NULL,
     attack TEXT,
     xp INT NOT NULL
-    -- loot_id supprimé
 );
 
--- Table intermédiaire pour les butins des monstres (Monster - Items)
--- Permet à un monstre de lâcher plusieurs types d'objets, avec une quantité.
-CREATE TABLE Monster_Loot (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    monster_id INT,
-    item_id INT,
-    quantity INT NOT NULL DEFAULT 1,
-    drop_rate DECIMAL(5, 2) DEFAULT 1.0, -- Taux de chance de drop (ex: 0.5 pour 50%)
-    FOREIGN KEY (monster_id) REFERENCES Monster(id),
-    FOREIGN KEY (item_id) REFERENCES Items(id),
-    UNIQUE (monster_id, item_id) -- Un seul type d'objet par monstre dans cette table
-);
 
--- Création de la table Hero (Personnage principal)
--- Les équipements (armor, primary_weapon, etc.) font référence à des Items.
+
+-- Création de la table Hero (Personnage principal) - MISE À JOUR
+-- Ajout de la clé étrangère account_id
 CREATE TABLE Hero (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
+    account_id INT, -- Lien vers le compte utilisateur (Peut être NULL si non lié immédiatement)
     class_id INT, -- Relation avec Class
     image VARCHAR(255),
     biography TEXT,
@@ -57,21 +73,43 @@ CREATE TABLE Hero (
     mana INT NOT NULL,
     strength INT NOT NULL,
     initiative INT NOT NULL,
-    
+
     armor_item_id INT,
     primary_weapon_item_id INT,
     secondary_weapon_item_id INT,
     shield_item_id INT,
-    
+
     spell_list TEXT,
     xp INT NOT NULL,
     current_level INT DEFAULT 1,
-    
+
+    FOREIGN KEY (account_id) REFERENCES Account(id), -- NOUVEAU
     FOREIGN KEY (class_id) REFERENCES Class(id),
     FOREIGN KEY (armor_item_id) REFERENCES Items(id),
     FOREIGN KEY (primary_weapon_item_id) REFERENCES Items(id),
     FOREIGN KEY (secondary_weapon_item_id) REFERENCES Items(id),
     FOREIGN KEY (shield_item_id) REFERENCES Items(id)
+);
+
+-- Création de la table Chapter (Chapitres de l'histoire)
+CREATE TABLE Chapter (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    image VARCHAR(255)
+);
+
+
+
+-- Table intermédiaire pour les butins des monstres (Monster - Items)
+CREATE TABLE Monster_Loot (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    monster_id INT,
+    item_id INT,
+    quantity INT NOT NULL DEFAULT 1,
+    drop_rate DECIMAL(5, 2) DEFAULT 1.0, -- Taux de chance de drop
+    FOREIGN KEY (monster_id) REFERENCES Monster(id),
+    FOREIGN KEY (item_id) REFERENCES Items(id),
+    UNIQUE (monster_id, item_id)
 );
 
 -- Création de la table Level (Niveaux de progression des classes)
@@ -87,14 +125,6 @@ CREATE TABLE Level (
     FOREIGN KEY (class_id) REFERENCES Class(id)
 );
 
-
--- Création de la table Chapter (Chapitres de l'histoire)
-CREATE TABLE Chapter (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    content TEXT NOT NULL,
-    image VARCHAR(255)
-);
-
 -- Table intermédiaire pour les trésors dans les chapitres (Chapter - Items)
 CREATE TABLE Chapter_Treasure (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -103,7 +133,7 @@ CREATE TABLE Chapter_Treasure (
     quantity INT NOT NULL DEFAULT 1,
     FOREIGN KEY (chapter_id) REFERENCES Chapter(id),
     FOREIGN KEY (item_id) REFERENCES Items(id),
-    UNIQUE (chapter_id, item_id) -- Un seul type d'objet par chapitre dans cette table
+    UNIQUE (chapter_id, item_id)
 );
 
 -- Création de la table Encounter (Rencontres dans les chapitres)
@@ -123,7 +153,7 @@ CREATE TABLE Inventory (
     quantity INT NOT NULL DEFAULT 1,
     FOREIGN KEY (hero_id) REFERENCES Hero(id),
     FOREIGN KEY (item_id) REFERENCES Items(id),
-    UNIQUE (hero_id, item_id) -- Un seul enregistrement par type d'objet par héros
+    UNIQUE (hero_id, item_id)
 );
 
 -- Création de la table Links (Liens entre chapitres)
