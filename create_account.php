@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
+        <?php require_once 'head.php'; ?>
+        <title>Créer un compte - DungeonXplorer</title>
     </head>
     <body>
-        <form>
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" required><br><br>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Créer un compte">
-        </form>
+        <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
+        <h2 class="pirata-one-regular texte-principal">Créer un compte</h2>
+        <form action="register.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
+        <div class="input-group flex-nowrap w-50 mx-auto">
+            <span class="input-group-text" id="addon-wrapping">@</span>
+            <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
+        </div>
+
+        <div class="input-group flex-nowrap w-50 mx-auto">
+            <span class="input-group-text" id="addon-wrapping">@</span>
+            <input type="password" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Mot de passe" aria-label="Password" aria-describedby="addon-wrapping">
+        </div>
+
+        <div class="input-group flex-nowrap w-50 mx-auto">
+            <span class="input-group-text" id="addon-wrapping">@</span>
+            <input type="password" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Confirmer le mot de passe" aria-label="PasswordConfirm" aria-describedby="addon-wrapping">
+        </div>
+
+        <input type="submit" value="S'inscrire" class="btn btn-primary mt-3">
+    </form>
     </body>
 </html>

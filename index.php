@@ -6,6 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <?php echo "Hello, World!";?>
+    <?php header("Location: create_account.php"); exit; ?>
 </body>
 </html>
