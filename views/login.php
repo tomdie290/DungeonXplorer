@@ -34,7 +34,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     <body>
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
         <h2 class="pirata-one-regular texte-principal">Se connecter</h2>
-        <form action="login.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
+        <form action="../index.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
         <div class="input-group flex-nowrap w-50 mx-auto">
             <span class="input-group-text" id="addon-wrapping">@</span>
             <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" name="username" required>

@@ -73,6 +73,8 @@ class Router
 $router = new Router('DungeonXplorer');
 
 $router->addRoute('', 'HomeController@index'); // Pour la racine
+$router->addRoute('login', 'LoginController@index'); // Pour la racine
+$router->addRoute('register', 'RegisterController@index'); // Pour la racine
 
 
 $router->route(trim($_SERVER['REQUEST_URI'], '/'));
