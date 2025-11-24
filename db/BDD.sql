@@ -1,18 +1,15 @@
+CREATE DATABASE DungeonXplorer;
+USE DungeonXplorer;
 
-create database DungeonXplorer;
-
--- NOUVEAU: Création de la table Account (Compte utilisateur pour la connexion/sauvegarde)
 CREATE TABLE Account (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE, -- Nom d'utilisateur unique
+    username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL, -- Stockage sécurisé du mot de passe
+    password_hash VARCHAR(255) NOT NULL,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 
-
--- Création de la table Class (Classe des personnages)
 CREATE TABLE Class (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -24,16 +21,13 @@ CREATE TABLE Class (
     max_items INT NOT NULL
 );
 
--- Création de la table Items (Objets disponibles dans le jeu)
 CREATE TABLE Items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     description TEXT,
-    item_type VARCHAR(50) NOT NULL -- Ex: 'Arme', 'Armure', 'Potion', etc.
+    item_type VARCHAR(50) NOT NULL
 );
 
-
--- Création de la table Monster (Monstres rencontrés dans l'histoire)
 CREATE TABLE Monster (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -43,46 +37,42 @@ CREATE TABLE Monster (
     strength INT NOT NULL,
     attack TEXT,
     xp INT NOT NULL
-    -- loot_id supprimé
 );
 
--- Table intermédiaire pour les butins des monstres (Monster - Items)
--- Permet à un monstre de lâcher plusieurs types d'objets, avec une quantité.
 CREATE TABLE Monster_Loot (
     id INT AUTO_INCREMENT PRIMARY KEY,
     monster_id INT,
     item_id INT,
     quantity INT NOT NULL DEFAULT 1,
-    drop_rate DECIMAL(5, 2) DEFAULT 1.0, -- Taux de chance de drop (ex: 0.5 pour 50%)
-    FOREIGN KEY (monster_id) REFERENCES Monster(id),
+    drop_rate DECIMAL(5,2) DEFAULT 1.0,
+    FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES Items(id),
-    UNIQUE (monster_id, item_id) -- Un seul type d'objet par monstre dans cette table
+    UNIQUE(monster_id, item_id)
 );
 
--- MODIFIÉ: Création de la table Hero (Personnage principal)
--- Les équipements (armor, primary_weapon, etc.) font référence à des Items.
 CREATE TABLE Hero (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    account_id INT, -- Clé étrangère vers Account
+    account_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
-    class_id INT, -- Relation avec Class
+    class_id INT,
     image VARCHAR(255),
     biography TEXT,
+
     pv INT NOT NULL,
     mana INT NOT NULL,
     strength INT NOT NULL,
     initiative INT NOT NULL,
-    
+
     armor_item_id INT,
     primary_weapon_item_id INT,
     secondary_weapon_item_id INT,
     shield_item_id INT,
-    
+
     spell_list TEXT,
     xp INT NOT NULL,
     current_level INT DEFAULT 1,
-    
-    FOREIGN KEY (account_id) REFERENCES Account(id), -- Clé étrangère vers Account
+
+    FOREIGN KEY (account_id) REFERENCES Account(id) ON DELETE CASCADE,
     FOREIGN KEY (class_id) REFERENCES Class(id),
     FOREIGN KEY (armor_item_id) REFERENCES Items(id),
     FOREIGN KEY (primary_weapon_item_id) REFERENCES Items(id),
@@ -90,10 +80,10 @@ CREATE TABLE Hero (
     FOREIGN KEY (shield_item_id) REFERENCES Items(id)
 );
 
--- Création de la table Level (Niveaux de progression des classes)
+
 CREATE TABLE Level (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    class_id INT, -- Relation avec Class
+    class_id INT,
     level INT NOT NULL,
     required_xp INT NOT NULL,
     pv_bonus INT NOT NULL,
@@ -104,61 +94,85 @@ CREATE TABLE Level (
 );
 
 
--- Création de la table Chapter (Chapitres de l'histoire)
 CREATE TABLE Chapter (
     id INT AUTO_INCREMENT PRIMARY KEY,
     content TEXT NOT NULL,
     image VARCHAR(255)
 );
 
--- Table intermédiaire pour les trésors dans les chapitres (Chapter - Items)
 CREATE TABLE Chapter_Treasure (
     id INT AUTO_INCREMENT PRIMARY KEY,
     chapter_id INT,
     item_id INT,
     quantity INT NOT NULL DEFAULT 1,
-    FOREIGN KEY (chapter_id) REFERENCES Chapter(id),
+    FOREIGN KEY (chapter_id) REFERENCES Chapter(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES Items(id),
-    UNIQUE (chapter_id, item_id) -- Un seul type d'objet par chapitre dans cette table
+    UNIQUE(chapter_id, item_id)
 );
 
--- Création de la table Encounter (Rencontres dans les chapitres)
 CREATE TABLE Encounter (
     id INT AUTO_INCREMENT PRIMARY KEY,
     chapter_id INT,
     monster_id INT,
-    FOREIGN KEY (chapter_id) REFERENCES Chapter(id),
+    FOREIGN KEY (chapter_id) REFERENCES Chapter(id) ON DELETE CASCADE,
     FOREIGN KEY (monster_id) REFERENCES Monster(id)
 );
 
--- Table intermédiaire pour l'inventaire des héros (Hero - Items)
-CREATE TABLE Inventory (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    hero_id INT,
-    item_id INT,
-    quantity INT NOT NULL DEFAULT 1,
-    FOREIGN KEY (hero_id) REFERENCES Hero(id),
-    FOREIGN KEY (item_id) REFERENCES Items(id),
-    UNIQUE (hero_id, item_id) -- Un seul enregistrement par type d'objet par héros
-);
-
--- Création de la table Links (Liens entre chapitres)
 CREATE TABLE Links (
     id INT AUTO_INCREMENT PRIMARY KEY,
     chapter_id INT,
     next_chapter_id INT,
     description TEXT,
-    FOREIGN KEY (chapter_id) REFERENCES Chapter(id),
+    FOREIGN KEY (chapter_id) REFERENCES Chapter(id) ON DELETE CASCADE,
     FOREIGN KEY (next_chapter_id) REFERENCES Chapter(id)
 );
 
--- Table intermédiaire pour le suivi de progression (Hero - Chapter)
-CREATE TABLE Hero_Progress (
+
+CREATE TABLE Inventory (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    hero_id INT,
-    chapter_id INT,
-    status VARCHAR(20) DEFAULT 'Completed', -- Ex: 'Started', 'Completed', 'Failed'
-    completion_date DATETIME, -- Pour marquer quand le chapitre a été terminé
-    FOREIGN KEY (hero_id) REFERENCES Hero(id),
+    hero_id INT NOT NULL,
+    item_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (hero_id) REFERENCES Hero(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES Items(id),
+    UNIQUE(hero_id, item_id)
+);
+
+
+CREATE TABLE Adventure (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    hero_id INT NOT NULL,
+    start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_date DATETIME,        -- NULL = aventure en cours
+    status VARCHAR(20) DEFAULT 'InProgress', -- InProgress / Completed / Failed
+
+    current_chapter_id INT,   -- position actuelle de l’aventure
+
+    FOREIGN KEY (hero_id) REFERENCES Hero(id) ON DELETE CASCADE,
+    FOREIGN KEY (current_chapter_id) REFERENCES Chapter(id)
+);
+
+-- Empêcher plusieurs aventures en parallèle
+ALTER TABLE Adventure
+ADD CONSTRAINT one_active_adventure_per_hero
+CHECK (
+    NOT (
+        end_date IS NULL
+        AND hero_id IN (
+            SELECT hero_id FROM Adventure
+            WHERE end_date IS NULL
+            GROUP BY hero_id HAVING COUNT(*) > 1
+        )
+    )
+);
+
+CREATE TABLE Adventure_Progress (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    adventure_id INT NOT NULL,
+    chapter_id INT NOT NULL,
+    status VARCHAR(20) DEFAULT 'Visited',
+    visit_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (adventure_id) REFERENCES Adventure(id) ON DELETE CASCADE,
     FOREIGN KEY (chapter_id) REFERENCES Chapter(id)
 );
