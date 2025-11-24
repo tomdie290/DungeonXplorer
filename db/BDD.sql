@@ -1,3 +1,6 @@
+
+create database DungeonXplorer;
+
 -- NOUVEAU: Création de la table Account (Compte utilisateur pour la connexion/sauvegarde)
 CREATE TABLE Account (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -6,6 +9,8 @@ CREATE TABLE Account (
     password_hash VARCHAR(255) NOT NULL, -- Stockage sécurisé du mot de passe
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+
 
 -- Création de la table Class (Classe des personnages)
 DROP TABLE Class;
@@ -169,3 +174,6 @@ CREATE TABLE Hero_Progress (
     FOREIGN KEY (hero_id) REFERENCES Hero(id),
     FOREIGN KEY (chapter_id) REFERENCES Chapter(id)
 );
+
+
+

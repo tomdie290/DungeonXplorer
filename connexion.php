@@ -1,7 +1,13 @@
 <?php
+/* fileZila
 $mysql_user   = "dx05";
 $mysql_pass   = "uiK2ieNiez3aigie";
 $mysql_db     = "dx05_bd";
+$mysql_server = "localhost";
+*/
+$mysql_user   = "root";
+$mysql_pass   = "";
+$mysql_db     = "Dungeon";
 $mysql_server = "localhost";
 
 
