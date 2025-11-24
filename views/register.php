@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <?php require_once 'head.php'; ?>
         <title>Créer un compte - DungeonXplorer</title>
@@ -29,7 +29,7 @@
 
         <?php
     try {
-        require_once 'connexion.php';
+        require_once '../connexion.php';
     }
     catch (Exception $e) {
         die('Une erreur est survenue. Veuillez réessayer plus tard.' . $e->getMessage());

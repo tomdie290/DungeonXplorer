@@ -2,7 +2,7 @@
 // Traiter la connexion avant d'envoyer du HTML (évite les problèmes de headers)
 session_start();
 try {
-    require_once 'connexion.php';
+    require_once '../connexion.php';
     global $conn;
 }
 catch (Exception $e) {
@@ -26,7 +26,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <?php require_once 'head.php'; ?>
         <title>Se connecter - DungeonXplorer</title>
