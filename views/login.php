@@ -2,7 +2,7 @@
 // Traiter la connexion avant d'envoyer du HTML (évite les problèmes de headers)
 session_start();
 try {
-    require_once '../connexion.php';
+    require_once 'connexion.php';
     global $conn;
 }
 catch (Exception $e) {
@@ -46,6 +46,11 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
         </div>
 
         <input type="submit" value="Se connecter" class="btn btn-primary mt-3">
+
+        <a href="home" class="btn-primary"
+           style="padding: 12px 25px; text-decoration: none; color: #E5E5E5; border: 2px solid #C4975E; border-radius: 8px;">
+            retour
+        </a>
     </form>
         <?php if(!empty($login_error)): ?>
             <div class="alert alert-danger"><?php echo htmlspecialchars($login_error); ?></div>

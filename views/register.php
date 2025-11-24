@@ -27,6 +27,11 @@
     </form>
     <input type="submit" value="Se connecter" class="btn btn-secondary mt-3" id="login-button">
 
+    <a href="home" class="btn-primary"
+           style="padding: 12px 25px; text-decoration: none; color: #E5E5E5; border: 2px solid #C4975E; border-radius: 8px;">
+            retour
+    </a>
+
         <?php
     try {
         require_once '../connexion.php';
