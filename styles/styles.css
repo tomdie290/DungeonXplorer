@@ -1,0 +1,62 @@
+.pirata-one-regular {
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-regular {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+
+* {
+    font-family: "Roboto", system-ui;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Pirata One", system-ui;
+    text-align: center;
+}
+
+body{
+    background-color: #1A1A1A;
+}
+
+.texte-principal {
+    color: #E5E5E5;
+}
+
+.background-secondaire {
+    background-color: #2E2E2E;
+}
+
+.btn-primary {
+    background-color: #4A7A66;
+    border-color: #C4975E;
+}
+
+/* Force input text and placeholder color to match the dark theme */
+input.form-control,
+.form-control,
+.form-control:focus {
+    color: #E5E5E5;
+    background-color: #2E2E2E;
+    border-color: #C4975E;
+}
+
+.form-control::placeholder {
+    color: #E5E5E5;
+    opacity: 0.7;
+}
+
+/* Input group addon text */
+.input-group-text {
+    color: #E5E5E5;
+    background-color: #2E2E2E;
+    border-color: #C4975E;
+}

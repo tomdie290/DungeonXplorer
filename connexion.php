@@ -7,7 +7,7 @@ $mysql_server = "localhost";
 */
 $mysql_user   = "root";
 $mysql_pass   = "";
-$mysql_db     = "Dungeon";
+$mysql_db     = "dungeonxplorer";
 $mysql_server = "localhost";
 
 
