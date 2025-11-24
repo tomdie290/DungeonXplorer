@@ -19,7 +19,7 @@ $chapter = $chapterController->getChapter($chapterId);
     <ul>
         <?php foreach ($chapter->getChoices() as $choice): ?>
             <li>
-                <a href="index.php?chapter=<?php echo $choice['chapter']; ?>">
+                <a href="../index.php">
                     <?php echo $choice['text']; ?>
                 </a>
             </li>
