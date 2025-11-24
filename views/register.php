@@ -9,7 +9,7 @@ session_start();?>
     <body>
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
         <h2 class="pirata-one-regular texte-principal">Créer un compte</h2>
-        <form action="create_account.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
+        <form action="../index.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
         <div class="input-group flex-nowrap w-50 mx-auto">
             <span class="input-group-text" id="addon-wrapping">@</span>
             <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" name="Username" required>
@@ -29,10 +29,15 @@ session_start();?>
     </form>
     <input type="submit" value="Se connecter" class="btn btn-secondary mt-3" id="login-button">
 
+    <a href="home" class="btn-primary"
+           style="padding: 12px 25px; text-decoration: none; color: #E5E5E5; border: 2px solid #C4975E; border-radius: 8px;">
+            retour
+    </a>
+
         <?php
         
     try {
-        require_once 'connexion.php';
+        require_once '../connexion.php';
     }
     catch (Exception $e) {
         die('Une erreur est survenue. Veuillez réessayer plus tard.' . $e->getMessage());
