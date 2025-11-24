@@ -1,14 +1,14 @@
 <?php
-/* fileZila
+// fileZila
 $mysql_user   = "dx05";
 $mysql_pass   = "uiK2ieNiez3aigie";
 $mysql_db     = "dx05_bd";
 $mysql_server = "localhost";
-*/
-$mysql_user   = "root";
+
+/*$mysql_user   = "root";
 $mysql_pass   = "";
 $mysql_db     = "dungeonxplorer";
-$mysql_server = "localhost";
+$mysql_server = "localhost";*/
 
 
 $conn = new PDO(

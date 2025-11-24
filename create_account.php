@@ -1,5 +1,7 @@
+<?php
+session_start();?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <?php require_once 'head.php'; ?>
         <title>Créer un compte - DungeonXplorer</title>
@@ -28,6 +30,7 @@
     <input type="submit" value="Se connecter" class="btn btn-secondary mt-3" id="login-button">
 
         <?php
+        
     try {
         require_once 'connexion.php';
     }
@@ -55,11 +58,11 @@
             $_SESSION['username'] = $username;
             $_SESSION['userid']= null;
 
-            $q = $db -> prepare("SELECT user_id FROM user WHERE user_name = :username");
+            $q = $conn -> prepare("SELECT id FROM account WHERE username = :username");
             $q->execute(['username' => $username]);
             $user = $q->fetch();
 
-            $_SESSION['userid'] = $user['user_id'];
+            $_SESSION['id'] = $user['id'];
 
             echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
         }

@@ -15,7 +15,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     $user = $q -> fetch();
     if($user && password_verify($_POST['password'], $user['password_hash'])) {
         // Login successful
-        $_SESSION['userid'] = $user['user_id'];
+        $_SESSION['id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         header("Location: index.php");
         exit();
