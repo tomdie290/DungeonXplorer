@@ -3,6 +3,6 @@
 class RegisterController
 {
     public function index() {
-        require_once 'views/register.php';
+        require_once 'view/register.php';
     }
 }
