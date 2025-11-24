@@ -6,6 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <?php header("Location: create_account.php"); exit; ?>
+    <?php
+    session_start();
+    echo "<h1>Bienvenue, " . htmlspecialchars($_SESSION['username']) . "!</h1>";
+
+    ?>
 </body>
 </html>

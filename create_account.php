@@ -25,6 +25,8 @@
 
         <input type="submit" value="S'inscrire" class="btn btn-primary mt-3">
     </form>
+    <input type="submit" value="Se connecter" class="btn btn-secondary mt-3" id="login-button">
+
         <?php
     try {
         require_once 'connexion.php';
@@ -63,5 +65,11 @@
         }
     }
     ?>
+    <script>
+        document.getElementById('login-button').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.href = 'login.php';
+        });
+    </script>
     </body>
 </html>
