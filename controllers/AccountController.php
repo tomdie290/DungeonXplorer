@@ -6,7 +6,7 @@ class AccountController {
             session_start();
         }
         if (!isset($_SESSION['id']) || !isset($_SESSION['username'])) {
-            require_once 'view/home.php';
+            header("Location: home");
         } else {
             require_once 'view/account.php';
         }
