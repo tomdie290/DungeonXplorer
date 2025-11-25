@@ -1,3 +1,41 @@
+<?php
+    try {
+        require_once 'core/Database.php';
+    }
+    catch (Exception $e) {
+        die('Une erreur est survenue. Veuillez réessayer plus tard.' . $e->getMessage());
+    }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        $username = $_POST['Username'];
+        $password = $_POST['Password'];
+        $passwordconfirm = $_POST['PasswordConfirm'];
+
+        if($password !== $passwordconfirm) {
+            echo "<p class='text-danger'>Les mots de passe ne correspondent pas.</p>"; // à remplacer par un truc boostrap
+            exit;
+        }
+        else{
+            global $conn;
+            $q = $conn->prepare("INSERT INTO account (username, password_hash) VALUES (:username, :password)");
+            $q->execute([
+                'username' => $username,
+                'password' => password_hash($password, PASSWORD_DEFAULT)
+            ]);
+
+            $_SESSION['username'] = $username;
+            $_SESSION['userid']= null;
+
+            $q = $db -> prepare("SELECT id FROM account WHERE username = :username");
+            $q->execute(['username' => $username]);
+            $user = $q->fetch();
+
+            $_SESSION['id'] = $user['id'];
+
+            echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -32,44 +70,6 @@
             retour
     </a>
 
-        <?php
-    try {
-        require_once '../connexion.php';
-    }
-    catch (Exception $e) {
-        die('Une erreur est survenue. Veuillez réessayer plus tard.' . $e->getMessage());
-    }
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-        $username = $_POST['Username'];
-        $password = $_POST['Password'];
-        $passwordconfirm = $_POST['PasswordConfirm'];
-
-        if($password !== $passwordconfirm) {
-            echo "<p class='text-danger'>Les mots de passe ne correspondent pas.</p>"; // à remplacer par un truc boostrap
-            exit;
-        }
-        else{
-            global $conn;
-            $q = $conn->prepare("INSERT INTO account (username, password_hash) VALUES (:username, :password)");
-            $q->execute([
-                'username' => $username,
-                'password' => password_hash($password, PASSWORD_DEFAULT)
-            ]);
-
-            $_SESSION['username'] = $username;
-            $_SESSION['userid']= null;
-
-            $q = $db -> prepare("SELECT user_id FROM user WHERE user_name = :username");
-            $q->execute(['username' => $username]);
-            $user = $q->fetch();
-
-            $_SESSION['userid'] = $user['user_id'];
-
-            echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
-        }
-    }
-    ?>
     <script>
         document.getElementById('login-button').addEventListener('click', function(event) {
             event.preventDefault();
