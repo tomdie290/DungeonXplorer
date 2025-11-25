@@ -70,7 +70,7 @@ class Router
 }
 
 // Instanciation du routeur
-$router = new Router('cours/DungeonXplorer');
+$router = new Router('DungeonXplorer');
 
 $router->addRoute('', 'HomeController@index'); // Pour la racine
 $router->addRoute('home', 'HomeController@index'); // Pour la racine
