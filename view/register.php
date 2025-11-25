@@ -1,4 +1,5 @@
 <?php
+session_start();
     try {
         require_once 'core/Database.php';
     }
