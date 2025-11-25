@@ -1,3 +1,5 @@
+<?php
+session_start();?>
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -33,6 +35,7 @@
     </a>
 
         <?php
+        
     try {
         require_once '../connexion.php';
     }
@@ -60,11 +63,11 @@
             $_SESSION['username'] = $username;
             $_SESSION['userid']= null;
 
-            $q = $db -> prepare("SELECT user_id FROM user WHERE user_name = :username");
+            $q = $conn -> prepare("SELECT id FROM account WHERE username = :username");
             $q->execute(['username' => $username]);
             $user = $q->fetch();
 
-            $_SESSION['userid'] = $user['user_id'];
+            $_SESSION['id'] = $user['id'];
 
             echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
         }
