@@ -25,7 +25,7 @@ session_start();
             ]);
 
             $_SESSION['username'] = $username;
-            $_SESSION['userid']= null;
+            $_SESSION['id']= null;
 
             $q = $db -> prepare("SELECT id FROM account WHERE username = :username");
             $q->execute(['username' => $username]);
