@@ -31,30 +31,41 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     <head>
         <?php require_once 'head.php'; ?>
         <title>Se connecter - DungeonXplorer</title>
+        <link rel="stylesheet" href="styles/styles.css">
     </head>
     <body>
-        <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
-        <h2 class="pirata-one-regular texte-principal">Se connecter</h2>
-        <form  method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
-        <div class="input-group flex-nowrap w-50 mx-auto">
-            <span class="input-group-text" id="addon-wrapping">@</span>
-            <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" name="username" required>
-        </div>
 
-        <div class="input-group flex-nowrap w-50 mx-auto">
-            <span class="input-group-text" id="addon-wrapping">@</span>
-            <input type="password" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Mot de passe" aria-label="Password" aria-describedby="addon-wrapping" name="password" required>
-        </div>
+        <div class="login-container">
+        <img class="mb d-block mx-auto" src="img/LogoVide.png" alt="logo application" width="400" height="400">
+        <h1 class="login-title mb-4">Se connecter</h1>
+        <form method="post" class="d-flex flex-column align-items-center gap-3">
+            
+            <div class="input-group w-100">
+                <input type="text"
+                       class="form-control background-secondaire texte-principal"
+                       placeholder="Nom d'utilisateur"
+                       aria-label="Username"
+                       name="username"
+                       required>
+            </div>
 
-        <input type="submit" value="Se connecter" class="btn btn-primary mt-3">
+            <div class="input-group w-100">
+                <input type="password"
+                       class="form-control background-secondaire texte-principal"
+                       placeholder="Mot de passe"
+                       aria-label="Password"
+                       name="password"
+                       required>
+            </div>
 
-        <a href="home" class="btn-primary"
-           style="padding: 12px 25px; text-decoration: none; color: #E5E5E5; border: 2px solid #C4975E; border-radius: 8px;">
-            retour
-        </a>
-    </form>
+            <input type="submit" value="Se connecter" class="btn btn-primary mt-2 w-50">
+
+            <a href="home" class="back-btn mt-2">Retour</a>
+        </form>
         <?php if(!empty($login_error)): ?>
-            <div class="alert alert-danger"><?php echo htmlspecialchars($login_error); ?></div>
+            <div class="alert alert-danger mt-3 text-center">
+                <?= htmlspecialchars($login_error) ?>
+            </div>
         <?php endif; ?>
 
     </body>

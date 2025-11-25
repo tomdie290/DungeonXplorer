@@ -42,43 +42,55 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <?php require_once 'head.php'; ?>
-        <title>Créer un compte - DungeonXplorer</title>
-    </head>
-    <body>
-        <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
-        <h2 class="pirata-one-regular texte-principal">Créer un compte</h2>
-        <form  method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
-        <div class="input-group flex-nowrap w-50 mx-auto">
-            <span class="input-group-text" id="addon-wrapping">@</span>
-            <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" name="Username" required>
+<head>
+    <?php require_once 'head.php'; ?>
+    <title>Créer un compte - DungeonXplorer</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+
+<div class="login-container">
+    <img class="mb-4 d-block mx-auto" src="img/LogoVide.png" alt="logo application" width="400" height="400">
+    <h1 class="login-title mb-4">Créer un compte</h1>
+    <form method="post" class="d-flex flex-column align-items-center gap-3">
+        
+        <div class="input-group w-100">
+            <input type="text"
+                   class="form-control background-secondaire texte-principal"
+                   placeholder="Nom d'utilisateur"
+                   aria-label="Username"
+                   name="Username"
+                   required>
         </div>
 
-        <div class="input-group flex-nowrap w-50 mx-auto">
-            <span class="input-group-text" id="addon-wrapping">@</span>
-            <input type="password" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Mot de passe" aria-label="Password" aria-describedby="addon-wrapping" name="Password" required>
+        <div class="input-group w-100">
+            <input type="password"
+                   class="form-control background-secondaire texte-principal"
+                   placeholder="Mot de passe"
+                   aria-label="Password"
+                   name="Password"
+                   required>
         </div>
 
-        <div class="input-group flex-nowrap w-50 mx-auto">
-            <span class="input-group-text" id="addon-wrapping">@</span>
-            <input type="password" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Confirmer le mot de passe" aria-label="PasswordConfirm" aria-describedby="addon-wrapping" name="PasswordConfirm" required>
+        <div class="input-group w-100">
+            <input type="password"
+                   class="form-control background-secondaire texte-principal"
+                   placeholder="Confirmer le mot de passe"
+                   aria-label="PasswordConfirm"
+                   name="PasswordConfirm"
+                   required>
         </div>
 
-        <input type="submit" value="S'inscrire" class="btn btn-primary mt-3">
+        <input type="submit" value="S'inscrire" class="btn btn-primary mt-2 w-50">
+        <a href="home" class="back-btn mt-2">Retour</a>
     </form>
-    <input type="submit" value="Se connecter" class="btn btn-secondary mt-3" id="login-button">
+    <?php if (!empty($register_error)): ?>
+        <div class="alert alert-danger mt-3 text-center">
+            <?= htmlspecialchars($register_error) ?>
+        </div>
+    <?php endif; ?>
 
-    <a href="home" class="btn-primary"
-           style="padding: 12px 25px; text-decoration: none; color: #E5E5E5; border: 2px solid #C4975E; border-radius: 8px;">
-            retour
-    </a>
+</div>
 
-    <script>
-        document.getElementById('login-button').addEventListener('click', function(event) {
-            event.preventDefault();
-            window.location.href = 'login.php';
-        });
-    </script>
-    </body>
+</body>
 </html>

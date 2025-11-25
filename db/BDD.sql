@@ -214,3 +214,12 @@ CREATE TABLE Adventure_Progress (
     FOREIGN KEY (adventure_id) REFERENCES Adventure(id) ON DELETE CASCADE,
     FOREIGN KEY (chapter_id) REFERENCES Chapter(id)
 );
+
+
+
+INSERT INTO Class (name, description, base_pv, base_mana, strength, initiative, max_items)
+VALUES 
+('Guerrier', 'Un combattant robuste et puissant', 100, 0, 15, 5, 5),
+('Voleur', 'Rapide et agile, spécialisé dans les attaques surprises', 80, 10, 10, 15, 5),
+('Magicien', 'Maître des sorts, faible en combat physique mais puissant en magie', 60, 20, 5, 10, 5);
+
