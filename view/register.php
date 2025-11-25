@@ -13,12 +13,13 @@ session_start();
         $passwordconfirm = $_POST['PasswordConfirm'];
 
         if($password !== $passwordconfirm) {
-            echo "<p class='text-danger'>Les mots de passe ne correspondent pas.</p>"; // à remplacer par un truc boostrap
+            echo "<p class='text-danger'>Les mots de passe ne correspondent pas.</p>";
             exit;
         }
         else{
-            global $conn;
-            $q = $conn->prepare("INSERT INTO account (username, password_hash) VALUES (:username, :password)");
+
+            $db = getDB();
+            $q = $db -> prepare("INSERT INTO account (username, password_hash) VALUES (:username, :password)");
             $q->execute([
                 'username' => $username,
                 'password' => password_hash($password, PASSWORD_DEFAULT)
@@ -32,9 +33,11 @@ session_start();
             $user = $q->fetch();
 
             $_SESSION['id'] = $user['id'];
-
+            
             echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
+            header("Location: home");
         }
+
     }
 ?>
 <!DOCTYPE html>
@@ -46,7 +49,7 @@ session_start();
     <body>
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
         <h2 class="pirata-one-regular texte-principal">Créer un compte</h2>
-        <form action="../index.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
+        <form  method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
         <div class="input-group flex-nowrap w-50 mx-auto">
             <span class="input-group-text" id="addon-wrapping">@</span>
             <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" name="Username" required>

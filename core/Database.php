@@ -1,5 +1,5 @@
 <?php
-
+function getDB() {
 // core/Database.php
 
 // Chemin vers le fichier .env
@@ -27,4 +27,6 @@ try {
 } catch (PDOException $e) {
     echo "Erreur de connexion à la base de données : " . $e->getMessage();
     exit;
+}
+return $db;
 }

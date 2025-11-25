@@ -3,21 +3,22 @@
 session_start();
 try {
     require_once 'core/Database.php';
-    global $conn;
+    $db = getDB();
 }
 catch (Exception $e) {
     die('Une erreur est survenue. Veuillez réessayer plus tard.' . $e->getMessage());
 }
 
 if(isset($_POST['username']) && isset($_POST['password'])) {
-    $q = $conn -> prepare("SELECT * FROM account WHERE username = :username");
+
+    $q = $db -> prepare("SELECT * FROM account WHERE username = :username");
     $q -> execute(['username' => $_POST['username']]);
     $user = $q -> fetch();
     if($user && password_verify($_POST['password'], $user['password_hash'])) {
         // Login successful
         $_SESSION['id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
-        header("Location: index.php");
+        header("Location: account");
         exit();
     } else {
         $login_error = 'Nom d\'utilisateur ou mot de passe incorrect.';
@@ -34,7 +35,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     <body>
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
         <h2 class="pirata-one-regular texte-principal">Se connecter</h2>
-        <form action="../index.php" method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
+        <form  method="post" class="d-flex justify-content-center align-items-center flex-column gap-2">
         <div class="input-group flex-nowrap w-50 mx-auto">
             <span class="input-group-text" id="addon-wrapping">@</span>
             <input type="text" class="form-control form-control-sm background-secondaire texte-principal" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" name="username" required>
