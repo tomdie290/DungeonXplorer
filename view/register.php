@@ -19,7 +19,7 @@ session_start();
         else{
 
             $db = getDB();
-            $q = $db -> prepare("INSERT INTO account (username, password_hash) VALUES (:username, :password)");
+            $q = $db -> prepare("INSERT INTO Account (username, password_hash) VALUES (:username, :password)");
             $q->execute([
                 'username' => $username,
                 'password' => password_hash($password, PASSWORD_DEFAULT)
@@ -28,7 +28,7 @@ session_start();
             $_SESSION['username'] = $username;
             $_SESSION['id']= null;
 
-            $q = $db -> prepare("SELECT id FROM account WHERE username = :username");
+            $q = $db -> prepare("SELECT id FROM Account WHERE username = :username");
             $q->execute(['username' => $username]);
             $user = $q->fetch();
 
