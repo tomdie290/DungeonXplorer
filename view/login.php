@@ -11,7 +11,7 @@ catch (Exception $e) {
 
 if(isset($_POST['username']) && isset($_POST['password'])) {
 
-    $q = $db -> prepare("SELECT * FROM account WHERE username = :username");
+    $q = $db -> prepare("SELECT * FROM Account WHERE username = :username");
     $q -> execute(['username' => $_POST['username']]);
     $user = $q -> fetch();
     if($user && password_verify($_POST['password'], $user['password_hash'])) {
