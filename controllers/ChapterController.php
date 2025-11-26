@@ -77,9 +77,16 @@ class ChapterController
             header("Location: login");
         } else {
 
+            $sql = "SELECT current_chapter_id AS id FROM Adventure 
+                    JOIN Hero ON Hero.id = Adventure.hero_id
+                    JOIN Account ON Account.id = Hero.account_id
+                    WHERE Account.id = ? AND Account.current_hero = Hero.id AND Adventure.end_date IS NULL";
+            $stmt = getDB()->prepare($sql);
+            $stmt->execute([$_SESSION['id']]);
+            $id = $stmt->fetchColumn();
 
-
-            require_once 'view/chapter_view.php';
+            $this->show($id);
         }
+
     }
 }

@@ -23,7 +23,8 @@ CREATE TABLE Account
     username      VARCHAR(50)  NOT NULL UNIQUE,
     email         VARCHAR(100) UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
+    creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    current_hero  INT      DEFAULT NULL
 );
 
 
@@ -234,7 +235,6 @@ CREATE TABLE Adventure_Progress
 );
 
 
-
 INSERT INTO Class (name, description, base_pv, base_mana, strength, initiative, max_items)
 VALUES ('Guerrier', 'Un combattant robuste et puissant', 100, 0, 15, 5, 5),
        ('Voleur', 'Rapide et agile, spécialisé dans les attaques surprises', 80, 10, 10, 15, 5),
@@ -242,12 +242,62 @@ VALUES ('Guerrier', 'Un combattant robuste et puissant', 100, 0, 15, 5, 5),
 
 
 INSERT INTO Chapter (title, description, image)
-VALUES ('La Forêt Enchantée',
-        'Vous vous trouvez dans une forêt sombre et enchantée. Deux chemins se présentent à vous.',
-        'img/Forest Spirit.jpg'),
-       ('Le Lac Mystérieux', 'Vous arrivez à un lac aux eaux limpides. Une créature vous observe.',
-        'img/Forest Spirit.jpg');
+VALUES ('Introduction',
+        'Le ciel est lourd ce soir sur le village du Val Perdu, dissimulé entre les montagnes. La petite taverne, dernier refuge avant l''immense forêt, est étrangement calme quand le bourgmestre s’approche de vous. Homme d’apparence usée par les années et les soucis, il vous adresse un regard désespéré. Vous sentez le poids de la mission qui s’annonce, et un frisson parcourt votre échine. Bientôt, la forêt s''ouvre devant vous, sombre et menaçante. La quête commence.',
+        'img/Village01.jpg'),
+       ('L''orée de la forêt',
+        'Vous franchissez la lisière des arbres, la pénombre de la forêt avalant le sentier devant vous. Un vent froid glisse entre les troncs, et le bruissement des feuilles ressemble à un murmure menaçant.',
+        'img/BrambleTrails01.jpg'),
+       ('L''arbre aux corbeaux',
+        'Votre choix vous mène devant un vieux chêne aux branches tordues, grouillant de corbeaux noirs qui vous observent en silence. À vos pieds, des traces de pas légers, probablement récents, mènent plus loin dans les bois. Soudain, un bruit de pas feutrés se fait entendre. Vous ressentez la présence d’un prédateur.',
+        'img/Dark Forest01.jpg'),
+       ('Le sanglier enragé',
+        'En progressant, le calme de la forêt est soudain brisé par un grognement. Surgissant des buissons, un énorme sanglier au pelage épais et aux yeux injectés de sang se dirige vers vous. Sa rage est palpable et il semble prêt à en découdre.',
+        'img/SavageBoard01.jpg'),
+       ('Rencontre avec le paysan',
+        'Tandis que vous progressez, une voix humaine s’élève, interrompant le silence de la forêt. Vous tombez sur un vieux paysan, accroupi près de champignons aux couleurs vives. Il sursaute en vous voyant puis se détend, vous souriant tristement.',
+        'img/OldMan01.jpg'),
+       ('Le loup noir',
+        'À mesure que vous avancez, un bruissement attire votre attention. Une silhouette sombre s’élance soudainement devant vous : un loup noir aux yeux perçants. Son poil est hérissé et sa gueule laisse entrevoir des crocs acérés.',
+        'img/Wolf01.jpg'),
+       ('La clairière aux pierres anciennes',
+        'Vous atteignez une clairière étrange, entourée de pierres dressées, comme un ancien autel oublié. Une brume légère rampe au sol, les ombres dansent sous la lune.',
+        'img/StoneWall01.jpg'),
+       ('Les murmures du ruisseau',
+        'Vous arrivez près d’un ruisseau serpentant entre les arbres. Le chant de l’eau vous apaise, mais des murmures étranges proviennent de la rive. Une pierre moussue porte des inscriptions anciennes.',
+        ''),
+       ('Au pied du château',
+        'La forêt s’écarte et laisse place à une colline escarpée. Au sommet, le château en ruines projette une ombre menaçante. Les murs effrités témoignent d’un passé sinistre.',
+        'img/Castle01.jpg'),
+       ('La lumière au bout du néant',
+        'Le monde disparaît autour de vous, une obscurité glaciale vous enveloppe. Une lumière fragile apparaît, accompagnée d’une voix ancienne. Vous revenez à la vie, mais dépossédé de tout équipement.',
+        ''),
+       ('La curiosité tua le chat',
+        'Qu’avez-vous fait, malheureux !',
+        '');
+
 
 INSERT INTO Links (chapter_id, next_chapter_id, description)
-VALUES ('1', '2', 'Aller à gauche'),
-       ('1','2','Aller à droite');
+VALUES (2, 3, 'Emprunter le chemin sinueux'),
+       (2, 4, 'Prendre le sentier couvert de ronces'),
+
+       (3, 5, 'Rester prudent'),
+       (3, 6, 'Ignorer les bruits et poursuivre'),
+
+       (4, 8, 'Vaincre le sanglier'),
+       (4, 10, 'Fuir ou être vaincu'),
+
+       (5, 7, 'Continuer l''aventure'),
+
+       (6, 7, 'Survivre au loup'),
+       (6, 10, 'Le loup vous terrasse'),
+
+       (7, 8, 'Prendre le sentier couvert de mousse'),
+       (7, 9, 'Suivre le chemin tortueux à travers les racines'),
+
+       (8, 11, 'Toucher la pierre gravée'),
+       (8, 9, 'Ignorer la pierre et continuer'),
+
+       (10, 1, 'Reprendre l''aventure depuis le début'),
+
+       (11, 10, 'Retour au chapitre 10');
