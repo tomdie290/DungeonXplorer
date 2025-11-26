@@ -17,7 +17,7 @@ session_start();
             exit;
         }
         else{
-
+            try{
             $db = getDB();
             $q = $db -> prepare("INSERT INTO Account (username, password_hash) VALUES (:username, :password)");
             $q->execute([
@@ -36,6 +36,10 @@ session_start();
             
             echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
             header("Location: home");
+        }
+        catch(Exception $e){
+            $register_error = "Erreur lors de l'inscription : Cet utilisateur existe déjà.";
+        }
         }
 
     }
