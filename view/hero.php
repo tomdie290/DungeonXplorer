@@ -3,6 +3,17 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once 'core/Database.php';
 $db = getDB();
 
+$defaultSelected = "img/HeroDefault.png";
+
+$defaultImages = [
+    "img/HeroDefault.png",
+    "img/HeroRogueM.png",
+    "img/HeroRogueF.png",
+    "img/HeroMageM.png",
+    "img/HeroMageF.png"
+];
+
+
 $classes = $db->query("SELECT * FROM Class")->fetchAll(PDO::FETCH_ASSOC);
 $creation_success = '';
 $creation_error = '';
@@ -13,7 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $name = $_POST['hero_name'] ?? '';
     $class_id = $_POST['class_id'] ?? '';
     $biography = $_POST['biography'] ?? '';
-    $image_path = null;
+    $image_path = $defaultSelected;
+
+    if (!empty($_FILES['hero_image']['name']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        $image_name = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.\-]/', '_', basename($_FILES['hero_image']['name']));
+        $image_path = $uploadDir . $image_name;
+        move_uploaded_file($_FILES['hero_image']['tmp_name'], $image_path);
+    }
+    else if (isset($_POST['selected_default_image']) && !empty($_POST['selected_default_image'])) {
+        $sel = $_POST['selected_default_image'];
+        if (in_array($sel, $defaultImages, true)) {
+            $image_path = $sel;
+        } else {
+            $image_path = $defaultSelected;
+        }
+    }
+
 
     if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = 'uploads/';
@@ -98,7 +126,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <h1 class="login-title mb-4">Créer un héros</h1>
 
-    <form method="post" class="d-flex flex-column align-items-center gap-3 w-100">
+    <form method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center gap-3 w-100">
+        
+        <label class="texte-principal">Choisir une image :</label>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <?php foreach ($defaultImages as $img): 
+                $isSelected = ($img === $defaultSelected); ?>
+                <label style="cursor: pointer;">
+                    <input type="radio" name="selected_default_image" value="<?= htmlspecialchars($img) ?>" hidden <?= $isSelected ? 'checked' : '' ?>>
+                    <div class="hero-image-wrapper <?= $isSelected ? 'selected-image' : '' ?>">
+                        <img src="<?= htmlspecialchars($img) ?>" class="hero-image-preview" alt="">
+                    </div>
+                </label>
+            <?php endforeach; ?>
+        </div>
+
+        <script>
+            document.querySelectorAll("input[name='selected_default_image']").forEach(input => {
+                input.addEventListener("change", () => {
+                    document.querySelectorAll(".hero-image-wrapper").forEach(w => w.classList.remove("selected-image"));
+                    const wrapper = input.parentElement.querySelector(".hero-image-wrapper");
+                    if(wrapper) wrapper.classList.add("selected-image");
+                });
+            });
+        </script>
+        
+    
         <input type="hidden" name="action" value="create_hero">
 
         <div class="input-group w-100">
@@ -110,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <option value="">-- Choisir une classe --</option>
                 <?php foreach ($classes as $cls): ?>
                     <option value="<?= $cls['id'] ?>">
-                        <?= htmlspecialchars($cls['name']) ?> (PV: <?= $cls['base_pv'] ?>, Mana: <?= $cls['base_mana'] ?>, Force: <?= $cls['strength'] ?>, Init: <?= $cls['initiative'] ?>)
+                        <?= htmlspecialchars($cls['name']) ?> (PV <?= $cls['base_pv'] ?> | Mana <?= $cls['base_mana'] ?>)
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -120,14 +173,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <textarea name="biography" class="form-control background-secondaire texte-principal" placeholder="Biographie du héros" rows="4"></textarea>
         </div>
 
+        
+        <div class="w-100">
+            <label class="texte-principal">Ou importer une image :</label>
+            <input type="file" name="hero_image" accept="image/*" class="form-control background-secondaire texte-principal">
+        </div>
+
+
         <input type="submit" value="Créer le héros" class="btn btn-primary mt-2 w-50">
+
+
     </form>
 
-    <?php if (!empty($creation_success)): ?>
-        <div class="alert alert-success mt-3 text-center"><?= htmlspecialchars($creation_success) ?></div>
+    <!-- Messages -->
+    <?php if ($creation_success): ?>
+        <div class="alert alert-success mt-3 text-center"><?= $creation_success ?></div>
     <?php endif; ?>
-    <?php if (!empty($creation_error)): ?>
-        <div class="alert alert-danger mt-3 text-center"><?= htmlspecialchars($creation_error) ?></div>
+
+    <?php if ($creation_error): ?>
+        <div class="alert alert-danger mt-3 text-center"><?= $creation_error ?></div>
     <?php endif; ?>
 
     <hr style="border-color: #C4975E; margin: 30px 0;">

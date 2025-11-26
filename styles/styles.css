@@ -93,3 +93,29 @@ input.form-control,
 .back-btn:hover {
     background-color: #8B1E1E;
 }
+
+.hero-image-wrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transform: scale(1.35);
+    transition: 0.2s;
+}
+
+.selected-image {
+    border: 3px solid #C4975E;
+    box-shadow: 0 0 10px #c4975e80;
+}
