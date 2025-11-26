@@ -3,6 +3,7 @@
 // controllers/ChapterController.php
 
 require_once 'models/Chapter.php';
+require_once 'core/Database.php';
 
 class ChapterController
 {
@@ -10,28 +11,37 @@ class ChapterController
 
     public function __construct()
     {
-        // Exemple de chapitres avec des images
-        $this->chapters[] = new Chapter(
-            1,
-            "La Forêt Enchantée",
-            "Vous vous trouvez dans une forêt sombre et enchantée. Deux chemins se présentent à vous.",
-            "images/forêt.jpg", // Chemin vers l'image
-            [
-                ["text" => "Aller à gauche", "chapter" => 2],
-                ["text" => "Aller à droite", "chapter" => 3]
-            ]
-        );
+        $db = getDB();
 
-        $this->chapters[] = new Chapter(
-            2,
-            "Le Lac Mystérieux",
-            "Vous arrivez à un lac aux eaux limpides. Une créature vous observe.",
-            "images/lac.jpg", // Chemin vers l'image
-            [
-                ["text" => "Nager dans le lac", "chapter" => 4],
-                ["text" => "Faire demi-tour", "chapter" => 1]
-            ]
-        );
+        $stmt = $db->query("SELECT id FROM Chapter ORDER BY id ASC");
+        $chapters = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach ($chapters as $chapter) {
+
+            $stmtChapter = $db->prepare("
+        SELECT id, title, description, image
+        FROM Chapter
+        WHERE id = ?
+    ");
+            $stmtChapter->execute([$chapter]);
+            $chapterRow = $stmtChapter->fetch(PDO::FETCH_ASSOC);
+
+            $stmtLinks = $db->prepare("
+        SELECT description AS text, next_chapter_id AS chapter
+        FROM Links
+        WHERE chapter_id = ?
+    ");
+            $stmtLinks->execute([$chapter]);
+            $links = $stmtLinks->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->chapters[] = new Chapter(
+                $chapterRow['id'],
+                $chapterRow['title'],
+                $chapterRow['description'],
+                $chapterRow['image'],
+                $links
+            );
+        }
 
     }
 
@@ -55,6 +65,21 @@ class ChapterController
                 return $chapter;
             }
         }
-        return null; // Chapitre non trouvé
+        return null;
+    }
+
+    public function index()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['id']) || !isset($_SESSION['username'])) {
+            header("Location: login");
+        } else {
+
+
+
+            require_once 'view/chapter_view.php';
+        }
     }
 }
