@@ -17,12 +17,7 @@
     font-family: "Roboto", system-ui;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-family: "Pirata One", system-ui;
     text-align: center;
 }
@@ -41,6 +36,12 @@ body {
 
 .btn-primary {
     background-color: #4A7A66;
+    border-color: #C4975E;
+    border-width: medium;
+}
+
+.btn-primary:hover {
+    background-color: #52b88d;
     border-color: #C4975E;
 }
 
@@ -65,9 +66,28 @@ input.form-control,
     border-color: #C4975E;
 }
 
+/* Style number input spinner arrows to match input background and text */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    color: #E5E5E5;
+    background-color: #2E2E2E;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: textfield;
+}
+
 .login-container {
     max-width: 500px;
-    margin: 80px auto;
+    margin: 1rem auto;
     padding: 30px;
     background-color: #2E2E2E;
     border: 2px solid #C4975E;
