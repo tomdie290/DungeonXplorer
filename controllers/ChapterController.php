@@ -27,7 +27,7 @@ class ChapterController
             $chapterRow = $stmtChapter->fetch(PDO::FETCH_ASSOC);
 
             $stmtLinks = $db->prepare("
-        SELECT description AS text, next_chapter_id AS chapter
+        SELECT description AS text , ID as id, next_chapter_id AS chapter
         FROM Links
         WHERE chapter_id = ?
     ");
@@ -70,6 +70,7 @@ class ChapterController
 
     public function index()
     {
+        /*
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -86,7 +87,27 @@ class ChapterController
             $id = $stmt->fetchColumn();
 
             $this->show($id);
-        }
+        }*/
 
+        // temporaire
+        $this->show(2);
+    }
+
+    public function choice() {
+        //TODO a finir
+        if (isset($_POST['choice'])) {
+
+            $db = getDB();
+
+            $sql = "SELECT * FREOM Acount
+                    JOIN Hero ON Hero.account_id = Acount.id
+                    JOIN Adventure ON Adventure.hero_id = Hero.id
+                    WHERE Hero.id = Acount.current_hero 
+                    AND Adventure.end_date IS NULL";
+
+
+        } else {
+            header("Location: chapter");
+        }
     }
 }

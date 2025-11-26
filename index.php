@@ -79,6 +79,7 @@ $router->addRoute('register', 'RegisterController@index');
 $router->addRoute('account', 'AccountController@index');
 $router->addRoute('hero', 'HeroController@index');
 $router->addRoute('chapter', 'ChapterController@index');
+$router->addRoute('chapter/choice', 'ChapterController@choice');
 $router->addRoute('profil', 'ProfilController@index');
 $router->addRoute('update_password', 'UpdatePasswordController@index');
 
