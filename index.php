@@ -72,11 +72,13 @@ class Router
 // Instanciation du routeur
 $router = new Router('DungeonXplorer');
 
-$router->addRoute('', 'HomeController@index'); // Pour la racine
-$router->addRoute('home', 'HomeController@index'); // Pour la racine
-$router->addRoute('login', 'LoginController@index'); // Pour la racine
-$router->addRoute('register', 'RegisterController@index'); // Pour la racine
-$router->addRoute('account', 'AccountController@index'); // Pour la racine
-$router->addRoute('hero', 'HeroController@index'); // Pour la racine
+$router->addRoute('', 'HomeController@index');
+$router->addRoute('home', 'HomeController@index');
+$router->addRoute('login', 'LoginController@index');
+$router->addRoute('register', 'RegisterController@index');
+$router->addRoute('account', 'AccountController@index');
+$router->addRoute('hero', 'HeroController@index');
+$router->addRoute('chapter', 'ChapterController@index');
+
 
 $router->route(trim($_SERVER['REQUEST_URI'], '/'));
