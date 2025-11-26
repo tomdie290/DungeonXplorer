@@ -43,27 +43,20 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2 class="login-title mt-5 mb-4">Liste de mes héros</h2>
 
 <div class="container">
-
     <?php if (empty($heroes)): ?>
         <p class="texte-principal text-center">Aucun héros créé pour l’instant.</p>
     <?php endif; ?>
 
     <div class="row g-4">
-
         <?php foreach ($heroes as $hero): ?>
-            <div class="col-md-4">
-                <div class="login-container">
-
-                    <div class="text-center">
-                    <div class="hero-image-wrapper" style="width:150px; height:150px; border-radius:50%;">
+            <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+                <div class="hero-card">
+                    <div class="hero-image-wrapper">
                         <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : 'img/HeroDefault.png' ?>"
-                            alt="Image du héros"
-                            class="hero-image-preview"
-                            style="width:100%; height:100%; object-fit:cover; object-position:top;">
+                             alt="Image du héros">
                     </div>
 
-                    <h3 class="login-title mt-3"><?= htmlspecialchars($hero['name']) ?></h3>
-
+                    <h2><?= htmlspecialchars($hero['name']) ?></h2>
                     <p class="texte-principal">Classe : <strong><?= htmlspecialchars($hero['class_name']) ?></strong></p>
 
                     <p class="texte-principal">
@@ -98,14 +91,10 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </a>
                         <?php endif; ?>
                     </div>
-
                 </div>
             </div>
         <?php endforeach; ?>
-
     </div>
-
 </div>
-
 </body>
 </html>
