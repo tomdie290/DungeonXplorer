@@ -177,7 +177,7 @@ CREATE TABLE Adventure
     end_date           DATETIME,                         -- NULL = aventure en cours
     status             VARCHAR(20) DEFAULT 'InProgress', -- InProgress / Completed / Failed
 
-    current_chapter_id INT,                              -- position actuelle de l’aventure
+    current_chapter_id INT         DEFAULT 1,            -- position actuelle de l’aventure
 
     FOREIGN KEY (hero_id) REFERENCES Hero (id) ON DELETE CASCADE,
     FOREIGN KEY (current_chapter_id) REFERENCES Chapter (id)
