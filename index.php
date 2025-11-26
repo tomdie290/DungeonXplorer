@@ -65,7 +65,7 @@ class Router
         }
 
         // Si aucune route n'a été trouvée, gérer l'erreur 404
-        require_once 'views/404.php';
+        require_once 'view/404.php';
     }
 }
 
@@ -73,6 +73,10 @@ class Router
 $router = new Router('DungeonXplorer');
 
 $router->addRoute('', 'HomeController@index'); // Pour la racine
-
+$router->addRoute('home', 'HomeController@index'); // Pour la racine
+$router->addRoute('login', 'LoginController@index'); // Pour la racine
+$router->addRoute('register', 'RegisterController@index'); // Pour la racine
+$router->addRoute('account', 'AccountController@index'); // Pour la racine
+$router->addRoute('hero', 'HeroController@index'); // Pour la racine
 
 $router->route(trim($_SERVER['REQUEST_URI'], '/'));

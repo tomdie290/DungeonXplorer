@@ -1,29 +1,33 @@
 .pirata-one-regular {
-  font-family: "Pirata One", system-ui;
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .roboto-regular {
-  font-family: "Roboto", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
 }
-
 
 * {
     font-family: "Roboto", system-ui;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: "Pirata One", system-ui;
     text-align: center;
 }
 
-body{
+body {
     background-color: #1A1A1A;
 }
 
@@ -59,4 +63,33 @@ input.form-control,
     color: #E5E5E5;
     background-color: #2E2E2E;
     border-color: #C4975E;
+}
+
+.login-container {
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #2E2E2E;
+    border: 2px solid #C4975E;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(196, 151, 94, 0.25);
+}
+
+.login-title {
+    font-family: "Pirata One", system-ui;
+    color: #E5E5E5;
+    text-align: center;
+}
+
+.back-btn {
+    padding: 10px 20px;
+    display: inline-block;
+    text-decoration: none;
+    color: #E5E5E5;
+    border: 2px solid #C4975E;
+    border-radius: 8px;
+}
+
+.back-btn:hover {
+    background-color: #8B1E1E;
 }

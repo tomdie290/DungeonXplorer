@@ -1,10 +1,26 @@
+DROP DATABASE IF EXISTS DungeonXplorer;
 CREATE DATABASE DungeonXplorer;
 USE DungeonXplorer;
+
+DROP TABLE IF EXISTS Adventure_Progress;
+DROP TABLE IF EXISTS Adventure;
+DROP TABLE IF EXISTS Inventory;
+DROP TABLE IF EXISTS Links;
+DROP TABLE IF EXISTS Encounter;
+DROP TABLE IF EXISTS Chapter_Treasure;
+DROP TABLE IF EXISTS Chapter;
+DROP TABLE IF EXISTS Level;
+DROP TABLE IF EXISTS Hero;
+DROP TABLE IF EXISTS Monster_Loot;
+DROP TABLE IF EXISTS Monster;
+DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS Class;
+DROP TABLE IF EXISTS Account;
 
 CREATE TABLE Account (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -152,19 +168,41 @@ CREATE TABLE Adventure (
     FOREIGN KEY (current_chapter_id) REFERENCES Chapter(id)
 );
 
--- Empêcher plusieurs aventures en parallèle
-ALTER TABLE Adventure
-ADD CONSTRAINT one_active_adventure_per_hero
-CHECK (
-    NOT (
-        end_date IS NULL
-        AND hero_id IN (
-            SELECT hero_id FROM Adventure
-            WHERE end_date IS NULL
-            GROUP BY hero_id HAVING COUNT(*) > 1
-        )
-    )
-);
+DELIMITER $$
+
+CREATE TRIGGER trg_adventure_single_active_insert
+    BEFORE INSERT ON Adventure
+    FOR EACH ROW
+BEGIN
+    IF NEW.end_date IS NULL THEN
+        IF (SELECT COUNT(*)
+            FROM Adventure
+            WHERE hero_id = NEW.hero_id AND end_date IS NULL) > 0 THEN
+
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Un héros ne peut pas avoir plusieurs aventures en cours.';
+        END IF;
+    END IF;
+END$$
+
+CREATE TRIGGER trg_adventure_single_active_update
+    BEFORE UPDATE ON Adventure
+    FOR EACH ROW
+BEGIN
+    IF NEW.end_date IS NULL THEN
+        IF (SELECT COUNT(*)
+            FROM Adventure
+            WHERE hero_id = NEW.hero_id
+              AND end_date IS NULL
+              AND id != NEW.id) > 0 THEN
+
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Un héros ne peut pas avoir plusieurs aventures en cours.';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
 
 CREATE TABLE Adventure_Progress (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -176,3 +214,12 @@ CREATE TABLE Adventure_Progress (
     FOREIGN KEY (adventure_id) REFERENCES Adventure(id) ON DELETE CASCADE,
     FOREIGN KEY (chapter_id) REFERENCES Chapter(id)
 );
+
+
+
+INSERT INTO Class (name, description, base_pv, base_mana, strength, initiative, max_items)
+VALUES 
+('Guerrier', 'Un combattant robuste et puissant', 100, 0, 15, 5, 5),
+('Voleur', 'Rapide et agile, spécialisé dans les attaques surprises', 80, 10, 10, 15, 5),
+('Magicien', 'Maître des sorts, faible en combat physique mais puissant en magie', 60, 20, 5, 10, 5);
+
