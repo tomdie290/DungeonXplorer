@@ -39,7 +39,9 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </head>
     <body>
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
-        <a href="hero" class="btn btn-primary w-50">Crée hero</a>
+            <div class="text-center mt-3">
+                <a href="hero" class="btn btn-primary d-inline-block px-4">Crée hero</a>
+            </div>
         <h2 class="login-title mt-5 mb-4">Liste de mes héros</h2>
 
 <div class="container">
