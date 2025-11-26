@@ -55,9 +55,11 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="login-container">
 
                     <div class="text-center">
-                        <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : 'img/default_hero.png' ?>"
-                             alt="Image du héros"
-                             style="width:150px;height:150px;object-fit:cover;border-radius:10px;">
+                    <div class="hero-image-wrapper" style="width:150px; height:150px; border-radius:50%;">
+                        <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : 'img/HeroDefault.png' ?>"
+                            alt="Image du héros"
+                            class="hero-image-preview"
+                            style="width:100%; height:100%; object-fit:cover; object-position:top;">
                     </div>
 
                     <h3 class="login-title mt-3"><?= htmlspecialchars($hero['name']) ?></h3>
