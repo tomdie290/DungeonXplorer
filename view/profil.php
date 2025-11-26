@@ -1,115 +1,105 @@
-<?php
-// Inclure le fichier de connexion à la base de données
-require_once 'core/Database.php';
-
-if (!isset($_SESSION['id'])) {
-    header("Location: login");
-    exit;
-}
-
-$db = getDB();
-$currentAccountId = $_SESSION['id'];
-
-// Récupérer les informations du compte connecté et ses héros associés
-$sql = "SELECT 
-            Account.id AS account_id,
-            Account.username,
-            Account.email,
-            Account.password_hash,
-            Account.creation_date,
-            Hero.id AS hero_id,
-            Hero.name AS hero_name,
-            Hero.current_level,
-            Hero.xp
-        FROM Account
-        LEFT JOIN Hero ON Account.id = Hero.account_id
-        WHERE Account.id = :account_id
-        ORDER BY Hero.id";
-$stmt = $db->prepare($sql);
-$stmt->execute(['account_id' => $currentAccountId]);
-$accounts = $stmt->fetchAll();
+<?php 
+if (!isset($account)) { die("Erreur : aucune donnée de compte."); } 
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Profil des Comptes</title>
-    <?php require_once 'head.php'; ?>
-    <style>
-        .password {
-            font-family: monospace;
-        }
-    </style>
+    <title>Profil</title>
+    <?php require 'head.php'; ?>
     <script>
         function togglePassword(id) {
-            const passwordField = document.getElementById(id);
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-            } else {
-                passwordField.type = "password";
-            }
+            const field = document.getElementById(id);
+            field.type = field.type === "password" ? "text" : "password";
         }
-        </script>
+    </script>
 </head>
-<body class="bg-dark text-light "> <!-- Fond noir, texte blanc -->
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Profil de votre Compte</h1>
-        <?php 
-        foreach ($accounts as $account): 
-        ?>
-            <div class="card mb-4 bg-dark text-light border border-2 border-white rounded-3"> <!-- Carte avec fond blanc, texte noir -->
-                <div class="card-body">
-                    <h2 class="card-title">Compte : <?php echo htmlspecialchars($account['username']); ?></h2>
-                    <p>
-                        <strong>Mot de passe :</strong>
-                        <input type="password" id="password-<?php echo $account['account_id']; ?>" class="form-control d-inline-block w-auto" value="<?php echo htmlspecialchars($account['password_hash']); ?>" readonly>
-                        <button class="btn btn-secondary btn-sm" onclick="togglePassword('password-<?php echo $account['account_id']; ?>')">Afficher/Masquer</button>
+
+<body class="texte-principal">
+
+<div class="container mt-5">
+    <h1 class="mb-4 pirata-one-regular">Profil du Compte</h1>
+
+    <div class="card background-secondaire border border-2 border-white rounded-3 mb-5 p-4">
+        <h2 class="text-center"><?= htmlspecialchars($account['username'] ?? '') ?></h2>
+        <p class="text-center"><strong>Email :</strong> <?= htmlspecialchars($account['email'] ?? 'Non renseigné') ?></p>
+        <p class="text-center"><strong>Créé le :</strong> <?= htmlspecialchars($account['creation_date'] ?? '') ?></p>
+
+        <hr>
+
+        <h3 class="text-center mb-3">Modifier votre profil</h3>
+        <form method="POST" action="update_profile.php" class="d-flex flex-column gap-3 w-75 mx-auto">
+
+            <div class="input-group">
+                <span class="input-group-text">Nom d'utilisateur</span>
+                <input type="text" name="username" class="form-control" 
+                       value="<?= htmlspecialchars($account['username'] ?? '') ?>" required>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-text">Nouveau mot de passe</span>
+                <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Laissez vide pour ne pas changer">
+                <button type="button" class="btn btn-secondary" onclick="togglePassword('new_password')">Voir / Masquer</button>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-text">Confirmer mot de passe</span>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirmez le mot de passe">
+                <button type="button" class="btn btn-secondary" onclick="togglePassword('confirm_password')">Voir / Masquer</button>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="mb-3 pirata-one-regular">Vos Héros</h2>
+
+    <?php if (empty($heroes)): ?>
+        <p class="text-center">Aucun héros créé.</p>
+    <?php else: ?>
+        <div class="row g-4">
+            <?php foreach ($heroes as $hero): ?>
+            <div class="col-md-4">
+                <div class="hero-card">
+
+                    <div class="hero-image-wrapper">
+                        <img src="<?= htmlspecialchars($hero['image'] ?? 'assets/img/default.png') ?>" 
+                             alt="Hero Image">
+                    </div>
+
+                    <h3><?= htmlspecialchars($hero['name'] ?? 'Inconnu') ?></h3>
+                    <p>Classe : <strong><?= htmlspecialchars($hero['class_name'] ?? "Inconnue") ?></strong></p>
+                    <p>Niveau : <strong><?= $hero['current_level'] ?? 1 ?></strong></p>
+                    <p>XP : <?= $hero['xp'] ?? 0 ?></p>
+
+                    <hr>
+
+                    <p><strong>PV :</strong> <?= $hero['pv'] ?? 0 ?></p>
+                    <p><strong>Mana :</strong> <?= $hero['mana'] ?? 0 ?></p>
+                    <p><strong>Force :</strong> <?= $hero['strength'] ?? 0 ?></p>
+                    <p><strong>Initiative :</strong> <?= $hero['initiative'] ?? 0 ?></p>
+
+                    <hr>
+
+                    <p><strong>Chapitre actuel :</strong><br>
+                        <?= htmlspecialchars($hero['chapter_title'] ?? "Pas d’aventure en cours") ?>
                     </p>
-                    <p>
-                        <strong>Modifier le mot de passe :</strong>
-                        <form method="POST" action="update_password" class="d-flex gap-2 align-items-center">
-                            <div class="input-group">
-                                <input type="password" name="new_password" id="new-password-<?php echo $account['account_id']; ?>" 
-                                    class="form-control" placeholder="Nouveau mot de passe" required>
-                                
-                                <button type="button" class="btn btn-secondary" 
-                                        onclick="toggleNewPassword('<?php echo $account['account_id']; ?>')">
-                                    Voir / Masquer
-                                </button>
-                            </div>
 
-                            <input type="hidden" name="account_id" value="<?php echo $account['account_id']; ?>">
-                            <button type="submit" class="btn btn-primary">Modifier</button>
-                        </form>
-                    </p>
-
-                    <script>
-                        function toggleNewPassword(id) {
-                            const field = document.getElementById('new-password-' + id);
-                            if (field.type === "password") {
-                                field.type = "text";
-                            } else {
-                                field.type = "password";
-                            }
-                        }
-                    </script>
-
-
-                    <p><strong>Date de création :</strong> <?php echo htmlspecialchars($account['creation_date']); ?></p>
-                    <h3>Héros associés :</h3>
-                    <?php if ($account['hero_id']): ?>
-                        <ul class="list-group">
-                            <li class="list-group-item bg-dark text-light">
-                                <strong>Nom :</strong> <?php echo htmlspecialchars($account['hero_name']); ?> |
-                                <strong>Niveau :</strong> <?php echo htmlspecialchars($account['current_level']); ?> |
-                                <strong>XP :</strong> <?php echo htmlspecialchars($account['xp']); ?>
-                            </li>
-                        </ul>
-                    <?php else: ?>
-                        <p>Aucun héros associé.</p>
-                    <?php endif; ?>
                 </div>
             </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+    <div class="text-center mt-4">
+        <a href="account" class="btn btn-danger">Retour</a>
     </div>
+
+    <div class="text-center mt-4">
+        <a href="logout" class="btn btn-danger">Se déconnecter</a>
+    </div>
+</div>
+
 </body>
 </html>
