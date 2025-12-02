@@ -1,83 +1,105 @@
-<?php
-// Inclure le fichier de connexion à la base de données
-require_once 'connexion.php';
-
-// Récupérer tous les comptes et leurs héros associés
-$sql = "SELECT 
-            Account.id AS account_id,
-            Account.username,
-            Account.email,
-            Account.password_hash,
-            Account.creation_date,
-            Hero.id AS hero_id,
-            Hero.name AS hero_name,
-            Hero.current_level,
-            Hero.xp
-        FROM Account
-        LEFT JOIN Hero ON Account.id = Hero.account_id
-        ORDER BY Account.id, Hero.id";
-
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$accounts = $stmt->fetchAll();
+<?php 
+if (!isset($account)) { die("Erreur : aucune donnée de compte."); } 
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil des Comptes</title>
-    <style>
-        .password {
-            font-family: monospace;
-        }
-    </style>
+    <title>Profil</title>
+    <?php require 'head.php'; ?>
     <script>
         function togglePassword(id) {
-            const passwordField = document.getElementById(id);
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-            } else {
-                passwordField.type = "password";
-            }
+            const field = document.getElementById(id);
+            field.type = field.type === "password" ? "text" : "password";
         }
     </script>
 </head>
-<body>
-    <h1>Profil des Comptes</h1>
-    <?php 
-    $currentAccountId = null;
-    foreach ($accounts as $account): 
-        // Afficher les informations du compte uniquement une fois
-        if ($currentAccountId !== $account['account_id']):
-            $currentAccountId = $account['account_id'];
-    ?>
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
-            <h2>Compte : <?php echo htmlspecialchars($account['username']); ?></h2>
-            <p><strong>Email :</strong> <?php echo htmlspecialchars($account['email']); ?></p>
-            <p>
-                <strong>Mot de passe :</strong>
-                <input type="password" id="password-<?php echo $account['account_id']; ?>" class="password" value="<?php echo htmlspecialchars($account['password_hash']); ?>" readonly>
-                <button onclick="togglePassword('password-<?php echo $account['account_id']; ?>')">Afficher/Masquer</button>
-            </p>
-            <p><strong>Date de création :</strong> <?php echo htmlspecialchars($account['creation_date']); ?></p>
-            <a href="edit_account.php?account_id=<?php echo $account['account_id']; ?>">Modifier le compte</a>
-            <h3>Héros associés :</h3>
-            <?php endif; ?>
-            <?php if ($account['hero_id']): ?>
-                <ul>
-                    <li>
-                        <strong>Nom :</strong> <?php echo htmlspecialchars($account['hero_name']); ?> |
-                        <strong>Niveau :</strong> <?php echo htmlspecialchars($account['current_level']); ?> |
-                        <strong>XP :</strong> <?php echo htmlspecialchars($account['xp']); ?>
-                        <a href="edit_hero.php?hero_id=<?php echo $account['hero_id']; ?>">Modifier</a>
-                    </li>
-                </ul>
-            <?php else: ?>
-                <p>Aucun héros associé.</p>
-            <?php endif; ?>
+
+<body class="texte-principal">
+
+<div class="container mt-5">
+    <h1 class="mb-4 pirata-one-regular">Profil du Compte</h1>
+
+    <div class="card background-secondaire border border-2 border-white rounded-3 mb-5 p-4">
+        <h2 class="text-center"><?= htmlspecialchars($account['username'] ?? '') ?></h2>
+        <p class="text-center"><strong>Email :</strong> <?= htmlspecialchars($account['email'] ?? 'Non renseigné') ?></p>
+        <p class="text-center"><strong>Créé le :</strong> <?= htmlspecialchars($account['creation_date'] ?? '') ?></p>
+
+        <hr>
+
+        <h3 class="text-center mb-3">Modifier votre profil</h3>
+        <form method="POST" action="update_profile.php" class="d-flex flex-column gap-3 w-75 mx-auto">
+
+            <div class="input-group">
+                <span class="input-group-text">Nom d'utilisateur</span>
+                <input type="text" name="username" class="form-control" 
+                       value="<?= htmlspecialchars($account['username'] ?? '') ?>" required>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-text">Nouveau mot de passe</span>
+                <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Laissez vide pour ne pas changer">
+                <button type="button" class="btn btn-secondary" onclick="togglePassword('new_password')">Voir / Masquer</button>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-text">Confirmer mot de passe</span>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirmez le mot de passe">
+                <button type="button" class="btn btn-secondary" onclick="togglePassword('confirm_password')">Voir / Masquer</button>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="mb-3 pirata-one-regular">Vos Héros</h2>
+
+    <?php if (empty($heroes)): ?>
+        <p class="text-center">Aucun héros créé.</p>
+    <?php else: ?>
+        <div class="row g-4">
+            <?php foreach ($heroes as $hero): ?>
+            <div class="col-md-4">
+                <div class="hero-card">
+
+                    <div class="hero-image-wrapper">
+                        <img src="<?= htmlspecialchars($hero['image'] ?? 'assets/img/default.png') ?>" 
+                             alt="Hero Image">
+                    </div>
+
+                    <h3><?= htmlspecialchars($hero['name'] ?? 'Inconnu') ?></h3>
+                    <p>Classe : <strong><?= htmlspecialchars($hero['class_name'] ?? "Inconnue") ?></strong></p>
+                    <p>Niveau : <strong><?= $hero['current_level'] ?? 1 ?></strong></p>
+                    <p>XP : <?= $hero['xp'] ?? 0 ?></p>
+
+                    <hr>
+
+                    <p><strong>PV :</strong> <?= $hero['pv'] ?? 0 ?></p>
+                    <p><strong>Mana :</strong> <?= $hero['mana'] ?? 0 ?></p>
+                    <p><strong>Force :</strong> <?= $hero['strength'] ?? 0 ?></p>
+                    <p><strong>Initiative :</strong> <?= $hero['initiative'] ?? 0 ?></p>
+
+                    <hr>
+
+                    <p><strong>Chapitre actuel :</strong><br>
+                        <?= htmlspecialchars($hero['chapter_title'] ?? "Pas d’aventure en cours") ?>
+                    </p>
+
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
+    <?php endif; ?>
+    <div class="text-center mt-4">
+        <a href="account" class="btn btn-danger">Retour</a>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="logout" class="btn btn-danger">Se déconnecter</a>
+    </div>
+</div>
+
 </body>
 </html>

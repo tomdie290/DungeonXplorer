@@ -1,58 +1,80 @@
 <?php
 
-// models/Monster.php
-
 abstract class Monster
 {
-    protected $name;
-    protected $health;
-    protected $mana;
-    protected $experienceValue;
-    protected $treasure;
+    protected string $name;
+    protected int $pv;
+    protected int $mana;
+    protected int $strength;
+    protected int $initiative;
+    protected string $attackText;
+    protected int $xpReward;
+    protected array $treasure;
+    protected ?string $image;
 
-    public function __construct($name, $health, $mana, $experienceValue, $treasure)
-    {
+    public function __construct(
+        string $name,
+        int $pv,
+        int $mana,
+        int $strength,
+        int $initiative,
+        string $attackText,
+        int $xpReward,
+        array $treasure = [],
+        ?string $image = null
+    ) {
         $this->name = $name;
-        $this->health = $health;
+        $this->pv = $pv;
         $this->mana = $mana;
-        $this->experienceValue = $experienceValue;
+        $this->strength = $strength;
+        $this->initiative = $initiative;
+        $this->attackText = $attackText;
+        $this->xpReward = $xpReward;
         $this->treasure = $treasure;
+        $this->image = $image;
     }
 
-    abstract public function attack();
+    abstract public function attack(): string;
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getHealth()
+    public function getHealth(): int
     {
-        return $this->health;
+        return $this->pv;
     }
 
-    public function getMana()
+    public function getMana(): int
     {
         return $this->mana;
     }
 
-    public function takeDamage($damage)
+    public function getExperienceValue(): int
     {
-        $this->health -= $damage;
+        return $this->xpReward;
     }
 
-    public function isAlive()
-    {
-        return $this->health > 0;
-    }
-
-    public function getExperienceValue()
-    {
-        return $this->experienceValue;
-    }
-
-    public function getTreasure()
+    public function getTreasure(): array
     {
         return $this->treasure;
     }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function isAlive(): bool
+    {
+        return $this->pv > 0;
+    }
+
+    public function takeDamage(int $dmg): void
+    {
+        $this->pv -= $dmg;
+        if ($this->pv < 0) $this->pv = 0;
+    }
 }
+?>

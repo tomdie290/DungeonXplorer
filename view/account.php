@@ -37,33 +37,32 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php require_once 'head.php'; ?>
         <title>Mon compte - DungeonXplorer</title>
     </head>
+    <?php require_once 'navbar.php'; ?>
     <body>
+<<<<<<< HEAD
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
             <div class="text-center mt-3">
                 <a href="hero" class="btn btn-primary d-inline-block px-4">Crée hero</a>
             </div>
+=======
+>>>>>>> origin/main
         <h2 class="login-title mt-5 mb-4">Liste de mes héros</h2>
 
 <div class="container">
-
     <?php if (empty($heroes)): ?>
-        <p class="texte-principal text-center">Aucun héros créé pour l’instant.</p>
+        <p class="texte-principal text-center">Aucun héro créé pour l’instant.</p>
     <?php endif; ?>
 
     <div class="row g-4">
-
         <?php foreach ($heroes as $hero): ?>
-            <div class="col-md-4">
-                <div class="login-container">
-
-                    <div class="text-center">
-                        <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : 'img/default_hero.png' ?>"
-                             alt="Image du héros"
-                             style="width:150px;height:150px;object-fit:cover;border-radius:10px;">
+            <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+                <div class="hero-card">
+                    <div class="hero-image-wrapper">
+                        <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : 'img/HeroDefault.png' ?>"
+                             alt="Image du héros">
                     </div>
 
-                    <h3 class="login-title mt-3"><?= htmlspecialchars($hero['name']) ?></h3>
-
+                    <h2><?= htmlspecialchars($hero['name']) ?></h1>
                     <p class="texte-principal">Classe : <strong><?= htmlspecialchars($hero['class_name']) ?></strong></p>
 
                     <p class="texte-principal">
@@ -98,14 +97,10 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </a>
                         <?php endif; ?>
                     </div>
-
                 </div>
             </div>
         <?php endforeach; ?>
-
     </div>
-
 </div>
-
 </body>
 </html>

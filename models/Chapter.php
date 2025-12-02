@@ -9,18 +9,20 @@ class Chapter
     private $description;
     private $image; 
     private $choices;
+    private $monsterType;
 
-    public function __construct($id, $title, $description, $image, $choices)
+    public function __construct($id, $title, $description, $image, $choices, ?string $monsterType = null)
     {
         $this->id = $id;
         $this->title = $title;
         $this->description = $description;
         $this->image = $image; 
         $this->choices = $choices;
+        $this->monsterType = $monsterType;
     }
 
     public function getId()
-    {
+    {   
         return $this->id;
     }
 
@@ -43,4 +45,15 @@ class Chapter
     {
         return $this->choices;
     }
+
+    public function hasMonster()
+    {
+        return $this->monsterType !== null;
+    }
+
+    public function getMonsterType()
+    {
+        return $this->monsterType;
+    }
+
 }

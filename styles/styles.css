@@ -1,3 +1,7 @@
+.p {
+    color: white;
+}
+
 .pirata-one-regular {
     font-family: "Pirata One", system-ui;
     font-weight: 400;
@@ -20,6 +24,7 @@
 h1, h2, h3, h4, h5, h6 {
     font-family: "Pirata One", system-ui;
     text-align: center;
+    color: #E5E5E5;
 }
 
 body {
@@ -112,4 +117,229 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .back-btn:hover {
     background-color: #8B1E1E;
+}
+
+.hero-image-wrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transform: scale(1.35);
+    transition: 0.2s;
+}
+
+.selected-image {
+    border: 3px solid #C4975E;
+    box-shadow: 0 0 10px #c4975e80;
+}
+
+.hero-card {
+    background-color: #2E2E2E;
+    border: 2px solid #C4975E;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 0 15px rgba(196, 151, 94, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.hero-card:hover {
+    transform: scale(1.03);
+}
+
+.hero-card .hero-image-wrapper {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.hero-card .hero-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 50%;
+}
+
+.hero-card p {
+    margin: 3px 0;
+    font-size: 0.9rem;
+}
+
+.row.g-4 {
+    row-gap: 1rem;
+    column-gap: 1rem;
+}
+
+.adventure-card {
+    background: #2b2b2b;
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+}
+
+.hero-image-wrapper {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #C4975E;
+    margin: 0 auto 10px;
+}
+
+.hero-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transform: scale(1.4);
+}
+
+.adventure-card:hover {
+    transform: scale(1.03);
+}
+
+.adventure-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.chapter-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 25px;
+    background: #262626;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    box-shadow: 0 0 25px var(--gold-soft);
+}
+
+.chapter-image {
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid var(--gold);
+    margin-bottom: 20px;
+}
+
+.choice-list {
+    list-style: none;
+    padding: 0;
+}
+
+.choice-list li {
+    color: white;
+    margin: 12px 0;
+    padding: 12px 15px;
+    background: #2E2E2E;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.choice-list li:hover {
+    background: #3A3A3A;
+    transform: scale(1.03);
+    box-shadow: 0 0 10px var(--gold-soft);
+}
+
+.choice-list input[type="radio"] {
+    accent-color: var(--gold);
+
+}
+
+
+.combat-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 25px;
+    background: #262626;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    box-shadow: 0 0 25px var(--gold-soft);
+    color: #E5E5E5;
+}
+
+.section {
+    background: #2E2E2E;
+    padding: 20px;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.stats {
+    font-size: 1.2em;
+    line-height: 1.6em;
+    color: #E5E5E5;
+}
+
+.button-attack {
+    padding: 15px 25px;
+    font-size: 1.3em;
+    background: #8B1E1E;
+    border: 2px solid #C4975E;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    margin-top: 15px;
+}
+
+.button-attack:hover {
+    background: #A32222;
+    box-shadow: 0 0 10px #c4975e80;
+}
+
+.log-box {
+    background: #1A1A1A;
+    padding: 15px;
+    height: 180px;
+    overflow-y: auto;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    text-align: left;
+    color: #E5E5E5;
+}
+
+.victory-box {
+    background: #1f3b2a;
+    padding: 20px;
+    border: 2px solid #66ff99;
+    border-radius: 10px;
+    font-size: 1.3em;
+    color: white;
+    text-align: center;
+}
+
+a.next-link {
+    color: #66ff99;
+    font-size: 1.4em;
+    text-decoration: none;
+}
+a.next-link:hover {
+    text-decoration: underline;
 }

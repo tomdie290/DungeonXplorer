@@ -1,14 +1,14 @@
 <?php
 
-class AccountController {
+class UpdatePassWordController {
     public function index() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         if (!isset($_SESSION['id']) || !isset($_SESSION['username'])) {
-            header("Location: login");
+            header("Location: home");
         } else {
-            require_once 'view/account.php';
+            require_once 'view/update_password.php';
         }
     }
 }
