@@ -117,4 +117,19 @@ class AdventureController
 
         require 'view/start_adventure.php';
     }
+    private function getEncounterForChapter(int $chapterId) 
+    {
+        $db = getDB();
+
+        $sql = "SELECT m.*
+                FROM Encounter e
+                JOIN Monster m ON e.monster_id = m.id
+                WHERE e.chapter_id = ?";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$chapterId]);
+        $monster = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $monster ? new Monster($monster) : null;
+    }
 }
