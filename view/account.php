@@ -55,7 +55,7 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                              alt="Image du héros">
                     </div>
 
-                    <h2><?= htmlspecialchars($hero['name']) ?></h1>
+                    <h1><?= htmlspecialchars($hero['name']) ?></h1>
                     <p class="texte-principal">Classe : <strong><?= htmlspecialchars($hero['class_name']) ?></strong></p>
 
                     <p class="texte-principal">
