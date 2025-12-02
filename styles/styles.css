@@ -13,20 +13,14 @@
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    font-variation-settings:
-        "wdth" 100;
+    font-variation-settings: "wdth" 100;
 }
 
 * {
     font-family: "Roboto", system-ui;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-family: "Pirata One", system-ui;
     text-align: center;
     color: #E5E5E5;
@@ -320,6 +314,7 @@ a.next-link {
     font-size: 1.4em;
     text-decoration: none;
 }
+
 a.next-link:hover {
     text-decoration: underline;
 }
