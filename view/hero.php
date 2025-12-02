@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <title>Créer un héros - DungeonXplorer</title>
 </head>
 <body>
-
+<?php require_once 'navbar.php'; ?>
 <div class="login-container">
 
     <h1 class="login-title mb-4">Créer un héros</h1>

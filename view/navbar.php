@@ -1,4 +1,3 @@
-
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -19,6 +18,17 @@ if (isset($_SESSION['id'])) {
         $username = htmlspecialchars($row['username']);
     }
 }
+
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$segments = explode('/', trim($path, '/'));
+$currentPage = end($segments);
+
+if($currentPage === '') {
+    $currentPage = 'home';
+}
+function isActive($page, $currentPage) {
+    return $page === $currentPage ? ' active' : '';
+}
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark site-navbar">
   <div class="container-fluid">
@@ -32,9 +42,15 @@ if (isset($_SESSION['id'])) {
     </button>
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="account">Accueil</a></li>
-        <li class="nav-item"><a class="nav-link" href="hero">Crée héros</a></li>
-        <li class="nav-item"><a class="nav-link" href="profil">Mon compte</a></li>
+        <li class="nav-item">
+          <a class="nav-link<?= isActive('account', $currentPage) ?>" href="account">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<?= isActive('hero', $currentPage) ?>" href="hero">Crée héros</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<?= isActive('profil', $currentPage) ?>" href="profil">Mon compte</a>
+        </li>
       </ul>
 
       <div class="d-flex align-items-center">

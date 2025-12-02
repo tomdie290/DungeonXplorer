@@ -37,8 +37,9 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php require_once 'head.php'; ?>
         <title>Mon compte - DungeonXplorer</title>
     </head>
-    <?php require_once 'navbar.php'; ?>
+    
     <body>
+        <?php require_once 'navbar.php'; ?>
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
             <div class="text-center mt-3">
                 <a href="hero" class="btn btn-primary d-inline-block px-4">Crée hero</a>
@@ -59,7 +60,7 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                              alt="Image du héros">
                     </div>
 
-                    <h2><?= htmlspecialchars($hero['name']) ?></h1>
+                    <h2><?= htmlspecialchars($hero['name']) ?></h2>
                     <p class="texte-principal">Classe : <strong><?= htmlspecialchars($hero['class_name']) ?></strong></p>
 
                     <p class="texte-principal">
