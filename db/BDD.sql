@@ -206,23 +206,83 @@ VALUES
 -- Chapitres
 INSERT INTO Chapter (title, description, image)
 VALUES 
-('Introduction', 'Le ciel est lourd ce soir...', 'img/Village01.jpg'),
-('L''orée de la forêt', 'Vous franchissez la lisière...', 'img/BrambleTrails01.jpg'),
-('L''arbre aux corbeaux', 'Un vieux chêne tordu...', 'img/DarkForest01.jpg'),
-('Le sanglier enragé', 'Un sanglier fonce sur vous !', 'img/SavageBoard01.jpg'),
-('Rencontre avec le paysan', 'Un vieux paysan...', 'img/OldMan01.jpg'),
-('Le loup noir', 'Une silhouette sombre surgit...', 'img/Wolf01.jpg'),
-('La clairière aux pierres anciennes', 'Une clairière brumeuse...', 'img/StoneWall01.jpg');
+('Introduction', 'Le ciel est lourd ce soir sur le village du Val Perdu, dissimulé entre les montagnes. La petite taverne, dernier refuge avant l''immense forêt, est étrangement calme quand le bourgmestre s''approche de vous. Homme d''apparence usée par les années et les soucis, il vous adresse un regard désespéré.
+<<< Ma fille... elle a disparu dans la forêt. Personne n''a osé la chercher... sauf vous, peut-être? On raconte qu''un sorcier vit dans un château en ruines, caché au cœur des bois. Depuis des mois, des jeunes filles disparaissent... J''ai besoin de vous pour la retrouver. >>>
+Vous sentez le poids de la mission qui s''annonce, et un frisson parcourt votre échine. Bientôt, la forêt s''ouvre devant vous, sombre et menaçante. La quête commence.
+', 'img/Village01.jpg'),
+('L''orée de la forêt', 'Vous franchissez la lisière des arbres, la pénombre de la forêt avalant le sentier devant vous. Un vent froid glisse entre les troncs, et le bruissement des feuilles ressemble à un murmure menaçant. Deux chemins s''offrent à vous: l''un sinueux, bordé de vieux arbres noueux; l''autre droit mais envahi par des ronces épaisses.', 'img/BrambleTrails01.jpg'),
+('L''arbre aux corbeaux', 'Votre choix vous mène devant un vieux chêne aux branches tordues, grouillant de corbeaux noirs qui vous observent en silence. À vos pieds, des traces de pas légers, probablement récents, mènent plus loin dans les bois. Soudain, un bruit de pas feutrés se fait entendre. Vous ressentez la présence d''un prédateur.', 'img/DarkForest01.jpg'),
+('Le sanglier enragé', 'En progressant, le calme de la forêt est soudain brisé par un grognement. Surgissant des buissons, un énorme sanglier, au pelage épais et aux yeux injectés de sang, se dirige vers vous. Sa rage est palpable, et il semble prêt à en découdre. Le voici qui décide brutalement de vous charger!', 'img/SavageBoard01.jpg'),
+('Rencontre avec le paysan', 'Tandis que vous progressez, une voix humaine s''élève, interrompant le silence de la forêt. Vous tombez sur un vieux paysan, accroupi près de champignons aux couleurs vives. Il sursaute en vous voyant, puis se détend, vous souriant tristement.
+<<< Vous devriez faire attention, étranger, murmure-t-il. La nuit, des cris terrifiants retentissent depuis le cœur de la forêt... Des créatures rôdent. >>>
+', 'img/OldMan01.jpg'),
+('Le loup noir', 'À mesure que vous avancez, un bruissement attire votre attention. Une silhouette sombre s''élance soudainement devant vous: un loup noir aux yeux perçants. Son poil est hérissé et sa gueule laisse entrevoir des crocs acérés. Vous sentez son regard fixé sur vous, prêt à bondir. Le combat est inévitable.', 'img/Wolf01.jpg'),
+('La clairière aux pierres anciennes', 'Après votre rencontre, vous atteignez une clairière étrange, entourée de pierres dressées, comme un ancien autel oublié par le temps. Une légère brume rampe au sol, et les ombres des pierres semblent danser sous la lueur de la lune.', 'img/StoneWall01.jpg'),
+('Les murmures du ruisseau', 'Essoufflé mais déterminé, vous arrivez près d''un petit ruisseau qui serpente au milieu des arbres. Le chant de l''eau vous apaise quelque peu, mais des murmures étranges semblent émaner de la rive. Vous apercevez des inscriptions anciennes gravées dans une pierre moussue.','img/StoneWall01.jpg'),
+('Au pied du château','La forêt se disperse enfin, et devant vous se dresse une colline escarpée. Au sommet, le château en ruines projette une ombre menaçante sous le clair de lune. Les murs effrités et les tours en partie effondrées ajoutent à la sinistre réputation du lieu. Vous sentez que la véritable aventure commence ici, et que l''influence du sorcier n''est peut-être pas qu''une légende....','img/Castle02.jpg'),
+('La lumière au bout du néant', 'Le monde se dérobe sous vos pieds, et une obscurité profonde vous enveloppe, glaciale et insondable. Vous ne sentez plus le poids de votre équipement, ni la morsure de la douleur. Juste un vide infini, vous aspirant lentement dans les ténèbres. Alors que vous perdez toute notion du temps, une lueur douce apparaît au loin, vacillante comme une flamme fragile dans l''obscurité. Au fur et à mesure que vous approchez, vous entendez une voix, faible mais bienveillante, qui murmure des mots oubliés, anciens.
+<< Brave âme, ton chemin n''est pas achevé... À ceux qui échouent, une seconde chance est accordée. Mais les caprices du destin exigent un sacrifice. >>>
+La lumière s''intensifie, et vous sentez vos forces revenir, mais vos poches sont vides, votre sac allégé de tout trésor. Votre équipement, vos armes, tout a disparu, laissant place à une sensation de vulnérabilité. Lorsque la lumière vous enveloppe, vous ouvrez de nouveau les yeux, retrouvant la terre ferme sous vos pieds. Vous êtes de retour, sans autre possession que votre volonté de reprendre cette quête. Mais cette fois-ci, peut-être, saurez-vous éviter les pièges fatals qui vous ont mené à votre perte.
+','img/Lumiere.png'),
+('La curiosité tua le chat' , 'Qu''avez-vous fait, Malheureux!','img/mort.png'),
+('L''escalier menaçant ', 'Au pied du château, vous trouvez une entrée dissimulée menant à un escalier sombre. L''air y est moisi et un bruit de ferraille retentit au loin.','escalierSinistre.png' ),
+('Le Guet-apens du Squelette' , 'En haut de l''escalier, un piège se déclenche ! Un squelette armé d''une épée rouillée surgit d''une alcôve et vous attaque.','img/Skeleton.jpg'),
+('La Salle des Armures','Votre prudence vous permet de détecter le piège et de l''éviter. Vous arrivez dans une grande salle dont les murs sont tapissés d''armures vides. Un coffre semble posé sur une table centrale.','img/Chest02.jpg'),
+('Le Couloir des Illusions' , 'Vous arrivez dans un couloir étonnamment bien conservé, mais des murmures constants semblent vous désorienter. Vous distinguez une porte à gauche et une porte à droite.','img/couloir.jpg'),
+('Le Trésor Maudit','Le coffre est lourd. Vous réussissez à le forcer. Il contient de l''Or, mais en le touchant, une malédiction vous frappe : vous perdez une partie de vos PV (points de vie) et une partie de l''Or est perdue au combat futur. ','img/tresor.jpg'),
+('La Bibliothèque Interdite','La porte s''ouvre sur une bibliothèque où d''anciens parchemins se désagrègent. Au centre, un Gargouille de pierre s''anime et bloque votre chemin.','img/gargouille.jpg'),
+('La Crypte des Disparus','La porte du crâne mène à une crypte humide. Vous trouvez le cadavre d''un aventurier et, à côté de lui, une Potion de Soin.','img/crypte.jpg'),
+('Le Donjon Souterrain','Vous progressez vers un escalier descendant. Vous entendez de faibles pleurs et réalisez que vous êtes proche de la captive. Vous arrivez dans un donjon souterrain.','img/donjon.jpg'),
+('Le Coffre Verrouillé','En longeant le mur de droite, vous trouvez un coffre solidement verrouillé par une serrure complexe.','img/coffre.jpg'),
+('Le Piège à Dalles','En suivant le mur de gauche, vous marchez sur une dalle instable. Une fosse pleine de pointes s''ouvre sous vos pieds ! Vous devez faire un jet d''Agilité pour l''éviter.','img/dalleInstable.jpg'),
+('La Cellule de la Fille','Vous arrivez enfin devant la cellule : la fille du bourgmestre est là, terrifiée. Elle vous dit que le sorcier s''est enfermé dans son laboratoire au niveau supérieur et qu''il est protégé par un puissant gardien.','img/cellule.jpg'),
+('Le Passage Secret', 'La fille (ou le simple fait de l'avoir trouvée) vous révèle l'emplacement d'un passage secret menant à l'étage supérieur : derrière une tapisserie usée.','img/passageSecret.jpg'),
+;
+
 
 -- Liens entre chapitres
 INSERT INTO Links (chapter_id, next_chapter_id, description)
 VALUES
+
 (2, 3, 'Emprunter le chemin sinueux'),
 (2, 4, 'Prendre le sentier couvert de ronces'),
 (3, 5, 'Rester prudent'),
 (3, 6, 'Ignorer les bruits'),
-(4, 7, 'Continuer l’aventure'),
-(6, 7, 'Survivre au loup');
+(4, 8, 'tuer le sanglier'),
+(4, 10, 'mourire face au sanglier'),
+(5, 7, 'après avoir écouté le paysan'),
+(6, 7, 'Survivre au loup'),
+(6 ,10, 'mourir face au loup'),
+(7, 8, 'prendre le sentier couvert de mousses'),
+(7, 9, 'suivre le chemin tortueux à travers les racines'),
+(8, 11, 'toucher la pierre gravée'),
+(8, 9, 'ignorer cette curiosité et poursuivez votre route'),
+(9,12, 'l''aventure continue...'),
+(10,2, 'retour au debut de l''aventure'),
+(11,10, 'mourir empoisonné par la pierre gravée'),
+(12,13, 'montez l''escalier à la hâte'),
+(12,14, 'avancez prudemment, prêt à dégainer votre arme'),
+(13,15, 'gagnez le combat contre le squelette'),
+(13,10, 'mourir face au squelette'),
+(14,16, 'examiner le coffre sur la table'),
+(14,15, 'continuer sans toucher le coffre'),
+(15,17, 'ouvrir la porte de gauche'),
+(15,18, 'ouvrir la porte de droite'),
+(16,15, 'vous gagnez de l''or mais perdez des pv à cause d''une malédiction'),
+(17,19, 'gagner le combat contre la gargouille'),
+(17,10, 'mourir face à la gargouille');
+(18,19, 'buvez la potion de soin(retrouver tous vos pv)'),
+(18,19, 'ignorer la potion de soin'),
+(19,20, 'suivez le mur de gauche'),
+(19,21, 'suivez le mur de droite plus rapide'),
+(20,22, 'si vous êtes voleur et reussissez à forcer le coffre'),
+(20,22, 'si vous êtes pas voleur ou échouer à ouvrir le coffre'),
+(21,22, 'réussir le jet d''agilité'),
+(21,22, 'échouer le jet d''agilité vous perdez des dégats'),
+(22,23, 'liberez la fille(elle vous suivra)'),
+(22,23, 'demander d''attendre pour plus de sécurité'),
+(23,24, 'utiliser le passage pour surprendre le sorcier'),
+(23,25, 'affronter le sorcier de façon direct par la porte principale');
 
 -- Combats
 INSERT INTO Encounter (chapter_id, monster_id)
