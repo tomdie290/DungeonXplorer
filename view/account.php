@@ -39,13 +39,10 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </head>
     <?php require_once 'navbar.php'; ?>
     <body>
-<<<<<<< HEAD
         <h1 class="pirata-one-regular texte-principal">DungeonXplorer</h1>
             <div class="text-center mt-3">
                 <a href="hero" class="btn btn-primary d-inline-block px-4">Crée hero</a>
             </div>
-=======
->>>>>>> origin/main
         <h2 class="login-title mt-5 mb-4">Liste de mes héros</h2>
 
 <div class="container">
