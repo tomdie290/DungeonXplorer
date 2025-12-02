@@ -201,7 +201,18 @@ INSERT INTO Monster (name, pv, mana, strength, initiative, attack_text, xp_rewar
 VALUES 
 ('Sanglier Enragé', 50, 0, 12, 5, 'Le sanglier charge violemment !', 50, 'img/monsters/boar.png'),
 ('Loup Noir', 40, 0, 8, 12, 'Le loup bondit et tente de vous mordre !', 60, 'img/monsters/wolf.png'),
-('Orc Guerrier', 70, 0, 15, 8, 'L’orc abat sa massue !', 120, 'img/monsters/orc.png');
+('Orc Guerrier', 70, 0, 15, 8, 'L’orc abat sa massue !', 120, 'img/monsters/orc.png'),
+('Squelette', 25, 0, 6, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquellete.jpg'),
+('Gargouille de Pierre', 60, 0, 14, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
+('Ombre Ténébreuse', 90, 20, 18, 12, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
+('Esprit Élémentaire', 55, 30, 16, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
+('Malkor l''Ensorceleur', 120, 80, 25, 15, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg');
+
+
+
+
+
+;
 
 -- Chapitres
 INSERT INTO Chapter (title, description, image)
@@ -236,8 +247,15 @@ La lumière s''intensifie, et vous sentez vos forces revenir, mais vos poches so
 ('Le Coffre Verrouillé','En longeant le mur de droite, vous trouvez un coffre solidement verrouillé par une serrure complexe.','img/coffre.jpg'),
 ('Le Piège à Dalles','En suivant le mur de gauche, vous marchez sur une dalle instable. Une fosse pleine de pointes s''ouvre sous vos pieds ! Vous devez faire un jet d''Agilité pour l''éviter.','img/dalleInstable.jpg'),
 ('La Cellule de la Fille','Vous arrivez enfin devant la cellule : la fille du bourgmestre est là, terrifiée. Elle vous dit que le sorcier s''est enfermé dans son laboratoire au niveau supérieur et qu''il est protégé par un puissant gardien.','img/cellule.jpg'),
-('Le Passage Secret', 'La fille (ou le simple fait de l'avoir trouvée) vous révèle l'emplacement d'un passage secret menant à l'étage supérieur : derrière une tapisserie usée.','img/passageSecret.jpg'),
-;
+('Le Passage Secret', 'La fille (ou le simple fait de l''avoir trouvée) vous révèle l''emplacement d''un passage secret menant à l''étage supérieur : derrière une tapisserie usée.','img/passageSecret.jpg'),
+('L''Ombre Ténébreuse ','Le passage secret vous mène derrière un ennemi. Une Ombre Ténébreuse, gardien du laboratoire, vous fait face. Elle est forte, mais vous avez l''avantage de la surprise.','img/Laboratoire.jpg'),
+('L''Ombre Ténébreuse ', 'L''Ombre Ténébreuse vous attend devant la porte du laboratoire, prête à vous accueillir.','img/ombreTenebreuse.jpg'),
+('Le Laboratoire du Sorcier','Vous entrez dans un laboratoire rempli d''ingrédients étranges et de fioles bouillonnantes. Le sorcier, Malkor l''Ensorceleur, vous attend. Il lève une main et un champ de force magique vous empêche de passer.','img/sorcier.jpg'),
+('Le Bouclier Magique','Vous frappez le bouclier magique de toutes vos forces, mais il tient bon. Le sorcier utilise ce temps pour invoquer un Esprit Elémentaire afin de vous affaiblir.', 'img/combatEsprit.jpg'),
+('La Fiole de Puissance', 'Vous repérez une fiole bleue luisante sur une étagère, qui semble alimenter le bouclier. Vous la saisissez. Le sorcier vous attaque par la pensée.','img/fiole.jpg'),
+('Le Face-à-Face Final','Le sorcier est maintenant affaibli et son bouclier est tombé. Il lève ses mains et se prépare au combat ultime, le sortilège de Destruction Finale prêt à être lancé.','img/final.jpg'),
+('Le Retour des Ténèbres ','Le sorcier est vaincu. La magie qui enveloppait la forêt se dissipe lentement. Vous libérez la captive et retournez au Val Perdu, accueilli en héros. Le bourgmestre vous offre une grande récompense. Vous avez sauvé le village !','img/mortSorcier.jpg'),
+('Fin de l''Aventure', 'Vous avez réussi à sauver la fille du bourgmestre et à vaincre le sorcier maléfique. Votre nom sera gravé dans les annales du Val Perdu comme un héros légendaire. Félicitations pour avoir mené cette aventure à son terme !','img/victoire.jpg');
 
 
 -- Liens entre chapitres
@@ -283,6 +301,20 @@ VALUES
 (22,23, 'demander d''attendre pour plus de sécurité'),
 (23,24, 'utiliser le passage pour surprendre le sorcier'),
 (23,25, 'affronter le sorcier de façon direct par la porte principale');
+(24,26, 'gagner le combat contre l''ombre ténébreuse gardien du laboratoire par surprise'),
+(24,10, 'mourir face à l''ombre ténébreuse'),
+(25,26, 'gagner le combat comtre l''ombre ténébreuse de face'),
+(25,10, 'mourir face à l''ombre ténébreuse'),
+(26,27, 'essayer de detruire le champs de force par la force'),
+(26,28, 'chercher un moyen de détruire la source du champs de force'),
+(27,29, 'gagner le combat contre l''esprit élémentaire'),
+(27,10, 'mourir face à l''esprit élémentaire'),
+(28,29, 'buvez la fiole de puissance gagnez un bonus de puissance mais subissez de faible dégats'),
+(28,29, 'lancez la fiole sur le sol,le bouclier explose en blessant le sorcier'),
+(29,30, 'gagner le combat final contre le sorcier'),
+(29,2, 'mourir face au sorcier'),
+(30,31, 'retourner au village avec la fille du bourgmestre'),
+(31,32, 'fin de l''aventure');
 
 -- Combats
 INSERT INTO Encounter (chapter_id, monster_id)
@@ -290,3 +322,8 @@ VALUES
 (4, 1),
 (6, 2),
 (7, 3);
+(13, 4),
+(17, 5),
+(24, 6),
+(27, 7),
+(29, 8);
