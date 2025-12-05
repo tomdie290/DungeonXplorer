@@ -58,6 +58,7 @@ $router->addRoute('adventure', 'AdventureController@index');
 $router->addRoute('start_adventure', 'AdventureController@start');
 $router->addRoute('logout', 'LogoutController@index');
 $router->addRoute('combat', 'CombatController@index');
+$router->addRoute('deconnexion', 'DeconnexionController@index');
 
 
 $url = $_SERVER['REQUEST_URI'];

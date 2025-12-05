@@ -35,6 +35,7 @@ if (isset($_SESSION['id'])) {
         <li class="nav-item"><a class="nav-link" href="account">Accueil</a></li>
         <li class="nav-item"><a class="nav-link" href="hero">Crée héros</a></li>
         <li class="nav-item"><a class="nav-link" href="profil">Mon compte</a></li>
+        <li class="nav-item"><a class="nav-link" href="deconnexion">Deconnexion</a></li>
       </ul>
 
       <div class="d-flex align-items-center">
