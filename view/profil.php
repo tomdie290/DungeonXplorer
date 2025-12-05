@@ -15,15 +15,15 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
     </script>
 </head>
 
-<body class="texte-principal">
+<body>
 
 <div class="container mt-5">
     <h1 class="mb-4 pirata-one-regular">Profil du Compte</h1>
 
     <div class="card background-secondaire border border-2 border-white rounded-3 mb-5 p-4">
         <h2 class="text-center"><?= htmlspecialchars($account['username'] ?? '') ?></h2>
-        <p class="text-center"><strong>Email :</strong> <?= htmlspecialchars($account['email'] ?? 'Non renseigné') ?></p>
-        <p class="text-center"><strong>Créé le :</strong> <?= htmlspecialchars($account['creation_date'] ?? '') ?></p>
+        <p class="texte-principal"><strong>Email :</strong> <?= htmlspecialchars($account['email'] ?? 'Non renseigné') ?></p>
+        <p class="texte-principal"><strong>Créé le :</strong> <?= htmlspecialchars($account['creation_date'] ?? '') ?></p>
 
         <hr>
 

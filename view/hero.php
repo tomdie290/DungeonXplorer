@@ -114,6 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 ?>
+<?php if ($creation_success): ?>
+        <div class="alert alert-success mt-3 text-center"><?= $creation_success ?></div>
+        <?php header("Location: /DungeonXplorer/account"); exit; ?>
+    <?php endif; ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -181,14 +185,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
         <input type="submit" value="Créer le héros" class="btn btn-primary mt-2 w-50">
+        
 
 
     </form>
 
     <!-- Messages -->
-    <?php if ($creation_success): ?>
-        <div class="alert alert-success mt-3 text-center"><?= $creation_success ?></div>
-    <?php endif; ?>
+    
 
     <?php if ($creation_error): ?>
         <div class="alert alert-danger mt-3 text-center"><?= $creation_error ?></div>
