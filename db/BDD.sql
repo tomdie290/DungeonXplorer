@@ -236,7 +236,7 @@ Vous sentez le poids de la mission qui s''annonce, et un frisson parcourt votre 
 La lumière s''intensifie, et vous sentez vos forces revenir, mais vos poches sont vides, votre sac allégé de tout trésor. Votre équipement, vos armes, tout a disparu, laissant place à une sensation de vulnérabilité. Lorsque la lumière vous enveloppe, vous ouvrez de nouveau les yeux, retrouvant la terre ferme sous vos pieds. Vous êtes de retour, sans autre possession que votre volonté de reprendre cette quête. Mais cette fois-ci, peut-être, saurez-vous éviter les pièges fatals qui vous ont mené à votre perte.
 ','img/Lumiere.png'),
 ('La curiosité tua le chat' , 'Qu''avez-vous fait, Malheureux!','img/mort.png'),
-('L''escalier menaçant ', 'Au pied du château, vous trouvez une entrée dissimulée menant à un escalier sombre. L''air y est moisi et un bruit de ferraille retentit au loin.','escalierSinistre.png' ),
+('L''escalier menaçant ', 'Au pied du château, vous trouvez une entrée dissimulée menant à un escalier sombre. L''air y est moisi et un bruit de ferraille retentit au loin.','img/escalierSinistre.png' ),
 ('Le Guet-apens du Squelette' , 'En haut de l''escalier, un piège se déclenche ! Un squelette armé d''une épée rouillée surgit d''une alcôve et vous attaque.','img/Skeleton.jpg'),
 ('La Salle des Armures','Votre prudence vous permet de détecter le piège et de l''éviter. Vous arrivez dans une grande salle dont les murs sont tapissés d''armures vides. Un coffre semble posé sur une table centrale.','img/Chest02.jpg'),
 ('Le Couloir des Illusions' , 'Vous arrivez dans un couloir étonnamment bien conservé, mais des murmures constants semblent vous désorienter. Vous distinguez une porte à gauche et une porte à droite.','img/couloir.jpg'),
@@ -267,7 +267,7 @@ VALUES
 (3, 5, 'Rester prudent'),
 (3, 6, 'Ignorer les bruits'),
 (4, 8, 'tuer le sanglier'),
-(4, 10, 'mourire face au sanglier'),
+(4, 10, 'mourir face au sanglier'),
 (5, 7, 'après avoir écouté le paysan'),
 (6, 7, 'Survivre au loup'),
 (6 ,10, 'mourir face au loup'),
@@ -288,7 +288,7 @@ VALUES
 (15,18, 'ouvrir la porte de droite'),
 (16,15, 'vous gagnez de l''or mais perdez des pv à cause d''une malédiction'),
 (17,19, 'gagner le combat contre la gargouille'),
-(17,10, 'mourir face à la gargouille');
+(17,10, 'mourir face à la gargouille'),
 (18,19, 'buvez la potion de soin(retrouver tous vos pv)'),
 (18,19, 'ignorer la potion de soin'),
 (19,20, 'suivez le mur de gauche'),
@@ -300,7 +300,7 @@ VALUES
 (22,23, 'liberez la fille(elle vous suivra)'),
 (22,23, 'demander d''attendre pour plus de sécurité'),
 (23,24, 'utiliser le passage pour surprendre le sorcier'),
-(23,25, 'affronter le sorcier de façon direct par la porte principale');
+(23,25, 'affronter le sorcier de façon direct par la porte principale'),
 (24,26, 'gagner le combat contre l''ombre ténébreuse gardien du laboratoire par surprise'),
 (24,10, 'mourir face à l''ombre ténébreuse'),
 (25,26, 'gagner le combat comtre l''ombre ténébreuse de face'),
@@ -321,7 +321,7 @@ INSERT INTO Encounter (chapter_id, monster_id)
 VALUES
 (4, 1),
 (6, 2),
-(7, 3);
+(7, 3),
 (13, 4),
 (17, 5),
 (24, 6),

@@ -76,56 +76,62 @@ class ChapterController
 
         include 'view/chapter.php';
     }
+public function getChapter($id)
+{
+    $db = getDB();
 
-       public function getChapter($id)
-    {
-        $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM Chapter WHERE id = ?");
+    $stmt->execute([$id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $db->prepare("SELECT * FROM Chapter WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$row) return null;
+    if (!$row) return null;
 
-        $stmt2 = $db->prepare("SELECT * FROM Links WHERE chapter_id = ?");
-        $stmt2->execute([$id]);
-        $rawChoices = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    // Récupération des choix
+    $stmt2 = $db->prepare("SELECT * FROM Links WHERE chapter_id = ?");
+    $stmt2->execute([$id]);
+    $rawChoices = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-        $choices = [];
-        foreach ($rawChoices as $c) {
-            $choices[] = [
-                'id' => $c['id'],
-                'text' => $c['description'],
-                'chapter' => $c['next_chapter_id']
-            ];
-        }
+    $choices = [];
+    foreach ($rawChoices as $c) {
+        $choices[] = [
+            'id' => $c['id'],
+            'text' => $c['description'],
+            'chapter' => $c['next_chapter_id']
+        ];
+    }
 
-        $stmt3 = $db->prepare("
-            SELECT M.name 
-            FROM Encounter E
-            JOIN Monster M ON E.monster_id = M.id
-            WHERE E.chapter_id = ?
-        ");
-        $stmt3->execute([$id]);
-        $monsterName = $stmt3->fetchColumn();
+    // Récupération du monstre
+    $stmt3 = $db->prepare("
+        SELECT M.name 
+        FROM Encounter E
+        JOIN Monster M ON E.monster_id = M.id
+        WHERE E.chapter_id = ?
+    ");
+    $stmt3->execute([$id]);
+    $monsterName = $stmt3->fetchColumn();
 
-        $monsterClass = null;
-        if ($monsterName) {
-            $monsterClass = str_replace(
-                [' ', 'é', 'è', 'ê', 'ë', 'à', 'â', 'î', 'ï', 'ô', 'ö', 'ù', 'û', 'ç'],
-                ['','e','e','e','e','a','a','i','i','o','o','u','u','c'],
-                $monsterName
-            );
-        }
+    $monsterClass = null;
 
-        return new Chapter(
-            (int)$row['id'],
-            $row['title'],
-            $row['description'],
-            $row['image'],
-            $choices,
-            $monsterClass
+    if ($monsterName) {
+        // Normalisation du nom de classe
+        $monsterClass = str_replace(
+            [' ', 'é', 'è', 'ê', 'ë', 'à', 'â', 'î', 'ï', 'ô', 'ö', 'ù', 'û', 'ç'],
+            ['','e','e','e','e','a','a','i','i','o','o','u','u','c'],
+            $monsterName
         );
     }
+
+    // ⬅️ Ici on renvoie bien l’image du chapitre depuis la base
+    return new Chapter(
+        (int)$row['id'],
+        $row['title'],
+        $row['description'],
+        $row['image'],  // ✔️ l'image vient bien de la DB
+        $choices,
+        $monsterClass
+    );
+}
+
 
 
     public function index()
