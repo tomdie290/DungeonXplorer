@@ -8,7 +8,9 @@
 <body>
 <div class="chapter-container">
     <h1><?= $chapter->getTitle(); ?></h1>
-    <img class="chapter-image" src="/DungeonXplorer/<?php echo $chapter->getImage(); ?>" alt="Illustration du chapitre">
+    <div class="image-container">
+        <img class="chapter-image" src="/DungeonXplorer/<?php echo $chapter->getImage(); ?>" alt="Illustration du chapitre">
+    </div>
 
     <p class="texte-principal">
         <?= $chapter->getDescription(); ?>
