@@ -1,80 +1,46 @@
 <?php
+require_once 'core/Database.php';
 
-abstract class Monster
+class Monster
 {
-    protected string $name;
-    protected int $pv;
-    protected int $mana;
-    protected int $strength;
-    protected int $initiative;
-    protected string $attackText;
-    protected int $xpReward;
-    protected array $treasure;
-    protected ?string $image;
+    public int $id;
+    public string $name;
+    public int $pv;
+    public int $mana;
+    public int $strength;
+    public string $image;
 
-    public function __construct(
-        string $name,
-        int $pv,
-        int $mana,
-        int $strength,
-        int $initiative,
-        string $attackText,
-        int $xpReward,
-        array $treasure = [],
-        ?string $image = null
-    ) {
-        $this->name = $name;
-        $this->pv = $pv;
-        $this->mana = $mana;
-        $this->strength = $strength;
-        $this->initiative = $initiative;
-        $this->attackText = $attackText;
-        $this->xpReward = $xpReward;
-        $this->treasure = $treasure;
-        $this->image = $image;
-    }
-
-    abstract public function attack(): string;
-
-    public function getName(): string
+    // Charger un monstre selon un chapitre
+    public static function loadByChapter(int $chapterId): ?Monster
     {
-        return $this->name;
+        $db = getDB();
+
+        $stmt = $db->prepare("
+            SELECT m.*
+            FROM Monster m
+            JOIN Encounter e ON e.monster_id = m.id
+            WHERE e.chapter_id = ?
+            LIMIT 1
+        ");
+        $stmt->execute([$chapterId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) return null;
+
+        $monster = new Monster();
+        $monster->id = $row['id'];
+        $monster->name = $row['name'];
+        $monster->pv = $row['pv'];
+        $monster->mana = $row['mana'];
+        $monster->strength = $row['strength'];
+        $monster->image = $row['image'] ?? 'img/monster_default.png';
+
+        return $monster;
     }
 
-    public function getHealth(): int
-    {
-        return $this->pv;
-    }
-
-    public function getMana(): int
-    {
-        return $this->mana;
-    }
-
-    public function getExperienceValue(): int
-    {
-        return $this->xpReward;
-    }
-
-    public function getTreasure(): array
-    {
-        return $this->treasure;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function isAlive(): bool
-    {
-        return $this->pv > 0;
-    }
-
-    public function takeDamage(int $dmg): void
-    {
-        $this->pv -= $dmg;
-        if ($this->pv < 0) $this->pv = 0;
-    }
+    public function getName(): string { return $this->name; }
+    public function getImage(): string { return $this->image; }
+    public function getHp(): int { return $this->pv; }
+    public function getStrength(): int { return $this->strength; }
 }
 ?>

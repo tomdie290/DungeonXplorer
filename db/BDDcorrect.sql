@@ -208,7 +208,6 @@ VALUES
 ('Esprit Élémentaire', 55, 30, 16, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
 ('Malkor l''Ensorceleur', 120, 80, 25, 15, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg');
 
-
 -- Chapitres
 INSERT INTO Chapter (title, description, image)
 VALUES 
@@ -256,7 +255,6 @@ La lumière s''intensifie, et vous sentez vos forces revenir, mais vos poches so
 -- Liens entre chapitres
 INSERT INTO Links (chapter_id, next_chapter_id, description)
 VALUES
-
 (2, 3, 'Emprunter le chemin sinueux'),
 (2, 4, 'Prendre le sentier couvert de ronces'),
 (3, 5, 'Rester prudent'),
@@ -265,7 +263,7 @@ VALUES
 (4, 10, 'mourir face au sanglier'),
 (5, 7, 'après avoir écouté le paysan'),
 (6, 7, 'Survivre au loup'),
-(6 ,10, 'mourir face au loup'),
+(6, 10, 'mourir face au loup'),
 (7, 8, 'prendre le sentier couvert de mousses'),
 (7, 9, 'suivre le chemin tortueux à travers les racines'),
 (8, 11, 'toucher la pierre gravée'),
@@ -296,20 +294,10 @@ VALUES
 (22,23, 'demander d''attendre pour plus de sécurité'),
 (23,24, 'utiliser le passage pour surprendre le sorcier'),
 (23,25, 'affronter le sorcier de façon direct par la porte principale'),
-(24,26, 'gagner le combat contre l''ombre ténébreuse gardien du laboratoire par surprise'),
+(24,25, 'gagner le combat contre l''ombre ténébreuse'),
 (24,10, 'mourir face à l''ombre ténébreuse'),
-(25,26, 'gagner le combat comtre l''ombre ténébreuse de face'),
-(25,10, 'mourir face à l''ombre ténébreuse'),
-(26,27, 'essayer de detruire le champs de force par la force'),
-(26,28, 'chercher un moyen de détruire la source du champs de force'),
-(27,29, 'gagner le combat contre l''esprit élémentaire'),
-(27,10, 'mourir face à l''esprit élémentaire'),
-(28,29, 'buvez la fiole de puissance gagnez un bonus de puissance mais subissez de faible dégats'),
-(28,29, 'lancez la fiole sur le sol,le bouclier explose en blessant le sorcier'),
-(29,30, 'gagner le combat final contre le sorcier'),
-(29,2, 'mourir face au sorcier'),
-(30,31, 'retourner au village avec la fille du bourgmestre'),
-(31,32, 'fin de l''aventure');
+(25,10, 'mourir face à l''ombre ténébreuse');
+
 
 -- Combats
 INSERT INTO Encounter (chapter_id, monster_id)

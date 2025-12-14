@@ -89,7 +89,7 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 Démarrer une aventure
                             </a>
                         <?php endif; ?>
-                    </div>
+                        </div>
                 </div>
             </div>
         <?php endforeach; ?>
