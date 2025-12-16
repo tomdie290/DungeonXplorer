@@ -40,6 +40,12 @@
             </form>
         <?php endforeach; ?>
     </div>
+    <div class="mt-4 text-center">
+        <form method="post" action="/DungeonXplorer/chapter/quit" style="display:inline-block;">
+            <input type="hidden" name="chapter_id" value="<?= (int)$chapter->getId() ?>">
+            <button type="submit" class="choice-button" style="background:#8c2b2b; border-color:#6b1f1f;">Quitter et sauvegarder</button>
+        </form>
+    </div>
 </div>
 
 </body>

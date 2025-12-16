@@ -83,6 +83,18 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
         </button>
     </div>
 
+    <div class="text-center mt-2">
+        <form id="quit-form" method="post" action="/DungeonXplorer/chapter/quit" style="display:inline-block;">
+            <input type="hidden" name="chapter_id" value="<?= (int)$chapterId ?>">
+            <input type="hidden" name="hero_pv" id="quit-hero-pv" value="0">
+            <input type="hidden" name="hero_mana" id="quit-hero-mana" value="0">
+            <input type="hidden" name="monster_id" id="quit-monster-id" value="0">
+            <input type="hidden" name="monster_pv" id="quit-monster-pv" value="0">
+            <input type="hidden" name="hero_turn" id="quit-hero-turn" value="0">
+            <button type="submit" class="btn btn-warning btn-lg mx-1">Quitter et sauvegarder</button>
+        </form>
+    </div>
+
     <div id="post-combat-actions" class="text-center mt-3"></div>
 
 
@@ -104,6 +116,8 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
     const DEATH_CHAPTER_ID = <?= isset($deathChapterId) && $deathChapterId !== null ? (int)$deathChapterId : 'null' ?>;
     const DEATH_LINK_ID = <?= isset($deathLinkId) && $deathLinkId !== null ? (int)$deathLinkId : 'null' ?>;
     const DEATH_LINK_TEXT = <?= isset($deathLinkText) && $deathLinkText !== null ? json_encode($deathLinkText) : 'null' ?>;
+    const RESUME_COMBAT = <?= isset($heroTurnResume) && $heroTurnResume !== null ? 'true' : 'false' ?>;
+    const HERO_TURN_RESUME = <?= isset($heroTurnResume) && $heroTurnResume ? 'true' : 'false' ?>;
 </script>
 
 <script src="/DungeonXplorer/js/combat.js"></script>

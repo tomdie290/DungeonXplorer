@@ -135,19 +135,24 @@ document.addEventListener('DOMContentLoaded', () => {
        INITIATIVE (DÉBUT)
     ===================== */
 
-    const heroInit = d6() + hero.initiative;
-    const monsterInit = d6() + monster.initiative;
-    console.log(`Initiative: hero ${heroInit}, monster ${monsterInit}`);
-
     let heroTurn = false;
-
-    if (heroInit > monsterInit || (heroInit === monsterInit && hero.class === 'Voleur')) {
-        heroTurn = true;
-        log(`🟢 Vous commencez le combat (initiative ${heroInit} vs ${monsterInit})`);
+    if (typeof RESUME_COMBAT !== 'undefined' && RESUME_COMBAT) {
+        heroTurn = (typeof HERO_TURN_RESUME !== 'undefined' && HERO_TURN_RESUME) ? true : false;
+        log('⏯️ Reprise du combat — état restauré');
+        if (!heroTurn) setTimeout(monsterAttack, 1000);
     } else {
-        heroTurn = false;
-        log(`🔴 Le monstre commence (initiative ${monsterInit} vs ${heroInit})`);
-        setTimeout(monsterAttack, 1000);
+        const heroInit = d6() + hero.initiative;
+        const monsterInit = d6() + monster.initiative;
+        console.log(`Initiative: hero ${heroInit}, monster ${monsterInit}`);
+
+        if (heroInit > monsterInit || (heroInit === monsterInit && hero.class === 'Voleur')) {
+            heroTurn = true;
+            log(`🟢 Vous commencez le combat (initiative ${heroInit} vs ${monsterInit})`);
+        } else {
+            heroTurn = false;
+            log(`🔴 Le monstre commence (initiative ${monsterInit} vs ${heroInit})`);
+            setTimeout(monsterAttack, 1000);
+        }
     }
 
     /* =====================
@@ -263,5 +268,22 @@ document.addEventListener('DOMContentLoaded', () => {
         heroTurn = false;
         setTimeout(monsterAttack, 1000);
     });
+
+    // Avant de quitter la page en cours (bouton Quitter), injecte l'état du combat dans le formulaire
+    const quitForm = document.getElementById('quit-form');
+    if (quitForm) {
+        quitForm.addEventListener('submit', (e) => {
+            const hPv = document.getElementById('quit-hero-pv');
+            const hMana = document.getElementById('quit-hero-mana');
+            const mId = document.getElementById('quit-monster-id');
+            const mPv = document.getElementById('quit-monster-pv');
+            const hTurn = document.getElementById('quit-hero-turn');
+            if (hPv) hPv.value = Math.max(0, hero.pv);
+            if (hMana) hMana.value = Math.max(0, hero.mana);
+            if (mId) mId.value = monster.id || 0;
+            if (mPv) mPv.value = Math.max(0, monster.pv);
+            if (hTurn) hTurn.value = heroTurn ? 1 : 0;
+        });
+    }
 
 });

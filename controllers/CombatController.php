@@ -4,7 +4,7 @@ require_once 'models/Monster.php';
 
 class CombatController
 {
-    public function start(Monster $monster, int $chapterId): void
+    public function start(Monster $monster, int $chapterId, array $snapshot = null): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -17,6 +17,15 @@ class CombatController
         $hero = Hero::loadById($_SESSION['hero_id']);
         if (!$hero) {
             die("Erreur : héros introuvable");
+        }
+
+        // Si on reprend un combat depuis une sauvegarde en session, appliquer l'état
+        $heroTurnResume = null;
+        if (is_array($snapshot)) {
+            if (isset($snapshot['hero_pv'])) $hero->pv = (int)$snapshot['hero_pv'];
+            if (isset($snapshot['hero_mana'])) $hero->mana = (int)$snapshot['hero_mana'];
+            if (isset($snapshot['hero_turn'])) $heroTurnResume = (bool)$snapshot['hero_turn'];
+            if (isset($snapshot['monster_pv'])) $monster->pv = (int)$snapshot['monster_pv'];
         }
 
         // Récupère l'id du chapitre suivant (premier lien) pour la redirection après combat
@@ -68,6 +77,7 @@ class CombatController
         }
 
         // Passe les variables à la vue
+        // Passe le flag de reprise à la vue via $heroTurnResume
         require __DIR__ . '/../view/combat.php';
     }
 
@@ -94,6 +104,20 @@ class CombatController
         $hero->pv = $hero_pv;
         $hero->mana = $hero_mana;
         $hero->save();
+
+        // Supprime l'éventuel snapshot de combat en session pour l'aventure en cours
+        try {
+            require_once __DIR__ . '/../core/Database.php';
+            $db = getDB();
+            $stmt = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL");
+            $stmt->execute([$_SESSION['hero_id']]);
+            $adventureId = $stmt->fetchColumn();
+            if ($adventureId && isset($_SESSION['combat_snapshot'][$adventureId])) {
+                unset($_SESSION['combat_snapshot'][$adventureId]);
+            }
+        } catch (Exception $e) {
+            // ignore
+        }
 
         if ($result === 'win') {
             header("Location: /DungeonXplorer/chapter");

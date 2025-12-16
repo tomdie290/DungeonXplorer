@@ -79,9 +79,28 @@ if (!$check) {
 
     <hr>
 
-    <h3>Chapitre actuel : <?= $adventure['current_chapter_id'] ?></h3>
+    <?php
+    // Récupère les informations du chapitre courant
+    $currentChapterId = (int)($adventure['current_chapter_id'] ?? 0);
+    $chapterTitle = null;
+    $chapterDesc = null;
+    if ($currentChapterId > 0) {
+        $stmtC = $db->prepare("SELECT title, description FROM Chapter WHERE id = ?");
+        $stmtC->execute([$currentChapterId]);
+        $chapRow = $stmtC->fetch(PDO::FETCH_ASSOC);
+        if ($chapRow) {
+            $chapterTitle = $chapRow['title'];
+            $chapterDesc = $chapRow['description'];
+        }
+    }
+    ?>
 
-    <a href="chapter?id=<?= $adventureId ?>" class="btn btn-primary w-100 mt-3">
+    <h3>Chapitre actuel : <?= $currentChapterId ?><?php if ($chapterTitle) echo ' - ' . htmlspecialchars($chapterTitle); ?></h3>
+    <?php if ($chapterDesc): ?>
+        <p><?= nl2br(htmlspecialchars(strlen($chapterDesc) > 300 ? substr($chapterDesc, 0, 300) . '...' : $chapterDesc)) ?></p>
+    <?php endif; ?>
+
+    <a href="/DungeonXplorer/adventure/resume?id=<?= $adventureId ?>" class="btn btn-primary w-100 mt-3">
         Continuer l'aventure
     </a>
 

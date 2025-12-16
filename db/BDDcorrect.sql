@@ -255,6 +255,7 @@ La lumière s''intensifie, et vous sentez vos forces revenir, mais vos poches so
 -- Liens entre chapitres
 INSERT INTO Links (chapter_id, next_chapter_id, description)
 VALUES
+(1, 2, 'Entrer dans la forêt sombre'),
 (2, 3, 'Emprunter le chemin sinueux'),
 (2, 4, 'Prendre le sentier couvert de ronces'),
 (3, 5, 'Rester prudent'),
