@@ -28,7 +28,7 @@ class CombatController
             if (isset($snapshot['monster_pv'])) $monster->pv = (int)$snapshot['monster_pv'];
         }
 
-        // Récupère l'id du chapitre suivant (premier lien) pour la redirection après combat
+        // Récupère les liens du chapitre et identifie le lien "gagnant" et le lien de "mort"
         $nextChapterId = null;
         $nextLinkId = null;
         $nextLinkText = null;
@@ -38,34 +38,33 @@ class CombatController
         try {
             require_once __DIR__ . '/../core/Database.php';
             $db = getDB();
-            $stmt = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE chapter_id = ? ORDER BY id ASC LIMIT 1");
+            $stmt = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE chapter_id = ? ORDER BY id ASC");
             $stmt->execute([$chapterId]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                $nextLinkId = (int)$row['id'];
-                $nextChapterId = $row['next_chapter_id'] !== null ? (int)$row['next_chapter_id'] : null;
-                $nextLinkText = $row['description'] ?? null;
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Parcourt tous les liens afin d'identifier celui de mort (description contenant 'mort')
+            foreach ($rows as $r) {
+                $desc = $r['description'] ?? '';
+                if (stripos($desc, 'mort') !== false) {
+                    $deathLinkId = (int)$r['id'];
+                    $deathChapterId = $r['next_chapter_id'] !== null ? (int)$r['next_chapter_id'] : null;
+                    $deathLinkText = $desc;
+                    continue;
+                }
+                // Premier lien non-mort devient le lien de progression
+                if ($nextLinkId === null) {
+                    $nextLinkId = (int)$r['id'];
+                    $nextChapterId = $r['next_chapter_id'] !== null ? (int)$r['next_chapter_id'] : null;
+                    $nextLinkText = $desc;
+                }
             }
 
-            // Cherche le lien de mort associé au chapitre courant (next_chapter_id = 10)
-            $deathTarget = 10; // id du chapitre 'mort'
-            $stmt2 = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE chapter_id = ? AND next_chapter_id = ? LIMIT 1");
-            $stmt2->execute([$chapterId, $deathTarget]);
-            $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-            if ($row2) {
-                $deathLinkId = (int)$row2['id'];
-                $deathChapterId = $row2['next_chapter_id'] !== null ? (int)$row2['next_chapter_id'] : null;
-                $deathLinkText = $row2['description'] ?? null;
-            } else {
-                // fallback: cherche n'importe quel lien qui pointe vers le chapitre de mort
-                $stmt3 = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE next_chapter_id = ? LIMIT 1");
-                $stmt3->execute([$deathTarget]);
-                $row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
-                if ($row3) {
-                    $deathLinkId = (int)$row3['id'];
-                    $deathChapterId = $row3['next_chapter_id'] !== null ? (int)$row3['next_chapter_id'] : null;
-                    $deathLinkText = $row3['description'] ?? null;
-                }
+            // Si aucun lien non-mort trouvé mais il existe des liens, prendre le premier comme progression
+            if ($nextLinkId === null && !empty($rows)) {
+                $r = $rows[0];
+                $nextLinkId = (int)$r['id'];
+                $nextChapterId = $r['next_chapter_id'] !== null ? (int)$r['next_chapter_id'] : null;
+                $nextLinkText = $r['description'] ?? null;
             }
         } catch (Exception $e) {
             $nextChapterId = null;
