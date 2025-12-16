@@ -201,7 +201,7 @@ INSERT INTO Monster (name, pv, mana, strength, initiative, attack_text, xp_rewar
 VALUES 
 ('Sanglier Enragé', 50, 0, 12, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBoard01.jpg'),
 ('Loup Noir', 40, 0, 8, 12, 'Le loup bondit et tente de vous mordre !', 60, 'img/Wolf02.jpg'),
-('Orc Guerrier', 70, 0, 15, 8, 'L’orc abat sa massue !', 120, 'img/monsters/orc.png'),
+('Orc Guerrier', 70, 0, 15, 8, 'L’orc abat sa massue !', 120, 'img/Ork.png'),
 ('Squelette', 25, 0, 6, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquellete.jpg'),
 ('Gargouille de Pierre', 60, 0, 14, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
 ('Ombre Ténébreuse', 90, 20, 18, 12, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
