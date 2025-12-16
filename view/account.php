@@ -90,6 +90,13 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </a>
                         <?php endif; ?>
                         </div>
+
+                        <a href="inventory?hero=<?= $hero['id'] ?>" class="btn btn-info w-100 mb-2">Voir inventaire</a>
+
+                        <form method="POST" action="delete_hero" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce héros ? Cette action est irréversible.')" class="mt-2">
+                            <input type="hidden" name="hero_id" value="<?= $hero['id'] ?>">
+                            <button type="submit" class="btn btn-danger w-100">Supprimer le héros</button>
+                        </form>
                 </div>
             </div>
         <?php endforeach; ?>

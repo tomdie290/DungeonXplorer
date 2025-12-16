@@ -3,6 +3,9 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once 'core/Database.php';
 $db = getDB();
 
+// Assurer qu'une potion existe
+$db->exec("INSERT IGNORE INTO Items (id, name, description, item_type) VALUES (1, 'Potion de Soin', 'Restaure 20 PV', 'potion')");
+
 $defaultSelected = "img/HeroDefault.png";
 
 $defaultImages = [
@@ -75,6 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 'biography' => $biography,
                 'image' => $image_path
             ]);
+
+            // Ajouter une potion à l'inventaire
+            $heroId = $db->lastInsertId();
+            $stmt = $db->prepare("INSERT INTO Inventory (hero_id, item_id, quantity) VALUES (?, 1, 1)");
+            $stmt->execute([$heroId]);
+
             $creation_success = "Héros $name créé avec succès !";
         } else {
             $creation_error = "Classe invalide.";

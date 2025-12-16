@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("combat.js");
-    alert("combat.js chargé !");    
+    console.log("combat.js chargé !");    
 
     /* =====================
        DONNÉES COMBATTANTS
@@ -14,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         manaMax: parseInt(document.getElementById('hero-mana-max').innerText),
         strength: parseInt(document.getElementById('hero-strength').innerText),
         initiative: parseInt(document.getElementById('hero-initiative').innerText),
-        class: 'Guerrier', // ⚠️ adapte si besoin
+        class: HERO_CLASS,
         armorBonus: 0,
         weaponBonus: 0
     };
@@ -49,6 +48,32 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('hero-pv').innerText = hero.pv;
         document.getElementById('hero-mana').innerText = hero.mana;
         document.getElementById('monster-pv').innerText = monster.pv;
+        console.log(`UI updated: hero pv=${hero.pv}, monster pv=${monster.pv}`);
+    }
+
+    function endCombat(result) {
+        document.getElementById('btn-attack').disabled = true;
+        document.getElementById('btn-magic').disabled = true;
+        document.getElementById('btn-potion').disabled = true;
+
+        fetch('/DungeonXplorer/combat/end', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                result: result,
+                hero_pv: hero.pv,
+                hero_mana: hero.mana,
+                chapter_id: CHAPTER_ID
+            })
+        }).then(() => {
+            if (result === 'win') {
+                window.location.href = '/DungeonXplorer/chapter';
+            } else {
+                window.location.href = '/DungeonXplorer/home';
+            }
+        });
     }
 
     /* =====================
@@ -57,10 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const heroInit = d6() + hero.initiative;
     const monsterInit = d6() + monster.initiative;
+    console.log(`Initiative: hero ${heroInit}, monster ${monsterInit}`);
 
     let heroTurn = false;
 
-    if (heroInit > monsterInit) {
+    if (heroInit > monsterInit || (heroInit === monsterInit && hero.class === 'Voleur')) {
         heroTurn = true;
         log(`🟢 Vous commencez le combat (initiative ${heroInit} vs ${monsterInit})`);
     } else {
@@ -86,17 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const damage = Math.max(0, attack - defense);
         defender.pv -= damage;
 
+        console.log(`${isHero ? 'Héros attaque' : 'Monstre attaque'}: attack=${attack}, defense=${defense}, damage=${damage}, defender pv=${defender.pv}`);
         log(`${isHero ? 'Vous attaquez' : 'Le monstre attaque'} et inflige ${damage} dégâts`);
         updateUI();
     }
 
     function monsterAttack() {
+        console.log('monsterAttack called');
         if (monster.pv <= 0 || hero.pv <= 0) return;
 
         physicalAttack(monster, hero, false);
 
         if (hero.pv <= 0) {
             log("💀 Vous êtes mort...");
+            endCombat('lose');
             return;
         }
 
@@ -108,12 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
     ===================== */
 
     document.getElementById('btn-attack').addEventListener('click', () => {
+        console.log('Bouton Attaquer cliqué, heroTurn:', heroTurn);
         if (!heroTurn) return;
 
         physicalAttack(hero, monster, true);
 
         if (monster.pv <= 0) {
             log("🏆 Le monstre est vaincu !");
+            endCombat('win');
             return;
         }
 
@@ -121,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(monsterAttack, 1000);
     });
 
+    if(document.getElementById('btn-magic') != null)
     document.getElementById('btn-magic').addEventListener('click', () => {
         if (!heroTurn) return;
 
@@ -141,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (monster.pv <= 0) {
             log("🏆 Le monstre est vaincu !");
+            endCombat('win');
             return;
         }
 
@@ -151,10 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-potion').addEventListener('click', () => {
         if (!heroTurn) return;
 
-        const heal = 20;
-        hero.pv = Math.min(hero.pv + heal, hero.pvMax);
+        const potionType = 'pv'; // Type de potion : 'pv' ou 'mana'
+        const valeur = 20;
 
-        log(`🧪 Vous buvez une potion et récupérez ${heal} PV`);
+        if (potionType === 'pv') {
+            hero.pv = Math.min(hero.pv + valeur, hero.pvMax);
+            log(`🧪 Vous buvez une potion et récupérez ${valeur} PV`);
+        } else if (potionType === 'mana') {
+            hero.mana = Math.min(hero.mana + valeur, hero.manaMax);
+            log(`🧪 Vous buvez une potion et récupérez ${valeur} Mana`);
+        }
+
         updateUI();
 
         heroTurn = false;

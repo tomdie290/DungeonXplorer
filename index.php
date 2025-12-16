@@ -48,6 +48,8 @@ $router->addRoute('home', 'HomeController@index');
 $router->addRoute('login', 'LoginController@index');
 $router->addRoute('register', 'RegisterController@index');
 $router->addRoute('account', 'AccountController@index');
+$router->addRoute('delete_hero', 'AccountController@deleteHero');
+$router->addRoute('inventory', 'InventoryController@index');
 $router->addRoute('hero', 'HeroController@index');
 $router->addRoute('chapter', 'ChapterController@index');
 $router->addRoute('chapter/choice', 'ChapterController@choice');
@@ -57,6 +59,7 @@ $router->addRoute('adventure', 'AdventureController@index');
 $router->addRoute('start_adventure', 'AdventureController@start');
 $router->addRoute('logout', 'LogoutController@index');
 $router->addRoute('combat', 'CombatController@start');
+$router->addRoute('combat/end', 'CombatController@endCombat');
 $router->addRoute('deconnexion', 'DeconnexionController@index');
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

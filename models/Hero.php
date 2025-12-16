@@ -28,7 +28,7 @@ class Hero
     {
         $db = getDB();
         $stmt = $db->prepare("
-            SELECT H.*, C.name AS class_name
+            SELECT H.*, C.name AS class_name, C.base_pv, C.base_mana
             FROM Hero H
             JOIN Class C ON H.class_id = C.id
             WHERE H.id = ?
@@ -50,10 +50,10 @@ class Hero
         $hero->class = $data['class_name'] ?? '';
 
         $hero->pv = (int)$data['pv'];
-        $hero->pv_max = (int)($data['pv_max'] ?? $data['pv']);
+        $hero->pv_max = (int)$data['base_pv'];
 
         $hero->mana = (int)$data['mana'];
-        $hero->mana_max = (int)($data['mana_max'] ?? $data['mana']);
+        $hero->mana_max = (int)$data['base_mana'];
 
         $hero->strength = (int)$data['strength'];
         $hero->initiative = (int)$data['initiative'];
@@ -67,5 +67,12 @@ class Hero
         $hero->image = $data['image'] ?? 'img/HeroDefault.png';
 
         return $hero;
+    }
+
+    public function save(): void
+    {
+        $db = getDB();
+        $stmt = $db->prepare("UPDATE Hero SET pv = ?, mana = ? WHERE id = ?");
+        $stmt->execute([$this->pv, $this->mana, $this->id]);
     }
 }

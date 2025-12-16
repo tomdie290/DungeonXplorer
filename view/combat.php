@@ -72,9 +72,11 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
             ⚔️ Attaquer
         </button>
 
+        <?php if ($hero->class === 'Magicien'): ?>
         <button id="btn-magic" class="btn btn-primary btn-lg mx-1">
             ✨ Magie
         </button>
+        <?php endif; ?>
 
         <button id="btn-potion" class="btn btn-success btn-lg mx-1">
             🧪 Potion
@@ -92,6 +94,8 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
 <script>
     const HERO_ID = <?= (int)$hero->id ?>;
     const MONSTER_ID = <?= (int)$monster->getId() ?>;
+    const CHAPTER_ID = <?= (int)$chapterId ?>;
+    const HERO_CLASS = '<?= addslashes($hero->class) ?>';
 </script>
 
 <script src="/DungeonXplorer/js/combat.js"></script>

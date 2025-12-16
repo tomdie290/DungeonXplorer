@@ -42,5 +42,6 @@ class Monster
     public function getImage(): string { return $this->image; }
     public function getHp(): int { return $this->pv; }
     public function getStrength(): int { return $this->strength; }
+    public function getId(): int { return $this->id; }
 }
 ?>

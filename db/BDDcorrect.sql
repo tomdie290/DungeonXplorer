@@ -199,7 +199,7 @@ VALUES
 -- Monstres
 INSERT INTO Monster (name, pv, mana, strength, initiative, attack_text, xp_reward, image)
 VALUES 
-('Sanglier Enragé', 50, 0, 12, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBard01.jpg'),
+('Sanglier Enragé', 50, 0, 12, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBoard01.jpg'),
 ('Loup Noir', 40, 0, 8, 12, 'Le loup bondit et tente de vous mordre !', 60, 'img/Wolf02.jpg'),
 ('Orc Guerrier', 70, 0, 15, 8, 'L’orc abat sa massue !', 120, 'img/monsters/orc.png'),
 ('Squelette', 25, 0, 6, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquellete.jpg'),
