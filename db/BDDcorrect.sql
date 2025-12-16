@@ -296,7 +296,7 @@ VALUES
 (22,23, 'Demander d''attendre pour plus de sécurité'),
 (23,24, 'Utiliser le passage pour surprendre le sorcier'),
 (23,25, 'Affronter le sorcier de façon direct par la porte principale'),
-(24,25, 'Vous avez gagné le combat contre l''ombre ténébreuse'),
+(24,26, 'Vous avez gagné le combat contre l''ombre ténébreuse'),
 (24,10, 'Vous êtes mort face à l''ombre ténébreuse'),
 (25,26, 'Vous avez gagné le combat comtre l''ombre ténébreuse de face'),
 (25,10, 'Vous êtes mort face à l''ombre ténébreuse'),
