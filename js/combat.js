@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("combat.js chargé !");    
+    console.log("combat.js chargé !");
 
     /* =====================
        DONNÉES COMBATTANTS
@@ -45,16 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateUI() {
-        document.getElementById('hero-pv').innerText = hero.pv;
-        document.getElementById('hero-mana').innerText = hero.mana;
-        document.getElementById('monster-pv').innerText = monster.pv;
+        document.getElementById('hero-pv').innerText = Math.max(0, hero.pv);
+        document.getElementById('hero-mana').innerText = Math.max(0, hero.mana);
+        document.getElementById('monster-pv').innerText = Math.max(0, monster.pv);
         console.log(`UI updated: hero pv=${hero.pv}, monster pv=${monster.pv}`);
     }
 
     function endCombat(result) {
-        document.getElementById('btn-attack').disabled = true;
-        document.getElementById('btn-magic').disabled = true;
-        document.getElementById('btn-potion').disabled = true;
+        const btnAttack = document.getElementById('btn-attack');
+        const btnMagic = document.getElementById('btn-magic');
+        const btnPotion = document.getElementById('btn-potion');
+        if (btnAttack) btnAttack.disabled = true;
+        if (btnMagic) btnMagic.disabled = true;
+        if (btnPotion) btnPotion.disabled = true;
 
         fetch('/DungeonXplorer/combat/end', {
             method: 'POST',
@@ -69,9 +72,61 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }).then(() => {
             if (result === 'win') {
-                window.location.href = '/DungeonXplorer/chapter';
+                // Affiche un bouton pour avancer vers le chapitre suivant
+                const actions = document.getElementById('post-combat-actions') || document.querySelector('.text-center.mt-4');
+                const advanceBtn = document.createElement('button');
+                advanceBtn.id = 'btn-advance-chapter';
+                advanceBtn.className = 'btn btn-primary btn-lg mx-1';
+                advanceBtn.textContent = (typeof NEXT_LINK_TEXT === 'string' && NEXT_LINK_TEXT.trim().length > 0) ? NEXT_LINK_TEXT : '➡️ Avancer au chapitre suivant';
+                if (actions) actions.appendChild(advanceBtn);
+
+                advanceBtn.addEventListener('click', () => {
+                    if (typeof NEXT_LINK_ID === 'number' && NEXT_LINK_ID > 0) {
+                        // Soumet un formulaire POST comme dans view/chapter.php
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = '/DungeonXplorer/chapter/choice';
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'choice_id';
+                        input.value = NEXT_LINK_ID;
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else if (typeof NEXT_CHAPTER_ID === 'number' && NEXT_CHAPTER_ID > 0) {
+                        // Fallback: redirection par query
+                        window.location.href = '/DungeonXplorer/chapter?id=' + NEXT_CHAPTER_ID;
+                    } else {
+                        window.location.href = '/DungeonXplorer/chapter';
+                    }
+                });
             } else {
-                window.location.href = '/DungeonXplorer/home';
+                // Affiche un bouton pour aller au lien de mort (comme les choix de chapitre)
+                const actions = document.getElementById('post-combat-actions') || document.querySelector('.text-center.mt-4');
+                const deathBtn = document.createElement('button');
+                deathBtn.id = 'btn-death-link';
+                deathBtn.className = 'btn btn-danger btn-lg mx-1';
+                deathBtn.textContent = (typeof DEATH_LINK_TEXT === 'string' && DEATH_LINK_TEXT.trim().length > 0) ? DEATH_LINK_TEXT : '☠️ Aller au chapitre de la mort';
+                if (actions) actions.appendChild(deathBtn);
+
+                deathBtn.addEventListener('click', () => {
+                    if (typeof DEATH_LINK_ID === 'number' && DEATH_LINK_ID > 0) {
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = '/DungeonXplorer/chapter/choice';
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'choice_id';
+                        input.value = DEATH_LINK_ID;
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else if (typeof DEATH_CHAPTER_ID === 'number' && DEATH_CHAPTER_ID > 0) {
+                        window.location.href = '/DungeonXplorer/chapter?id=' + DEATH_CHAPTER_ID;
+                    } else {
+                        window.location.href = '/DungeonXplorer/chapter';
+                    }
+                });
             }
         });
     }
@@ -111,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const damage = Math.max(0, attack - defense);
         defender.pv -= damage;
+        defender.pv = Math.max(0, defender.pv);
 
         console.log(`${isHero ? 'Héros attaque' : 'Monstre attaque'}: attack=${attack}, defense=${defense}, damage=${damage}, defender pv=${defender.pv}`);
         log(`${isHero ? 'Vous attaquez' : 'Le monstre attaque'} et inflige ${damage} dégâts`);
@@ -124,6 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
         physicalAttack(monster, hero, false);
 
         if (hero.pv <= 0) {
+            hero.pv = 0;
+            updateUI();
             log("💀 Vous êtes mort...");
             endCombat('lose');
             return;
@@ -143,6 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
         physicalAttack(hero, monster, true);
 
         if (monster.pv <= 0) {
+            monster.pv = 0;
+            updateUI();
             log("🏆 Le monstre est vaincu !");
             endCombat('win');
             return;
@@ -167,11 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const damage = Math.max(0, attack - defense);
 
         monster.pv -= damage;
+        monster.pv = Math.max(0, monster.pv);
 
         log(`✨ Vous lancez un sort et infligez ${damage} dégâts`);
         updateUI();
 
         if (monster.pv <= 0) {
+            monster.pv = 0;
+            updateUI();
             log("🏆 Le monstre est vaincu !");
             endCombat('win');
             return;

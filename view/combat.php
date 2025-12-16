@@ -83,6 +83,8 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
         </button>
     </div>
 
+    <div id="post-combat-actions" class="text-center mt-3"></div>
+
 
     <div
         id="combat-log"
@@ -96,6 +98,12 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
     const MONSTER_ID = <?= (int)$monster->getId() ?>;
     const CHAPTER_ID = <?= (int)$chapterId ?>;
     const HERO_CLASS = '<?= addslashes($hero->class) ?>';
+    const NEXT_CHAPTER_ID = <?= isset($nextChapterId) && $nextChapterId !== null ? (int)$nextChapterId : 'null' ?>;
+    const NEXT_LINK_ID = <?= isset($nextLinkId) && $nextLinkId !== null ? (int)$nextLinkId : 'null' ?>;
+    const NEXT_LINK_TEXT = <?= isset($nextLinkText) && $nextLinkText !== null ? json_encode($nextLinkText) : 'null' ?>;
+    const DEATH_CHAPTER_ID = <?= isset($deathChapterId) && $deathChapterId !== null ? (int)$deathChapterId : 'null' ?>;
+    const DEATH_LINK_ID = <?= isset($deathLinkId) && $deathLinkId !== null ? (int)$deathLinkId : 'null' ?>;
+    const DEATH_LINK_TEXT = <?= isset($deathLinkText) && $deathLinkText !== null ? json_encode($deathLinkText) : 'null' ?>;
 </script>
 
 <script src="/DungeonXplorer/js/combat.js"></script>

@@ -74,11 +74,28 @@ class ChapterController {
 
         $choiceId = intval($_POST['choice_id']);
         $db = getDB();
-        $stmt = $db->prepare("SELECT next_chapter_id FROM Links WHERE id = ?");
+        $stmt = $db->prepare("SELECT next_chapter_id, description FROM Links WHERE id = ?");
         $stmt->execute([$choiceId]);
-        $next = $stmt->fetchColumn();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $next = $row['next_chapter_id'] ?? null;
+        $desc = $row['description'] ?? '';
 
         if (!$next) die("Choix invalide");
+
+        // Si le choix correspond à un retour au début ou à un lien de mort,
+        // restaurer les PV/Mana du héros au maximum.
+        $shouldRestore = false;
+        if ((int)$next === 2) $shouldRestore = true; // retour au début
+        if (stripos($desc, 'mort') !== false) $shouldRestore = true; // lien de mort
+
+        if ($shouldRestore) {
+            $hero = Hero::loadById($_SESSION['hero_id']);
+            if ($hero) {
+                $hero->pv = $hero->pv_max;
+                $hero->mana = $hero->mana_max;
+                $hero->save();
+            }
+        }
 
         $this->show((int)$next);
     }

@@ -19,6 +19,55 @@ class CombatController
             die("Erreur : héros introuvable");
         }
 
+        // Récupère l'id du chapitre suivant (premier lien) pour la redirection après combat
+        $nextChapterId = null;
+        $nextLinkId = null;
+        $nextLinkText = null;
+        $deathChapterId = null;
+        $deathLinkId = null;
+        $deathLinkText = null;
+        try {
+            require_once __DIR__ . '/../core/Database.php';
+            $db = getDB();
+            $stmt = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE chapter_id = ? ORDER BY id ASC LIMIT 1");
+            $stmt->execute([$chapterId]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                $nextLinkId = (int)$row['id'];
+                $nextChapterId = $row['next_chapter_id'] !== null ? (int)$row['next_chapter_id'] : null;
+                $nextLinkText = $row['description'] ?? null;
+            }
+
+            // Cherche le lien de mort associé au chapitre courant (next_chapter_id = 10)
+            $deathTarget = 10; // id du chapitre 'mort'
+            $stmt2 = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE chapter_id = ? AND next_chapter_id = ? LIMIT 1");
+            $stmt2->execute([$chapterId, $deathTarget]);
+            $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+            if ($row2) {
+                $deathLinkId = (int)$row2['id'];
+                $deathChapterId = $row2['next_chapter_id'] !== null ? (int)$row2['next_chapter_id'] : null;
+                $deathLinkText = $row2['description'] ?? null;
+            } else {
+                // fallback: cherche n'importe quel lien qui pointe vers le chapitre de mort
+                $stmt3 = $db->prepare("SELECT id, next_chapter_id, description FROM Links WHERE next_chapter_id = ? LIMIT 1");
+                $stmt3->execute([$deathTarget]);
+                $row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
+                if ($row3) {
+                    $deathLinkId = (int)$row3['id'];
+                    $deathChapterId = $row3['next_chapter_id'] !== null ? (int)$row3['next_chapter_id'] : null;
+                    $deathLinkText = $row3['description'] ?? null;
+                }
+            }
+        } catch (Exception $e) {
+            $nextChapterId = null;
+            $nextLinkId = null;
+            $deathChapterId = null;
+            $deathLinkId = null;
+            $nextLinkText = null;
+            $deathLinkText = null;
+        }
+
+        // Passe les variables à la vue
         require __DIR__ . '/../view/combat.php';
     }
 
