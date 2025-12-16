@@ -112,6 +112,11 @@ class AdventureController
             die("Aventure introuvable");
         }
 
+        // S'assurer que le héros associé à cette aventure est en session
+        if (isset($adventure['hero_id'])) {
+            $_SESSION['hero_id'] = (int)$adventure['hero_id'];
+        }
+
         require __DIR__ . '/../view/adventure.php';
     }
 }

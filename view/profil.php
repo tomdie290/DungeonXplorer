@@ -28,7 +28,9 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
         <hr>
 
         <h3 class="text-center mb-3">Modifier votre profil</h3>
-        <form method="POST" action="update_profile.php" class="d-flex flex-column gap-3 w-75 mx-auto">
+        <form id="update-password-form" method="POST" action="/DungeonXplorer/update_password" class="d-flex flex-column gap-3 w-75 mx-auto">
+            <input type="hidden" name="account_id" value="<?= (int)$account['id'] ?>">
+            <div id="update-password-error" class="alert alert-danger" style="display:none;"></div>
 
             <div class="input-group">
                 <span class="input-group-text">Nom d'utilisateur</span>
@@ -70,20 +72,20 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
                     </div>
 
                     <h3><?= htmlspecialchars($hero['name'] ?? 'Inconnu') ?></h3>
-                    <p>Classe : <strong><?= htmlspecialchars($hero['class_name'] ?? "Inconnue") ?></strong></p>
-                    <p>Niveau : <strong><?= $hero['current_level'] ?? 1 ?></strong></p>
-                    <p>XP : <?= $hero['xp'] ?? 0 ?></p>
+                    <p class="text-light">Classe : <strong><?= htmlspecialchars($hero['class_name'] ?? "Inconnue") ?></strong></p>
+                    <p class="text-light">Niveau : <strong><?= $hero['current_level'] ?? 1 ?></strong></p>
+                    <p class="text-light">XP : <?= $hero['xp'] ?? 0 ?></p>
 
                     <hr>
 
-                    <p><strong>PV :</strong> <?= $hero['pv'] ?? 0 ?></p>
-                    <p><strong>Mana :</strong> <?= $hero['mana'] ?? 0 ?></p>
-                    <p><strong>Force :</strong> <?= $hero['strength'] ?? 0 ?></p>
-                    <p><strong>Initiative :</strong> <?= $hero['initiative'] ?? 0 ?></p>
+                    <p class="text-light"><strong>PV :</strong> <?= $hero['pv'] ?? 0 ?></p>
+                    <p class="text-light"><strong>Mana :</strong> <?= $hero['mana'] ?? 0 ?></p>
+                    <p class="text-light"><strong>Force :</strong> <?= $hero['strength'] ?? 0 ?></p>
+                    <p class="text-light"><strong>Initiative :</strong> <?= $hero['initiative'] ?? 0 ?></p>
 
                     <hr>
 
-                    <p><strong>Chapitre actuel :</strong><br>
+                    <p class="text-light"><strong>Chapitre actuel :</strong><br>
                         <?= htmlspecialchars($hero['chapter_title'] ?? "Pas d’aventure en cours") ?>
                     </p>
 
@@ -100,6 +102,38 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
         <a href="logout" class="btn btn-danger">Se déconnecter</a>
     </div>
 </div>
+
+<script>
+    (function(){
+        const form = document.getElementById('update-password-form');
+        const err = document.getElementById('update-password-error');
+        if (!form) return;
+        form.addEventListener('submit', function(e){
+            if (!err) return;
+            err.style.display = 'none';
+            err.textContent = '';
+            const pw = document.getElementById('new_password').value.trim();
+            const conf = document.getElementById('confirm_password').value.trim();
+
+            // If both fields empty -> no password change requested
+            if (pw === '' && conf === '') return;
+
+            if (pw.length < 8) {
+                e.preventDefault();
+                err.textContent = 'Le mot de passe doit contenir au moins 8 caractères.';
+                err.style.display = 'block';
+                return;
+            }
+
+            if (pw !== conf) {
+                e.preventDefault();
+                err.textContent = 'Les deux champs de mot de passe ne correspondent pas.';
+                err.style.display = 'block';
+                return;
+            }
+        });
+    })();
+</script>
 
 </body>
 </html>
