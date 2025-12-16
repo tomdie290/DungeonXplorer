@@ -206,7 +206,7 @@ VALUES
 ('Gargouille de Pierre', 60, 0, 14, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
 ('Ombre Ténébreuse', 90, 20, 18, 12, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
 ('Esprit Élémentaire', 55, 30, 16, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
-('Malkor l''Ensorceleur', 120, 80, 25, 15, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg')
+('Malkor l''Ensorceleur', 120, 80, 25, 15, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
 ('Ombre Ténébreuse surprise', 60, 20, 12, 12, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg');
 
 -- Chapitres
