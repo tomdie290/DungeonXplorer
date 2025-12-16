@@ -101,6 +101,13 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
     <div class="text-center mt-4">
         <a href="logout" class="btn btn-danger">Se déconnecter</a>
     </div>
+    
+    <div class="text-center mt-4">
+        <form method="POST" action="/DungeonXplorer/delete_account" onsubmit="return confirm('Confirmer la suppression de votre compte ? Cette action est irréversible.');">
+            <input type="hidden" name="account_id" value="<?= (int)$account['id'] ?>">
+            <button type="submit" class="btn btn-outline-danger">Supprimer mon compte</button>
+        </form>
+    </div>
 </div>
 
 <script>

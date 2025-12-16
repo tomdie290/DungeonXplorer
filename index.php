@@ -49,6 +49,7 @@ $router->addRoute('login', 'LoginController@index');
 $router->addRoute('register', 'RegisterController@index');
 $router->addRoute('account', 'AccountController@index');
 $router->addRoute('delete_hero', 'AccountController@deleteHero');
+$router->addRoute('delete_account', 'AccountController@deleteAccount');
 $router->addRoute('inventory', 'InventoryController@index');
 $router->addRoute('hero', 'HeroController@index');
 $router->addRoute('chapter', 'ChapterController@index');
