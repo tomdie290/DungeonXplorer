@@ -24,6 +24,8 @@ class Hero
 
     public string $image;
 
+    public int $account_id;
+
     public static function loadById(int $id): ?Hero
     {
         $db = getDB();
@@ -65,7 +67,7 @@ class Hero
         $hero->level = (int)($data['current_level'] ?? 1);
 
         $hero->image = $data['image'] ?? 'img/HeroDefault.png';
-
+        $hero->account_id = (int)$data['account_id']; 
         return $hero;
     }
 

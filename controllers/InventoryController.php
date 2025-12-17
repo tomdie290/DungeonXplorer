@@ -1,10 +1,20 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-class InventoryController {
-    public function index() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+require_once __DIR__ . '/../models/Hero.php';
+require_once __DIR__ . '/../models/Inventory.php';
+
+class InventoryController
+{
+    private Inventory $inventoryModel;
+
+    public function __construct()
+    {
+        $this->inventoryModel = new Inventory();
+    }
+
+    public function index()
+    {
         if (!isset($_SESSION['id'])) {
             header("Location: login");
             exit;
@@ -12,34 +22,15 @@ class InventoryController {
 
         $accountId = $_SESSION['id'];
         $heroId = $_GET['hero'] ?? null;
+        if (!$heroId) die("Héros non spécifié");
 
-        if (!$heroId) {
-            die("Héros non spécifié");
-        }
-
-        require_once 'core/Database.php';
-        $db = getDB();
-
-        // Vérifier que le héros appartient au compte
-        $stmt = $db->prepare("SELECT id, name FROM Hero WHERE id = ? AND account_id = ?");
-        $stmt->execute([$heroId, $accountId]);
-        $hero = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$hero) {
+        $hero = Hero::loadById((int)$heroId);
+        if (!$hero || $hero->account_id !== $accountId) {
             die("Héros introuvable ou accès refusé");
         }
 
-        // Récupérer l'inventaire
-        $stmt = $db->prepare("
-            SELECT i.quantity, it.name, it.description, it.item_type
-            FROM Inventory i
-            JOIN Items it ON i.item_id = it.id
-            WHERE i.hero_id = ?
-        ");
-        $stmt->execute([$heroId]);
-        $inventory = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $inventory = $this->inventoryModel->getInventory($heroId);
 
-        require_once 'view/inventory.php';
+        require __DIR__ . '/../view/inventory.php';
     }
 }
-?>
