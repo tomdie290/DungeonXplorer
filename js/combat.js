@@ -13,17 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
         manaMax: parseInt(document.getElementById('hero-mana-max').innerText),
         strength: parseInt(document.getElementById('hero-strength').innerText),
         initiative: parseInt(document.getElementById('hero-initiative').innerText),
-        class: HERO_CLASS,
-        armorBonus: 0,
-        weaponBonus: 0
+        class: HERO_CLASS
     };
 
     const monster = {
         id: MONSTER_ID,
         pv: parseInt(document.getElementById('monster-pv').innerText),
         strength: parseInt(document.getElementById('monster-strength').innerText),
-        initiative: 8,
-        armorBonus: 0
+        initiative: 8
     };
 
     const logBox = document.getElementById('combat-log');
@@ -32,9 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
        UTILITAIRES
     ===================== */
 
-    function d6() {
-        return Math.floor(Math.random() * 6) + 1;
-    }
+    const d6 = () => Math.floor(Math.random() * 6) + 1;
 
     function log(text) {
         const p = document.createElement('p');
@@ -48,22 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('hero-pv').innerText = Math.max(0, hero.pv);
         document.getElementById('hero-mana').innerText = Math.max(0, hero.mana);
         document.getElementById('monster-pv').innerText = Math.max(0, monster.pv);
-        console.log(`UI updated: hero pv=${hero.pv}, monster pv=${monster.pv}`);
     }
+
 
     function endCombat(result) {
         const btnAttack = document.getElementById('btn-attack');
-        const btnMagic = document.getElementById('btn-magic');
         const btnPotion = document.getElementById('btn-potion');
         if (btnAttack) btnAttack.disabled = true;
-        if (btnMagic) btnMagic.disabled = true;
         if (btnPotion) btnPotion.disabled = true;
 
         fetch('/DungeonXplorer/combat/end', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 result: result,
                 hero_pv: hero.pv,
@@ -71,18 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 chapter_id: CHAPTER_ID
             })
         }).then(() => {
+            const actions = document.getElementById('post-combat-actions') || document.querySelector('.text-center.mt-4');
+            if (!actions) return;
+
             if (result === 'win') {
-                // Affiche un bouton pour avancer vers le chapitre suivant
-                const actions = document.getElementById('post-combat-actions') || document.querySelector('.text-center.mt-4');
                 const advanceBtn = document.createElement('button');
-                advanceBtn.id = 'btn-advance-chapter';
                 advanceBtn.className = 'btn btn-primary btn-lg mx-1';
-                advanceBtn.textContent = (typeof NEXT_LINK_TEXT === 'string' && NEXT_LINK_TEXT.trim().length > 0) ? NEXT_LINK_TEXT : '➡️ Avancer au chapitre suivant';
-                if (actions) actions.appendChild(advanceBtn);
+                advanceBtn.textContent = NEXT_LINK_TEXT || '➡️ Avancer au chapitre suivant';
+                actions.appendChild(advanceBtn);
 
                 advanceBtn.addEventListener('click', () => {
-                    if (typeof NEXT_LINK_ID === 'number' && NEXT_LINK_ID > 0) {
-                        // Soumet un formulaire POST comme dans view/chapter.php
+                    if (NEXT_LINK_ID) {
                         const form = document.createElement('form');
                         form.method = 'post';
                         form.action = '/DungeonXplorer/chapter/choice';
@@ -93,24 +83,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         form.appendChild(input);
                         document.body.appendChild(form);
                         form.submit();
-                    } else if (typeof NEXT_CHAPTER_ID === 'number' && NEXT_CHAPTER_ID > 0) {
-                        // Fallback: redirection par query
+                    } else if (NEXT_CHAPTER_ID) {
                         window.location.href = '/DungeonXplorer/chapter?id=' + NEXT_CHAPTER_ID;
                     } else {
                         window.location.href = '/DungeonXplorer/chapter';
                     }
                 });
+
             } else {
-                // Affiche un bouton pour aller au lien de mort (comme les choix de chapitre)
-                const actions = document.getElementById('post-combat-actions') || document.querySelector('.text-center.mt-4');
                 const deathBtn = document.createElement('button');
-                deathBtn.id = 'btn-death-link';
                 deathBtn.className = 'btn btn-danger btn-lg mx-1';
-                deathBtn.textContent = (typeof DEATH_LINK_TEXT === 'string' && DEATH_LINK_TEXT.trim().length > 0) ? DEATH_LINK_TEXT : '☠️ Aller au chapitre de la mort';
-                if (actions) actions.appendChild(deathBtn);
+                deathBtn.textContent = DEATH_LINK_TEXT || '☠️ Aller au chapitre de la mort';
+                actions.appendChild(deathBtn);
 
                 deathBtn.addEventListener('click', () => {
-                    if (typeof DEATH_LINK_ID === 'number' && DEATH_LINK_ID > 0) {
+                    if (DEATH_LINK_ID) {
                         const form = document.createElement('form');
                         form.method = 'post';
                         form.action = '/DungeonXplorer/chapter/choice';
@@ -121,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         form.appendChild(input);
                         document.body.appendChild(form);
                         form.submit();
-                    } else if (typeof DEATH_CHAPTER_ID === 'number' && DEATH_CHAPTER_ID > 0) {
+                    } else if (DEATH_CHAPTER_ID) {
                         window.location.href = '/DungeonXplorer/chapter?id=' + DEATH_CHAPTER_ID;
                     } else {
                         window.location.href = '/DungeonXplorer/chapter';
@@ -131,59 +118,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* =====================
-       INITIATIVE (DÉBUT)
-    ===================== */
 
-    let heroTurn = false;
+    let heroTurn = true;
     if (typeof RESUME_COMBAT !== 'undefined' && RESUME_COMBAT) {
-        heroTurn = (typeof HERO_TURN_RESUME !== 'undefined' && HERO_TURN_RESUME) ? true : false;
-        log('⏯️ Reprise du combat — état restauré');
-        if (!heroTurn) setTimeout(monsterAttack, 1000);
+        heroTurn = HERO_TURN_RESUME === 1;
+        log("⏯️ Combat repris");
+        if (!heroTurn) setTimeout(monsterAttack, 800);
     } else {
         const heroInit = d6() + hero.initiative;
         const monsterInit = d6() + monster.initiative;
-        console.log(`Initiative: hero ${heroInit}, monster ${monsterInit}`);
-
-        if (heroInit > monsterInit || (heroInit === monsterInit && hero.class === 'Voleur')) {
-            heroTurn = true;
-            log(`🟢 Vous commencez le combat (initiative ${heroInit} vs ${monsterInit})`);
-        } else {
-            heroTurn = false;
-            log(`🔴 Le monstre commence (initiative ${monsterInit} vs ${heroInit})`);
-            setTimeout(monsterAttack, 1000);
-        }
+        heroTurn = heroInit >= monsterInit;
+        log(heroTurn ? "🟢 Vous commencez" : "🔴 Le monstre commence");
+        if (!heroTurn) setTimeout(monsterAttack, 800);
     }
 
-    /* =====================
-       COMBAT
-    ===================== */
-
     function physicalAttack(attacker, defender, isHero = true) {
-        const attack = d6() + attacker.strength + (attacker.weaponBonus || 0);
-
-        let defense;
-        if (!isHero || defender.class !== 'Voleur') {
-            defense = d6() + Math.floor(defender.strength / 2) + (defender.armorBonus || 0);
-        } else {
-            defense = d6() + Math.floor(defender.initiative / 2) + (defender.armorBonus || 0);
-        }
-
+        const attack = d6() + attacker.strength;
+        const defense = d6() + Math.floor(defender.strength / 2);
         const damage = Math.max(0, attack - defense);
-        defender.pv -= damage;
-        defender.pv = Math.max(0, defender.pv);
-
-        console.log(`${isHero ? 'Héros attaque' : 'Monstre attaque'}: attack=${attack}, defense=${defense}, damage=${damage}, defender pv=${defender.pv}`);
+        defender.pv = Math.max(0, defender.pv - damage);
         log(`${isHero ? 'Vous attaquez' : 'Le monstre attaque'} et inflige ${damage} dégâts`);
         updateUI();
     }
 
     function monsterAttack() {
-        console.log('monsterAttack called');
         if (monster.pv <= 0 || hero.pv <= 0) return;
-
         physicalAttack(monster, hero, false);
-
         if (hero.pv <= 0) {
             hero.pv = 0;
             updateUI();
@@ -191,98 +151,144 @@ document.addEventListener('DOMContentLoaded', () => {
             endCombat('lose');
             return;
         }
-
         heroTurn = true;
     }
 
-    /* =====================
-       ACTIONS JOUEUR
-    ===================== */
-
     document.getElementById('btn-attack').addEventListener('click', () => {
-        console.log('Bouton Attaquer cliqué, heroTurn:', heroTurn);
         if (!heroTurn) return;
-
         physicalAttack(hero, monster, true);
-
         if (monster.pv <= 0) {
             monster.pv = 0;
             updateUI();
-            log("🏆 Le monstre est vaincu !");
+            log("🏆 Victoire !");
             endCombat('win');
             return;
         }
-
         heroTurn = false;
-        setTimeout(monsterAttack, 1000);
+        setTimeout(monsterAttack, 800);
     });
 
-    if(document.getElementById('btn-magic') != null)
-    document.getElementById('btn-magic').addEventListener('click', () => {
-        if (!heroTurn) return;
 
-        if (hero.mana < 5) {
-            log("❌ Pas assez de mana !");
-            return;
-        }
-
-        hero.mana -= 5;
-        const attack = d6() + d6() + 5;
-        const defense = d6() + Math.floor(monster.strength / 2);
-        const damage = Math.max(0, attack - defense);
-
-        monster.pv -= damage;
-        monster.pv = Math.max(0, monster.pv);
-
-        log(`✨ Vous lancez un sort et infligez ${damage} dégâts`);
-        updateUI();
-
-        if (monster.pv <= 0) {
-            monster.pv = 0;
-            updateUI();
-            log("🏆 Le monstre est vaincu !");
-            endCombat('win');
-            return;
-        }
-
-        heroTurn = false;
-        setTimeout(monsterAttack, 1000);
-    });
+    const style = document.createElement('style');
+    style.innerHTML = `
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:9999; }
+    .box { background:#262626; border:2px solid #C4975E; border-radius:12px; padding:20px; max-width:800px; width:80%; color:white; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:1rem; }
+    .card { background:#1f1f1f; border:2px solid #C4975E; border-radius:10px; padding:12px; }
+    .card h3 { color:#FFD700; }
+    .card button { margin-top:8px; width:100%; }`;
+    document.head.appendChild(style);
 
     document.getElementById('btn-potion').addEventListener('click', () => {
         if (!heroTurn) return;
+        if (document.querySelector('.overlay')) return;
 
-        const potionType = 'pv'; // Type de potion : 'pv' ou 'mana'
-        const valeur = 20;
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
 
-        if (potionType === 'pv') {
-            hero.pv = Math.min(hero.pv + valeur, hero.pvMax);
-            log(`🧪 Vous buvez une potion et récupérez ${valeur} PV`);
-        } else if (potionType === 'mana') {
-            hero.mana = Math.min(hero.mana + valeur, hero.manaMax);
-            log(`🧪 Vous buvez une potion et récupérez ${valeur} Mana`);
-        }
+        const box = document.createElement('div');
+        box.className = 'box';
 
-        updateUI();
+        const header = document.createElement('div');
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
 
-        heroTurn = false;
-        setTimeout(monsterAttack, 1000);
+        const title = document.createElement('h2');
+        title.innerText = '🧪 Potions';
+
+        const closeBtn = document.createElement('button');
+        closeBtn.innerText = '✖';
+        closeBtn.style.background = 'transparent';
+        closeBtn.style.border = 'none';
+        closeBtn.style.color = 'white';
+        closeBtn.style.fontSize = '22px';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.onclick = () => overlay.remove();
+
+        header.appendChild(title);
+        header.appendChild(closeBtn);
+
+        const content = document.createElement('div');
+        content.className = 'cards';
+
+        box.appendChild(header);
+        box.appendChild(content);
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        fetch(`/DungeonXplorer/inventory?hero=${hero.id}&onlyPotions=1`)
+            .then(r => r.text())
+            .then(html => {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const items = doc.querySelectorAll('.inventory-item');
+
+                if(items.length === 0) {
+                    content.innerHTML = `<p style="color:white">Aucune potion</p>`;
+                    return;
+                }
+
+                items.forEach(item => {
+                    const id = item.dataset.id;
+                    const type = item.dataset.type || 'pv';
+                    const quantity = parseInt(item.dataset.quantity || 1);
+                    let value = parseInt(item.dataset.value || 0);
+                    if(value === 0){
+                        const descText = item.querySelector('em')?.innerText ?? '';
+                        const match = descText.match(/(\d+)\s*(PV|Mana)/i);
+                        if(match) value = parseInt(match[1]);
+                    }
+
+                    const desc = item.querySelector('em')?.innerText ?? '';
+                    const name = item.querySelector('h3')?.innerText ?? 'Potion';
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+
+                    card.innerHTML = `
+                        <h3>${name}</h3>
+                        <p style="color:white">${desc}</p>
+                        <p style="color:white">Quantité : ${quantity}</p>
+                        <button class="btn btn-success">Utiliser</button>
+                    `;
+
+                    card.querySelector('button').onclick = () => {
+                        if(quantity <= 0) return;
+
+                        if(type === 'pv') {
+                            hero.pv = Math.min(hero.pv + value, hero.pvMax);
+                            log(`🧪 ${name} utilisée `);
+                        } else if(type === 'mana') {
+                            hero.mana = Math.min(hero.mana + value, hero.manaMax);
+                            log(`✨ ${name} utilisée `);
+                        }
+                        updateUI();
+
+                        fetch('/DungeonXplorer/inventory/use', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ item_id: id })
+                        });
+
+                        overlay.remove();
+                        heroTurn = false;
+                        setTimeout(monsterAttack, 800);
+                    };
+
+                    content.appendChild(card);
+                });
+            });
     });
 
-    // Avant de quitter la page en cours (bouton Quitter), injecte l'état du combat dans le formulaire
+
     const quitForm = document.getElementById('quit-form');
     if (quitForm) {
-        quitForm.addEventListener('submit', (e) => {
-            const hPv = document.getElementById('quit-hero-pv');
-            const hMana = document.getElementById('quit-hero-mana');
-            const mId = document.getElementById('quit-monster-id');
-            const mPv = document.getElementById('quit-monster-pv');
-            const hTurn = document.getElementById('quit-hero-turn');
-            if (hPv) hPv.value = Math.max(0, hero.pv);
-            if (hMana) hMana.value = Math.max(0, hero.mana);
-            if (mId) mId.value = monster.id || 0;
-            if (mPv) mPv.value = Math.max(0, monster.pv);
-            if (hTurn) hTurn.value = heroTurn ? 1 : 0;
+        quitForm.addEventListener('submit', () => {
+            document.getElementById('quit-hero-pv').value = hero.pv;
+            document.getElementById('quit-hero-mana').value = hero.mana;
+            document.getElementById('quit-monster-pv').value = monster.pv;
+            document.getElementById('quit-hero-turn').value = heroTurn ? 1 : 0;
         });
     }
 
