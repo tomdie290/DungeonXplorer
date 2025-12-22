@@ -192,9 +192,9 @@ CREATE TABLE Adventure_Progress
 -- Insertion Classes
 INSERT INTO Class (name, description, base_pv, base_mana, strength, initiative, max_items)
 VALUES 
-('Guerrier', 'Un combattant robuste et puissant', 100, 0, 15, 5, 5),
-('Voleur', 'Rapide et agile', 80, 10, 10, 15, 5),
-('Magicien', 'Puissant en magie', 60, 20, 5, 10, 5);
+('Guerrier', 'Un combattant robuste et puissant', 100, 0, 18, 5, 5),
+('Voleur', 'Rapide et agile', 80, 10, 12, 15, 5),
+('Magicien', 'Puissant en magie', 60, 20, 10, 10, 5);
 
 -- Monstres
 INSERT INTO Monster (name, pv, mana, strength, initiative, attack_text, xp_reward, image)
