@@ -1,0 +1,140 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+$monsters = $monsters ?? [];
+?>
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <?php require_once __DIR__ . '/head.php'; ?>
+    <meta charset="UTF-8">
+    <title>Gestion des monstres</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style> .small-img{max-width:50px;height:50px;object-fit:cover;} </style>
+</head>
+<body>
+<?php require_once __DIR__ . '/navbar.php'; ?>
+<div class="container mt-5">
+    <h1 class="mb-4">Gestion des monstres</h1>
+
+    <?php if (!empty($_SESSION['flash'])): ?>
+        <div class="alert alert-info"><?php echo htmlspecialchars($_SESSION['flash']); ?></div>
+        <?php unset($_SESSION['flash']); ?>
+    <?php endif; ?>
+
+    <div class="table-responsive mb-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>PV</th>
+                    <th>Mana</th>
+                    <th>Force</th>
+                    <th>Initiative</th>
+                    <th>XP</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($monsters as $m): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($m['id']); ?></td>
+                        <td><?php echo htmlspecialchars($m['name']); ?></td>
+                        <td><?php echo htmlspecialchars($m['pv']); ?></td>
+                        <td><?php echo htmlspecialchars($m['mana']); ?></td>
+                        <td><?php echo htmlspecialchars($m['strength']); ?></td>
+                        <td><?php echo htmlspecialchars($m['initiative']); ?></td>
+                        <td><?php echo htmlspecialchars($m['xp_reward']); ?></td>
+                        <td>
+                            <?php if (!empty($m['image'])): ?>
+                                <img src="<?php echo htmlspecialchars((defined('BASE_URL')?BASE_URL:'/').ltrim($m['image'], '/')); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" class="small-img">
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <a href="/manage_monsters/edit?id=<?php echo urlencode($m['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
+                            <form method="POST" action="/manage_monsters/delete" onsubmit="return confirm('Supprimer <?php echo addslashes(htmlspecialchars($m['name'])); ?> ?');" style="display:inline-block; margin:0 0 0 .25rem;">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($m['id']); ?>">
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card p-4 mb-4">
+        <h3 class="mb-3">Ajouter un monstre</h3>
+        <form method="POST" action="/manage_monsters/store" class="d-flex flex-column gap-2">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <label class="form-label">Nom</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">PV</label>
+                    <input type="number" name="pv" class="form-control" required min="1">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Mana</label>
+                    <input type="number" name="mana" class="form-control" min="0" value="0">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Force</label>
+                    <input type="number" name="strength" class="form-control" required min="1">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Initiative</label>
+                    <input type="number" name="initiative" class="form-control" required min="1">
+                </div>
+            </div>
+
+            <div class="row g-2 mt-2">
+                <div class="col-md-8">
+                    <label class="form-label">Texte d'attaque</label>
+                    <input type="text" name="attack_text" class="form-control" placeholder="Ex: Le monstre attaque!">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">XP récompense</label>
+                    <input type="number" name="xp_reward" class="form-control" required min="0" value="0">
+                </div>
+            </div>
+
+            <div class="input-group flex-column align-items-start mt-2">
+                <label class="input-group-text mb-2">Image</label>
+                <?php
+                $imageOptions = [];
+                $imgDir = __DIR__ . '/../img';
+                if (is_dir($imgDir)) {
+                    $files = glob($imgDir . '/*.{jpg,jpeg,png,gif,webp}', GLOB_BRACE);
+                    foreach ($files as $f) {
+                        $imageOptions[] = basename($f);
+                    }
+                }
+                ?>
+                <select name="image_path" class="form-select mt-2" id="imageSelector">
+                    <option value="">-- Aucune image --</option>
+                    <?php foreach ($imageOptions as $opt):
+                        $url = (defined('BASE_URL')?BASE_URL:'/').'img/'.rawurlencode($opt);
+                    ?>
+                        <option value="<?php echo htmlspecialchars($url); ?>"><?php echo htmlspecialchars($opt); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Ajouter le monstre</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-3">
+        <a href="/admin" class="btn btn-secondary">Retour admin</a>
+    </div>
+</div>
+</body>
+</html>
