@@ -42,6 +42,7 @@ function isActive($page, $currentPage) {
     </button>
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<<<<<<< HEAD
         <li class="nav-item">
           <a class="nav-link<?= isActive('account', $currentPage) ?>" href="account">Accueil</a>
         </li>
@@ -51,6 +52,12 @@ function isActive($page, $currentPage) {
         <li class="nav-item">
           <a class="nav-link<?= isActive('profil', $currentPage) ?>" href="profil">Mon compte</a>
         </li>
+=======
+        <li class="nav-item"><a class="nav-link" href="account">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="hero">Crée héros</a></li>
+        <li class="nav-item"><a class="nav-link" href="profil">Mon compte</a></li>
+        <li class="nav-item"><a class="nav-link" href="deconnexion">Deconnexion</a></li>
+>>>>>>> main
       </ul>
 
       <div class="d-flex align-items-center">

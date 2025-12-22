@@ -13,8 +13,7 @@
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    font-variation-settings:
-        "wdth" 100;
+    font-variation-settings: "wdth" 100;
 }
 
 * {
@@ -33,6 +32,7 @@ body {
 
 .texte-principal {
     color: #E5E5E5;
+    text-align: center;
 }
 
 .background-secondaire {
@@ -238,8 +238,12 @@ input[type="number"]::-webkit-inner-spin-button {
     box-shadow: 0 0 25px var(--gold-soft);
 }
 
+.image-container{
+    text-align: center;
+}
+
 .chapter-image {
-    width: 100%;
+    width: 40%;
     border-radius: 12px;
     border: 2px solid var(--gold);
     margin-bottom: 20px;
@@ -340,6 +344,7 @@ a.next-link {
     font-size: 1.4em;
     text-decoration: none;
 }
+
 a.next-link:hover {
     text-decoration: underline;
 }

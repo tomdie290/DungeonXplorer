@@ -56,7 +56,7 @@ session_start();
 <div class="login-container">
     <img class="mb-4 d-block mx-auto" src="img/LogoVide.png" alt="logo application" width="400" height="400">
     <h1 class="login-title mb-4">Créer un compte</h1>
-    <form method="post" class="d-flex flex-column align-items-center gap-3">
+    <form id="register-form" method="post" class="d-flex flex-column align-items-center gap-3">
         
         <div class="input-group w-100">
             <input type="text"
@@ -68,7 +68,7 @@ session_start();
         </div>
 
         <div class="input-group w-100">
-            <input type="password"
+            <input id="reg-password" type="password"
                    class="form-control background-secondaire texte-principal"
                    placeholder="Mot de passe"
                    aria-label="Password"
@@ -77,13 +77,15 @@ session_start();
         </div>
 
         <div class="input-group w-100">
-            <input type="password"
+            <input id="reg-password-confirm" type="password"
                    class="form-control background-secondaire texte-principal"
                    placeholder="Confirmer le mot de passe"
                    aria-label="PasswordConfirm"
                    name="PasswordConfirm"
                    required>
         </div>
+
+        <div id="register-error" class="alert alert-danger" style="display:none; width:100%;"></div>
 
         <input type="submit" value="S'inscrire" class="btn btn-primary mt-2 w-50">
         <a href="home" class="back-btn mt-2">Retour</a>
@@ -97,4 +99,33 @@ session_start();
 </div>
 
 </body>
+</html>
+<script>
+    (function(){
+        const form = document.getElementById('register-form');
+        const err = document.getElementById('register-error');
+        if (!form) return;
+        form.addEventListener('submit', function(e){
+            if (!err) return;
+            err.style.display = 'none';
+            err.textContent = '';
+            const pw = document.getElementById('reg-password').value.trim();
+            const conf = document.getElementById('reg-password-confirm').value.trim();
+
+            if (pw.length < 8) {
+                e.preventDefault();
+                err.textContent = 'Le mot de passe doit contenir au moins 8 caractères.';
+                err.style.display = 'block';
+                return;
+            }
+
+            if (pw !== conf) {
+                e.preventDefault();
+                err.textContent = 'Les mots de passe ne correspondent pas.';
+                err.style.display = 'block';
+                return;
+            }
+        });
+    })();
+</script>
 </html>

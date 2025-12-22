@@ -1,109 +1,125 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+require_once 'models/Hero.php';
+require_once 'models/Monster.php';
+
+if (!isset($_SESSION['hero_id'])) die("Erreur : héros non sélectionné");
+
+$hero = Hero::loadById($_SESSION['hero_id']);
+if (!$hero) die("Erreur : héros introuvable");
+
+if (!isset($monster)) die("Erreur : monstre introuvable"); 
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <?php require_once 'head.php'; ?>
-    <meta charset="UTF-8">
-    <title>Combat contre <?= $monster->getName(); ?></title>
-
+    <?php require 'head.php'; ?>
+    <title>Combat</title>
 </head>
 <body>
+<div class="container mt-4">
+    <h1 class="text-center texte-principal text-white">⚔️ Combat</h1>
 
-<div class="combat-container">
+    <div class="row mt-4 text-white">
 
-    <h1>Combat contre <?= $monster->getName(); ?></h1>
+        <div class="col-md-6 text-center">
+            <h2><?= htmlspecialchars($hero->name ?? 'Héros') ?></h2>
+            <img
+                src="/DungeonXplorer/<?= htmlspecialchars($hero->image ?? 'img/HeroDefault.png') ?>"
+                width="200"
+                alt="Héros"
+                class="mb-3"
+            >
 
-    <?php
-    if (!isset($_SESSION['hero'])) {
-        $_SESSION['hero'] = [
-            'name' => "Héros",
-            'hp'   => 100,
-            'mana' => 30,
-            'atk'  => 15
-        ];
-    }
+            <p>
+                PV :
+                <span id="hero-pv"><?= (int)$hero->pv ?></span> /
+                <span id="hero-pv-max"><?= (int)$hero->pv_max ?></span>
+            </p>
 
-    $hero = &$_SESSION['hero'];
-    ?>
+            <p>
+                Mana :
+                <span id="hero-mana"><?= (int)$hero->mana ?></span> /
+                <span id="hero-mana-max"><?= (int)$hero->mana_max ?></span>
+            </p>
 
-    <div class="section">
-        <h2><?= $hero['name']; ?></h2>
-        <div class="stats">
-            ❤️ PV : <?= $hero['hp']; ?><br>
-            🔷 Mana : <?= $hero['mana']; ?>
+            <span id="hero-strength" hidden><?= (int)$hero->strength ?></span>
+            <span id="hero-initiative" hidden><?= (int)$hero->initiative ?></span>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <h2><?= htmlspecialchars($monster->getName()) ?></h2>
+            <img
+                src="/DungeonXplorer/<?= htmlspecialchars($monster->getImage()) ?>"
+                width="200"
+                alt="Monstre"
+                class="mb-3"
+            >
+
+            <p>
+                PV :
+                <span id="monster-pv"><?= (int)$monster->getHp() ?></span>
+            </p>
+
+            <span id="monster-strength" hidden><?= (int)$monster->getStrength() ?></span>
         </div>
     </div>
 
-    <div class="section">
-        <h2><?= $monster->getName(); ?></h2>
-        <div class="stats">
-            ❤️ PV : <?= $monster->getHealth(); ?><br>
-            🔷 Mana : <?= $monster->getMana(); ?>
-        </div>
+    <div class="text-center mt-4">
+        <button id="btn-attack" class="btn btn-danger btn-lg mx-1">
+            ⚔️ Attaquer
+        </button>
+
+        <?php if ($hero->class === 'Magicien'): ?>
+        <button id="btn-magic" class="btn btn-primary btn-lg mx-1">
+            ✨ Magie
+        </button>
+        <?php endif; ?>
+
+        <button id="btn-potion" class="btn btn-success btn-lg mx-1">
+            🧪 Potion
+        </button>
     </div>
 
-    <?php
-    $log = [];
-
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-        $damage = $hero['atk'];
-        $log[] = "Vous attaquez et infligez $damage dégâts.";
-
-        $monster->takeDamage($damage);
-
-        if (!$monster->isAlive()) {
-            $log[] = "Vous avez vaincu le " . $monster->getName() . " !";
-
-            $xp = $monster->getExperienceValue();
-            $gold = $monster->getTreasure()['gold'];
-
-            $log[] = "Vous gagnez $xp XP et $gold or.";
-
-            echo "<div class='victory-box'>";
-            foreach ($log as $l) echo "<p>$l</p>";
-            echo "</div>";
-
-            echo "<p><a class='next-link' href='/DungeonXplorer/chapter/show/" . ($chapterId+1) . "'>➡ Continuer l'aventure</a></p>";
-
-            exit;
-        }
-
-        $monsterDamage = rand(5, 12);
-        $hero['hp'] -= $monsterDamage;
-
-        $log[] = $monster->attack();
-        $log[] = "Vous recevez $monsterDamage dégâts.";
-
-        if ($hero['hp'] <= 0) {
-            echo "<div class='victory-box' style='background:#4d1111;'>";
-            echo "<h2>Vous êtes mort...</h2>";
-            echo "<p><a class='next-link' href='/DungeonXplorer/chapter'>Recommencer</a></p>";
-            echo "</div>";
-            exit;
-        }
-    }
-    ?>
-
-    <div class="section">
-        <h3>Journal du combat</h3>
-        <div class="log-box">
-            <?php
-            if (!empty($log)) {
-                foreach ($log as $line) {
-                    echo "<p>• $line</p>";
-                }
-            } else {
-                echo "<p>Le combat commence !</p>";
-            }
-            ?>
-        </div>
+    <div class="text-center mt-2">
+        <form id="quit-form" method="post" action="/DungeonXplorer/chapter/quit" style="display:inline-block;">
+            <input type="hidden" name="chapter_id" value="<?= (int)$chapterId ?>">
+            <input type="hidden" name="hero_pv" id="quit-hero-pv" value="0">
+            <input type="hidden" name="hero_mana" id="quit-hero-mana" value="0">
+            <input type="hidden" name="monster_id" id="quit-monster-id" value="0">
+            <input type="hidden" name="monster_pv" id="quit-monster-pv" value="0">
+            <input type="hidden" name="hero_turn" id="quit-hero-turn" value="0">
+            <button type="submit" class="btn btn-warning btn-lg mx-1">Quitter et sauvegarder</button>
+        </form>
     </div>
 
-    <form method="POST">
-        <button class="button-attack" type="submit">Attaquer</button>
-    </form>
+    <div id="post-combat-actions" class="text-center mt-3"></div>
 
+
+    <div
+        id="combat-log"
+        class="mt-4 p-3 bg-black text-white rounded"
+        style="height:200px; overflow-y:auto;"
+    ></div>
 </div>
 
+<script>
+    const HERO_ID = <?= (int)$hero->id ?>;
+    const MONSTER_ID = <?= (int)$monster->getId() ?>;
+    const CHAPTER_ID = <?= (int)$chapterId ?>;
+    const HERO_CLASS = '<?= addslashes($hero->class) ?>';
+    const NEXT_CHAPTER_ID = <?= isset($nextChapterId) && $nextChapterId !== null ? (int)$nextChapterId : 'null' ?>;
+    const NEXT_LINK_ID = <?= isset($nextLinkId) && $nextLinkId !== null ? (int)$nextLinkId : 'null' ?>;
+    const NEXT_LINK_TEXT = <?= isset($nextLinkText) && $nextLinkText !== null ? json_encode($nextLinkText) : 'null' ?>;
+    const DEATH_CHAPTER_ID = <?= isset($deathChapterId) && $deathChapterId !== null ? (int)$deathChapterId : 'null' ?>;
+    const DEATH_LINK_ID = <?= isset($deathLinkId) && $deathLinkId !== null ? (int)$deathLinkId : 'null' ?>;
+    const DEATH_LINK_TEXT = <?= isset($deathLinkText) && $deathLinkText !== null ? json_encode($deathLinkText) : 'null' ?>;
+    const RESUME_COMBAT = <?= isset($heroTurnResume) && $heroTurnResume !== null ? 'true' : 'false' ?>;
+    const HERO_TURN_RESUME = <?= isset($heroTurnResume) && $heroTurnResume ? 'true' : 'false' ?>;
+</script>
+
+<script src="/DungeonXplorer/js/combat.js"></script>
 </body>
 </html>
