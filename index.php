@@ -51,6 +51,8 @@ $router->addRoute('account', 'AccountController@index');
 $router->addRoute('delete_hero', 'AccountController@deleteHero');
 $router->addRoute('delete_account', 'AccountController@deleteAccount');
 $router->addRoute('inventory', 'InventoryController@index');
+$router->addRoute('inventory/add', 'InventoryController@addPotion');
+$router->addRoute('inventory/use', 'InventoryController@use');
 $router->addRoute('hero', 'HeroController@index');
 $router->addRoute('chapter', 'ChapterController@index');
 $router->addRoute('chapter/choice', 'ChapterController@choice');

@@ -28,6 +28,12 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
     background-color: #1A1A1A;
+    color: #FFFFFF; /* Texte principal blanc */
+}
+
+/* Ensure buttons, anchors and other inline elements use white text for readability */
+button, .btn, .btn-primary, a, a:link, a:visited {
+    color: #FFFFFF !important;
 }
 
 .texte-principal {

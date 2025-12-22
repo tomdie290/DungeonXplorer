@@ -10,12 +10,12 @@ class Inventory
     {
         $db = getDB();
 
-        $stmt = $db->prepare("
-            SELECT i.quantity, it.name, it.description, it.item_type
-            FROM Inventory i
-            JOIN Items it ON i.item_id = it.id
-            WHERE i.hero_id = ?
-        ");
+        $stmt = $db->prepare(""
+            . "SELECT i.quantity, it.id AS item_id, it.name, it.description, it.item_type "
+            . "FROM Inventory i "
+            . "JOIN Items it ON i.item_id = it.id "
+            . "WHERE i.hero_id = ?"
+        );
         $stmt->execute([$heroId]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

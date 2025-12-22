@@ -135,7 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function physicalAttack(attacker, defender, isHero = true) {
         const attack = d6() + attacker.strength;
         const defense = d6() + Math.floor(defender.strength / 2);
-        const damage = Math.max(0, attack - defense);
+        const baseDamage = Math.max(0, attack - defense);
+        let damage = baseDamage;
+        if (isHero && typeof HERO_DAMAGE_BOOST !== 'undefined' && HERO_DAMAGE_BOOST > 0) {
+            damage = Math.ceil(baseDamage * (1 + HERO_DAMAGE_BOOST / 100));
+        }
         defender.pv = Math.max(0, defender.pv - damage);
         log(`${isHero ? 'Vous attaquez' : 'Le monstre attaque'} et inflige ${damage} dégâts`);
         updateUI();
@@ -256,24 +260,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.querySelector('button').onclick = () => {
                         if(quantity <= 0) return;
 
-                        if(type === 'pv') {
-                            hero.pv = Math.min(hero.pv + value, hero.pvMax);
-                            log(`🧪 ${name} utilisée `);
-                        } else if(type === 'mana') {
-                            hero.mana = Math.min(hero.mana + value, hero.manaMax);
-                            log(`✨ ${name} utilisée `);
-                        }
-                        updateUI();
-
                         fetch('/DungeonXplorer/inventory/use', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ item_id: id })
-                        });
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.error) {
+                                log(`⚠️ ${data.error}`);
+                                return;
+                            }
 
-                        overlay.remove();
-                        heroTurn = false;
-                        setTimeout(monsterAttack, 800);
+                            // apply server-confirmed effects
+                            if (data.applied) {
+                                if (data.applied.pv) {
+                                    hero.pv = Math.min(hero.pv + data.applied.pv, hero.pvMax);
+                                    log(`🧪 ${name} utilisée (+${data.applied.pv} PV)`);
+                                }
+                                if (data.applied.mana) {
+                                    hero.mana = Math.min(hero.mana + data.applied.mana, hero.manaMax);
+                                    log(`✨ ${name} utilisée (+${data.applied.mana} Mana)`);
+                                }
+                                if (data.applied.boost) {
+                                    HERO_DAMAGE_BOOST = data.applied.boost;
+                                    log(`⚡️ ${name} utilisée : +${data.applied.boost}% dégâts pour cette aventure`);
+                                }
+                                if (data.applied.strength) {
+                                    hero.strength = (hero.strength || 0) + data.applied.strength;
+                                    const strengthSpan = document.getElementById('hero-strength');
+                                    if (strengthSpan) strengthSpan.innerText = hero.strength;
+                                    log(`💪 ${name} utilisée : +${data.applied.strength} Force`);
+                                }
+                                if (data.applied.monster_damage) {
+                                    const dmg = parseInt(data.applied.monster_damage);
+                                    monster.pv = Math.max(0, monster.pv - dmg);
+                                    log(`💥 ${name} utilisée : inflige ${dmg} dégâts au monstre`);
+                                    updateUI();
+                                    if (monster.pv <= 0) {
+                                        log("🏆 Victoire !");
+                                        endCombat('win');
+                                        return;
+                                    }
+                                }
+                            }
+
+                            updateUI();
+                            overlay.remove();
+                            heroTurn = false;
+                            setTimeout(monsterAttack, 800);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            log('Erreur lors de l\'utilisation de la potion');
+                            overlay.remove();
+                        });
                     };
 
                     content.appendChild(card);

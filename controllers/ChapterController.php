@@ -308,6 +308,13 @@ class ChapterController {
         if (isset($_SESSION['combat_snapshot']) && isset($_SESSION['combat_snapshot'][$adventureId])) {
             $snap = $_SESSION['combat_snapshot'][$adventureId];
             if (isset($snap['chapter_id']) && (int)$snap['chapter_id'] > 0) {
+                // Mark adventure as resumed so inventory modifications are allowed again
+                try {
+                    $stmtP = $db->prepare("INSERT INTO Adventure_Progress (adventure_id, chapter_id, status) VALUES (?, ?, 'Resumed')");
+                    $stmtP->execute([$adventureId, (int)$snap['chapter_id']]);
+                } catch (Exception $e) {
+                    // ignore
+                }
                 header("Location: /DungeonXplorer/chapter?id=" . (int)$snap['chapter_id']);
                 exit;
             }
@@ -320,6 +327,13 @@ class ChapterController {
             $stmt->execute([$adventureId]);
             $current = $stmt->fetchColumn();
             if ($current && (int)$current > 0) {
+                // Mark adventure as resumed (allow inventory modifications again)
+                try {
+                    $stmtP = $db->prepare("INSERT INTO Adventure_Progress (adventure_id, chapter_id, status) VALUES (?, ?, 'Resumed')");
+                    $stmtP->execute([$adventureId, (int)$current]);
+                } catch (Exception $e) {
+                    // ignore
+                }
                 header("Location: /DungeonXplorer/chapter?id=" . (int)$current);
                 exit;
             }

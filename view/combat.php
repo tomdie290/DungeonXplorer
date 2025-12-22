@@ -118,6 +118,7 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
     const DEATH_LINK_TEXT = <?= isset($deathLinkText) && $deathLinkText !== null ? json_encode($deathLinkText) : 'null' ?>;
     const RESUME_COMBAT = <?= isset($heroTurnResume) && $heroTurnResume !== null ? 'true' : 'false' ?>;
     const HERO_TURN_RESUME = <?= isset($heroTurnResume) && $heroTurnResume ? 'true' : 'false' ?>;
+    var HERO_DAMAGE_BOOST = <?= isset($heroDamageBoost) ? (int)$heroDamageBoost : 0 ?>;
 </script>
 
 <script src="/DungeonXplorer/js/combat.js"></script>
