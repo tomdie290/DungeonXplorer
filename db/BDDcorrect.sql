@@ -307,7 +307,7 @@ VALUES
 (28,29, 'Buvez la fiole de puissance gagnez un bonus de puissance mais subissez de faible dégats'),
 (28,29, 'Lancez la fiole sur le sol,le bouclier explose en blessant le sorcier'),
 (29,30, 'Vous avez gagné le combat final contre le sorcier'),
-(29,2, 'Vous êtes mort face au sorcier'),
+(29,10, 'Vous êtes mort face au sorcier'),
 (30,31, 'Retourner au village avec la fille du bourgmestre');
 /*(31,32, 'Fin de l''aventure');*/
 
@@ -316,7 +316,6 @@ INSERT INTO Encounter (chapter_id, monster_id)
 VALUES
 (4, 1),
 (6, 2),
-(7, 3),
 (13, 4),
 (17, 5),
 (24, 9),

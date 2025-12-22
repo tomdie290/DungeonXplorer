@@ -33,6 +33,22 @@
             <?php
             $text = $choice['text'] ?? $choice['description'] ?? 'Continuer';
             $id = $choice['id'] ?? 0;
+
+            // Special case: chapter 20 has two choices about forcing the chest —
+            // one for thieves and one for non-thieves. Show only the appropriate
+            // button depending on the hero's class.
+            $chapterId = $chapter->getId();
+            $isVoleurChoice = stripos($text, 'voleur') !== false;
+            if ($chapterId === 20) {
+                if (isset($hero) && isset($hero->class)) {
+                    if ($hero->class === 'Voleur' && !$isVoleurChoice) {
+                        continue; // skip non-thief choice for thief
+                    }
+                    if ($hero->class !== 'Voleur' && $isVoleurChoice) {
+                        continue; // skip thief-only choice for non-thief
+                    }
+                }
+            }
             ?>
             <form method="post" action="/DungeonXplorer/chapter/choice">
                 <input type="hidden" name="choice_id" value="<?= intval($id) ?>">

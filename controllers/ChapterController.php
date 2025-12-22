@@ -89,27 +89,102 @@ class ChapterController {
 
         $choiceId = intval($_POST['choice_id']);
         $db = getDB();
-        $stmt = $db->prepare("SELECT next_chapter_id, description FROM Links WHERE id = ?");
+        $stmt = $db->prepare("SELECT next_chapter_id, description, chapter_id FROM Links WHERE id = ?");
         $stmt->execute([$choiceId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $next = $row['next_chapter_id'] ?? null;
         $desc = $row['description'] ?? '';
+        $originChapterId = isset($row['chapter_id']) ? (int)$row['chapter_id'] : null;
 
         if (!$next) die("Choix invalide");
 
-        // Si le choix correspond à un retour au début ou à un lien de mort,
-        // restaurer les PV/Mana du héros au maximum.
-        $shouldRestore = false;
-        if ((int)$next === 2) $shouldRestore = true; // retour au début
-        if (stripos($desc, 'mort') !== false) $shouldRestore = true; // lien de mort
+        // Effets spécifiques aux choix: potion, malédiction, poison, retour au début, mort
+        $hero = Hero::loadById($_SESSION['hero_id']);
+        if ($hero) {
+            $descLower = mb_strtolower($desc);
 
-        if ($shouldRestore) {
-            $hero = Hero::loadById($_SESSION['hero_id']);
-            if ($hero) {
+            // Retour au début ou mort -> restaurer complètement
+            if ((int)$next === 2 || stripos($descLower, 'mort') !== false) {
                 $hero->pv = $hero->pv_max;
                 $hero->mana = $hero->mana_max;
                 $hero->save();
             }
+
+            // Potion de soin explicite -> restaurer complètement
+            if (stripos($descLower, 'potion') !== false || stripos($descLower, 'soin') !== false || stripos($descLower, 'retrouver') !== false) {
+                $hero->pv = $hero->pv_max;
+                $hero->mana = $hero->mana_max;
+                $hero->save();
+            }
+
+            // Effet spécial: si le joueur boit la Fiole de Puissance (chapitre 28), lui donner un bonus de dégâts
+            // On évite l'empilement en enregistrant un flag de boost dans la session par aventure.
+            if ($originChapterId === 28 || stripos($descLower, 'fiole') !== false || stripos($descLower, 'puissance') !== false) {
+                // récupère l'aventure en cours
+                $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL");
+                $stmtA->execute([$_SESSION['hero_id']]);
+                $adventureId = $stmtA->fetchColumn();
+                if ($adventureId) {
+                    if (!isset($_SESSION['potion_boost'])) $_SESSION['potion_boost'] = [];
+                    if (empty($_SESSION['potion_boost'][$adventureId])) {
+                        // applique un bonus de +10 de force
+                        $hero->strength = (int)$hero->strength + 10;
+                        $hero->save();
+                        $_SESSION['potion_boost'][$adventureId] = true;
+                        // Optionnel: flash
+                        $_SESSION['flash'] = 'Vous avez bu la Fiole de Puissance : +10 de Force jusqu\'à la fin de l\'aventure.';
+                    }
+                }
+            }
+
+            // Malédiction / perte de PV -> appliquer une perte
+            if (preg_match('/perd(?:e|ez|es)?\s+des?\s*pv|perd(?:e|ez|es)|malédiction|perte\s+de\s+pv|dégats|dégâts/i', $desc)) {
+                // par défaut les dégâts sont importants (20), mais certaines descriptions
+                // précisent "faible dégâts" -> appliquer un petit malus pour éviter la mort instantanée
+                $loss = 20;
+                if (stripos($descLower, 'faible') !== false || stripos($descLower, 'leger') !== false || stripos($descLower, 'l\xc3\xa9ger') !== false || stripos($descLower, 'légers') !== false) {
+                    $loss = 5;
+                }
+                $hero->pv = max(0, $hero->pv - $loss);
+                $hero->save();
+            }
+
+            // Poison explicite -> appliquer un effet fort (mettre à 0 pour refléter le texte)
+            if (stripos($descLower, 'empoison') !== false || stripos($descLower, 'poison') !== false) {
+                // Si le lien mène à un chapitre de mort, la logique de mort s'en chargera;
+                // sinon on applique un sévère dégât pour refléter l'empoisonnement.
+                if ((int)$next !== 10) {
+                    $hero->pv = max(0, $hero->pv - 9999);
+                    $hero->save();
+                }
+            }
+        }
+
+        // Si le héros est mort après application des effets, rediriger vers le lien de mort du chapitre d'origine
+        if ($hero && $hero->pv <= 0) {
+            // Cherche un lien de mort dans le chapitre d'origine (description contenant 'mort')
+            if ($originChapterId !== null) {
+                $stmtD = $db->prepare("SELECT next_chapter_id FROM Links WHERE chapter_id = ? AND LOWER(description) LIKE '%mort%' LIMIT 1");
+                $stmtD->execute([$originChapterId]);
+                $rD = $stmtD->fetch(PDO::FETCH_ASSOC);
+                if ($rD && isset($rD['next_chapter_id'])) {
+                    $deathTarget = (int)$rD['next_chapter_id'];
+                    $this->show($deathTarget);
+                    return;
+                }
+                // fallback: cherche un lien pointant vers un chapitre classique de mort (10 ou 2)
+                $stmtF = $db->prepare("SELECT next_chapter_id FROM Links WHERE chapter_id = ? AND next_chapter_id IN (10,2) LIMIT 1");
+                $stmtF->execute([$originChapterId]);
+                $rF = $stmtF->fetch(PDO::FETCH_ASSOC);
+                if ($rF && isset($rF['next_chapter_id'])) {
+                    $this->show((int)$rF['next_chapter_id']);
+                    return;
+                }
+            }
+
+            // Si on n'a pas trouvé de lien de mort spécifique, montrer la page de mort générique (chapter 10 si existante)
+            $this->show(10);
+            return;
         }
 
         $this->show((int)$next);
