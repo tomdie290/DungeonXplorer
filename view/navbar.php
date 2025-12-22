@@ -43,18 +43,18 @@ function isActive($page, $currentPage) {
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link<?= isActive('account', $currentPage) ?>" href="account">Accueil</a>
+          <a class="nav-link<?= isActive('account', $currentPage) ?>" href="/account">Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link<?= isActive('hero', $currentPage) ?>" href="hero">Crée héros</a>
+          <a class="nav-link<?= isActive('hero', $currentPage) ?>" href="/hero">Crée héros</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link<?= isActive('profil', $currentPage) ?>" href="profil">Mon compte</a>
+          <a class="nav-link<?= isActive('profil', $currentPage) ?>" href="/profil">Mon compte</a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="deconnexion">Deconnexion</a></li>
+        <li class="nav-item"><a class="nav-link" href="/deconnexion">Deconnexion</a></li>
         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1): ?>
           <li class="nav-item">
-            <a class="nav-link<?= isActive('admin', $currentPage) ?>" href="admin">Page Admin</a>
+            <a class="nav-link<?= isActive('admin', $currentPage) ?>" href="/admin">Page Admin</a>
           </li>
         <?php endif; ?>
       </ul>

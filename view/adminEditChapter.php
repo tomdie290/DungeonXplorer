@@ -1,12 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../core/Database.php';
-$db = getDB();
-
-$q = $db -> prepare("SELECT * FROM chapter");
-$q -> execute();
-$chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
-
+if (!isset($chapter)) {
+    header('Location: /admin/manage_chapters');
+    exit;
+}
 ?>
 
 <!doctype html>
@@ -14,62 +11,31 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
 <head>
     <?php require_once __DIR__ . '/head.php'; ?>
     <meta charset="UTF-8">
-    <title>Gestion des chapitres</title>
+    <title>Modifier le chapitre</title>
 </head>
 
 <body>
 <?php require_once __DIR__ . '/navbar.php'; ?>
 <div class="container mt-5">
-    <h1 class="mb-4 pirata-one-regular">Gestion des chapitres</h1>
-
-    <h2 class="mb-3">Chapitres existants</h2>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($chapters as $chapter): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($chapter['id']); ?></td>
-                <td><?php echo htmlspecialchars($chapter['title']); ?></td>
-                <td><?php echo nl2br(htmlspecialchars($chapter['description'])); ?></td>
-                <td>
-                    <?php if (!empty($chapter['image'])): ?>
-                        <img src="<?php echo htmlspecialchars($chapter['image']); ?>" alt="Image du chapitre" style="max-width: 100px;">
-                    <?php else: ?>
-                        Aucune image
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <a href="/manage_chapters/edit?id=<?php echo urlencode($chapter['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
+    <h1 class="mb-4">Modifier le chapitre #<?php echo htmlspecialchars($chapter['id']); ?></h1>
 
     <div class="card hero-card background-secondaire rounded-3 mb-5 p-4">
-        <h2 class="text-center mb-4">Ajouter un nouveau chapitre</h2>
-        <form method="POST" action="/DungeonXplorer/admin/manage_chapters/store" class="d-flex flex-column gap-3 w-75 mx-auto">
+        <form method="POST" action="/manage_chapters/update" class="d-flex flex-column gap-3 w-75 mx-auto">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($chapter['id']); ?>">
+
             <div class="input-group">
                 <span class="input-group-text">Titre du chapitre</span>
-                <input type="text" name="title" class="form-control" required>
+                <input type="text" name="title" class="form-control" required value="<?php echo htmlspecialchars($chapter['title']); ?>">
             </div>
-            
+
             <div class="input-group">
-                <span class="input-group-text">Contenu du chapitre</span>
-                <textarea name="content" class="form-control" rows="5" required></textarea>
+                <span class="input-group-text">Description du chapitre</span>
+                <textarea name="description" class="form-control" rows="5" required><?php echo htmlspecialchars($chapter['description']); ?></textarea>
             </div>
 
             <div class="input-group flex-column align-items-start">
                 <label class="input-group-text mb-2">Sélecteur d'images</label>
                 <?php
-                // Récupère les images du dossier img/ et uploads/chapters/ pour proposer un choix
                 $imageOptions = [];
                 $imgDir = __DIR__ . '/../img';
                 $uploadDir = __DIR__ . '/../uploads/chapters';
@@ -90,14 +56,17 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
                 <select id="imageSelector" name="image_path" class="form-select mt-2 w-100">
                     <option value="">-- Aucune image sélectionnée --</option>
                     <?php foreach ($imageOptions as $opt):
-                        $url = "/" . $opt['file'];
+                        $pathPrefix = $opt['type'] === 'img' ? 'img/' : 'uploads/chapters/';
+                        $url = '/' . $pathPrefix . rawurlencode($opt['file']);
+                        $fullStored = $chapter['image'] ?? '';
+                        $isSelected = ($fullStored === $url) ? ' selected' : '';
                     ?>
-                        <option value="<?php echo htmlspecialchars($url); ?>"><?php echo htmlspecialchars($opt['file']); ?></option>
+                        <option value="<?php echo htmlspecialchars($url); ?>"<?php echo $isSelected; ?>><?php echo htmlspecialchars($opt['file']); ?></option>
                     <?php endforeach; ?>
                 </select>
 
                 <div class="mt-3 text-center w-100">
-                    <img id="imagePreview" src="" alt="Aperçu" style="max-width:240px; display:none; border:1px solid #ccc; padding:6px;" />
+                    <img id="imagePreview" src="<?php echo htmlspecialchars($chapter['image'] ?? ''); ?>" alt="Aperçu" style="max-width:240px; <?php echo empty($chapter['image']) ? 'display:none;' : ''; ?> border:1px solid #ccc; padding:6px;" />
                 </div>
 
                 <script>
@@ -112,10 +81,13 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
                     })();
                 </script>
             </div>
+
             <div class="text-center">
-                <button type="submit" class="btn btn-primary">Ajouter le chapitre</button>
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                <a href="/manage_chapters" class="btn btn-secondary ms-2">Annuler</a>
             </div>
         </form>
     </div>
+</div>
 </body>
 </html>

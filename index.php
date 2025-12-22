@@ -65,8 +65,14 @@ $router->addRoute('combat', 'CombatController@start');
 $router->addRoute('combat/end', 'CombatController@endCombat');
 $router->addRoute('deconnexion', 'DeconnexionController@index');
 $router->addRoute('admin', 'AdminController@index');
-$router->addRoute('admin/manage_chapters', 'AdminController@manageChapters');
-$router->addRoute('admin/manage_chapters/store',  'AdminController@storeChapter');
+$router->addRoute('manage_chapters', 'AdminController@manageChapters');
+$router->addRoute('manage_chapters/store',  'AdminController@storeChapter');
+$router->addRoute('manage_chapters/edit',   'AdminController@editChapter');
+$router->addRoute('manage_chapters/update', 'AdminController@updateChapter');
+$router->addRoute('manage_accounts', 'AdminController@manageUsers');
+$router->addRoute('manage_accounts/delete', 'AdminController@deleteUser');
+$router->addRoute('manage_accounts/edit', 'AdminController@editUser');
+$router->addRoute('manage_accounts/update', 'AdminController@updateUser');
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 

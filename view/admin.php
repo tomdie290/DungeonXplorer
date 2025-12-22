@@ -30,19 +30,19 @@ if (!$isAdmin) {
     <h2 class="login-title mt-5 mb-4">Administration</h2>
     <div class="container mb-5">
         <div class="list-group">
-            <a href="/DungeonXplorer/admin/manage_chapters" class="list-group-item list-group-item-action">
+            <a href="/manage_chapters" class="list-group-item list-group-item-action">
                 Gérer les chapitres
             </a>
-            <a href="/DungeonXplorer/admin/manage_monsters" class="list-group-item list-group-item-action">
+            <a href="/manage_monsters" class="list-group-item list-group-item-action">
                 Gérer les monstres
             </a>
-            <a href="/DungeonXplorer/admin/manage_images" class="list-group-item list-group-item-action">
+            <a href="/manage_images" class="list-group-item list-group-item-action">
                 Gérer les images
             </a>
-            <a href="/DungeonXplorer/admin/manage_treasures" class="list-group-item list-group-item-action">
+            <a href="/manage_treasures" class="list-group-item list-group-item-action">
                 Gérer les trésors
             </a>
-            <a href="/DungeonXplorer/admin/manage_accounts" class="list-group-item list-group-item-action">
+            <a href="/manage_accounts" class="list-group-item list-group-item-action">
                 Gérer les comptes utilisateur
             </a>
         </div>
