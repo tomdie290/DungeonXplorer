@@ -204,9 +204,9 @@ VALUES
 ('Orc Guerrier', 70, 0, 9, 8, 'L’orc abat sa massue !', 120, 'img/Ork.png'),
 ('Squelette', 25, 0, 9, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquelette.jpg'),
 ('Gargouille de Pierre', 60, 0, 10, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
-('Ombre Ténébreuse', 90, 20, 11, 10, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
+('Ombre Ténébreuse', 80, 20, 11, 10, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
 ('Esprit Élémentaire', 55, 30, 13, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
-('Malkor l''Ensorceleur', 120, 80, 15, 12, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
+('Malkor l''Ensorceleur', 100, 80, 15, 12, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
 ('Ombre Ténébreuse surprise', 60, 20, 10, 8, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg');
 
 -- Chapitres
