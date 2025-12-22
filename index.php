@@ -64,6 +64,9 @@ $router->addRoute('logout', 'LogoutController@index');
 $router->addRoute('combat', 'CombatController@start');
 $router->addRoute('combat/end', 'CombatController@endCombat');
 $router->addRoute('deconnexion', 'DeconnexionController@index');
+$router->addRoute('admin', 'AdminController@index');
+$router->addRoute('admin/manage_chapters', 'AdminController@manageChapters');
+$router->addRoute('admin/manage_chapters/store',  'AdminController@storeChapter');
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 

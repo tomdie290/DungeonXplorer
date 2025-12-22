@@ -39,6 +39,7 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </head>
     
     <body>
+    <?php require_once 'navbar.php'; ?>
         <div class="container">
         <div>
             <h1 class="login-title mt-5 mb-4">Bienvenue <?= htmlspecialchars($_SESSION['username']) ?> !</h1>
