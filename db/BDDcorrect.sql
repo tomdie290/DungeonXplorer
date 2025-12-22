@@ -199,15 +199,15 @@ VALUES
 -- Monstres
 INSERT INTO Monster (name, pv, mana, strength, initiative, attack_text, xp_reward, image)
 VALUES 
-('Sanglier Enragé', 50, 0, 12, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBoard01.jpg'),
+('Sanglier Enragé', 50, 0, 7, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBoard01.jpg'),
 ('Loup Noir', 40, 0, 8, 12, 'Le loup bondit et tente de vous mordre !', 60, 'img/Wolf02.jpg'),
-('Orc Guerrier', 70, 0, 15, 8, 'L’orc abat sa massue !', 120, 'img/Ork.png'),
-('Squelette', 25, 0, 6, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquelette.jpg'),
-('Gargouille de Pierre', 60, 0, 14, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
-('Ombre Ténébreuse', 90, 20, 18, 12, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
-('Esprit Élémentaire', 55, 30, 16, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
-('Malkor l''Ensorceleur', 120, 80, 25, 15, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
-('Ombre Ténébreuse surprise', 60, 20, 12, 12, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg');
+('Orc Guerrier', 70, 0, 9, 8, 'L’orc abat sa massue !', 120, 'img/Ork.png'),
+('Squelette', 25, 0, 9, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquelette.jpg'),
+('Gargouille de Pierre', 60, 0, 10, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
+('Ombre Ténébreuse', 90, 20, 11, 10, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
+('Esprit Élémentaire', 55, 30, 13, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
+('Malkor l''Ensorceleur', 120, 80, 15, 12, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
+('Ombre Ténébreuse surprise', 60, 20, 10, 8, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg');
 
 -- Chapitres
 INSERT INTO Chapter (title, description, image)
