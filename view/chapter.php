@@ -38,14 +38,19 @@
             // one for thieves and one for non-thieves. Show only the appropriate
             // button depending on the hero's class.
             $chapterId = $chapter->getId();
-            $isVoleurChoice = stripos($text, 'voleur') !== false;
+            // detect whether the choice mentions 'voleur' and whether it explicitly
+            // states 'pas voleur' (i.e. intended for non-thieves)
+            $containsVoleur = stripos($text, 'voleur') !== false;
+            $containsPasVoleur = stripos($text, 'pas voleur') !== false || stripos($text, "n'etes pas voleur") !== false || stripos($text, "n'\u2019etes pas voleur") !== false;
+
             if ($chapterId === 20) {
                 if (isset($hero) && isset($hero->class)) {
-                    if ($hero->class === 'Voleur' && !$isVoleurChoice) {
-                        continue; // skip non-thief choice for thief
-                    }
-                    if ($hero->class !== 'Voleur' && $isVoleurChoice) {
-                        continue; // skip thief-only choice for non-thief
+                    if ($hero->class === 'Voleur') {
+                        // For thieves: show only choices explicitly for thieves (contain 'voleur' but not 'pas voleur')
+                        if (! $containsVoleur || $containsPasVoleur) continue;
+                    } else {
+                        // For non-thieves: show choices that are explicitly 'pas voleur' or that don't mention 'voleur' at all
+                        if ($containsVoleur && ! $containsPasVoleur) continue;
                     }
                 }
             }

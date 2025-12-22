@@ -145,9 +145,61 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI();
     }
 
+    function magicAttack(attacker, defender, manaValue, isHero = true) {
+        // attacker must have enough mana
+        if (manaValue <= 0) return;
+
+        // Deduct mana from attacker immediately
+        if (isHero) {
+            if (hero.mana < manaValue) {
+                log('❌ Pas assez de mana pour lancer ce sort.');
+                return;
+            }
+            hero.mana = Math.max(0, hero.mana - manaValue);
+            log(`✨ Vous lancez un sort en dépensant ${manaValue} mana`);
+        } else {
+            // monster
+            monster.mana = Math.max(0, monster.mana - manaValue);
+            log(`✨ Le monstre lance un sort en dépensant ${manaValue} mana`);
+        }
+
+        // Compute magical attack: sum of two d6 + manaValue
+        const attackMag = d6() + d6() + manaValue;
+        const defense = d6() + Math.floor(defender.strength / 2);
+        const dmg = Math.max(0, attackMag - defense);
+
+        if (dmg > 0) {
+            defender.pv = Math.max(0, defender.pv - dmg);
+        }
+
+        log(`${isHero ? 'Votre sort' : 'Le sort du monstre'} inflige ${dmg} dégâts (Attaque: ${attackMag} vs Défense: ${defense})`);
+        updateUI();
+
+        // Check death
+        if (defender.pv <= 0) {
+            if (isHero) {
+                log('🏆 Victoire !');
+                endCombat('win');
+            } else {
+                log('💀 Vous êtes mort...');
+                endCombat('lose');
+            }
+            return;
+        }
+    }
+
     function monsterAttack() {
         if (monster.pv <= 0 || hero.pv <= 0) return;
-        physicalAttack(monster, hero, false);
+
+        // Monster may use magic if it has mana (treat mana>0 as magic-capable)
+        if (monster.mana > 0 && Math.random() < 0.5) {
+            const maxSpend = Math.min(6, monster.mana);
+            const manaSpend = Math.floor(Math.random() * maxSpend) + 1;
+            magicAttack(monster, hero, manaSpend, false);
+        } else {
+            physicalAttack(monster, hero, false);
+        }
+
         if (hero.pv <= 0) {
             hero.pv = 0;
             updateUI();
@@ -171,6 +223,40 @@ document.addEventListener('DOMContentLoaded', () => {
         heroTurn = false;
         setTimeout(monsterAttack, 800);
     });
+
+    const btnMagic = document.getElementById('btn-magic');
+    if (btnMagic) {
+        btnMagic.addEventListener('click', () => {
+            if (!heroTurn) return;
+            if (hero.mana <= 0) {
+                log('❌ Pas assez de mana pour lancer un sort.');
+                return;
+            }
+
+            let input = prompt('Combien de mana voulez-vous utiliser pour le sort ? (1 - ' + hero.mana + ')', '1');
+            if (input === null) return; // cancelled
+            const manaSpend = parseInt(input, 10);
+            if (isNaN(manaSpend) || manaSpend <= 0 || manaSpend > hero.mana) {
+                log('Valeur de mana invalide.');
+                return;
+            }
+
+            // Use the mana to cast the spell
+            magicAttack(hero, monster, manaSpend, true);
+
+            // After hero cast, check monster status
+            if (monster.pv <= 0) {
+                monster.pv = 0;
+                updateUI();
+                log('🏆 Victoire !');
+                endCombat('win');
+                return;
+            }
+
+            heroTurn = false;
+            setTimeout(monsterAttack, 800);
+        });
+    }
 
 
     const style = document.createElement('style');

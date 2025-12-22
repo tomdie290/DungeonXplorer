@@ -110,10 +110,18 @@ class ChapterController {
                 $hero->save();
             }
 
-            // Potion de soin explicite -> restaurer complètement
-            if (stripos($descLower, 'potion') !== false || stripos($descLower, 'soin') !== false || stripos($descLower, 'retrouver') !== false) {
-                $hero->pv = $hero->pv_max;
+            // Potion explicit handling: restore PV for 'soin' / 'retrouver',
+            // but do NOT restore mana unless the description explicitly mentions 'mana'.
+            if (stripos($descLower, 'mana') !== false) {
+                // If the text mentions mana, restore mana. Also restore PV if the text mentions healing.
                 $hero->mana = $hero->mana_max;
+                if (stripos($descLower, 'soin') !== false || stripos($descLower, 'retrouver') !== false || stripos($descLower, 'pv') !== false) {
+                    $hero->pv = $hero->pv_max;
+                }
+                $hero->save();
+            } elseif (stripos($descLower, 'soin') !== false || stripos($descLower, 'retrouver') !== false) {
+                // Only heal PV
+                $hero->pv = $hero->pv_max;
                 $hero->save();
             }
 
