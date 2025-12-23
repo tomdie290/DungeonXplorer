@@ -3,245 +3,230 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once 'core/Database.php';
 $db = getDB();
 
-// Note: removed automatic insertion of a default potion to let players choose their potions
-
-$defaultSelected = "img/HeroDefault.png";
-
-$defaultImages = [
-    "img/HeroDefault.png",
-    "img/HeroRogueM.png",
-    "img/HeroRogueF.png",
-    "img/HeroMageM.png",
-    "img/HeroMageF.png"
-];
-
-
 $classes = $db->query("SELECT * FROM Class")->fetchAll(PDO::FETCH_ASSOC);
-$creation_success = '';
+
 $creation_error = '';
 $class_success = '';
 $class_error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_hero') {
-    $name = $_POST['hero_name'] ?? '';
-    $class_id = $_POST['class_id'] ?? '';
-    $biography = $_POST['biography'] ?? '';
-    $image_path = $defaultSelected;
 
-    if (!empty($_FILES['hero_image']['name']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'uploads/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-        $image_name = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.\-]/', '_', basename($_FILES['hero_image']['name']));
-        $image_path = $uploadDir . $image_name;
-        move_uploaded_file($_FILES['hero_image']['tmp_name'], $image_path);
-    }
-    else if (isset($_POST['selected_default_image']) && !empty($_POST['selected_default_image'])) {
-        $sel = $_POST['selected_default_image'];
-        if (in_array($sel, $defaultImages, true)) {
-            $image_path = $sel;
-        } else {
-            $image_path = $defaultSelected;
-        }
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'create_hero') {
 
-
-    if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'uploads/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-        $image_name = time() . '_' . basename($_FILES['hero_image']['name']);
-        $image_path = $uploadDir . $image_name;
-        move_uploaded_file($_FILES['hero_image']['tmp_name'], $image_path);
-    }
+    $name       = $_POST['hero_name'] ?? '';
+    $class_id   = $_POST['class_id'] ?? '';
+    $biography  = $_POST['biography'] ?? '';
+    $gender     = $_POST['gender'] ?? 'H';
 
     if (empty($name) || empty($class_id)) {
-        $creation_error = "Veuillez remplir tous les champs du héros.";
+        $creation_error = "Veuillez remplir tous les champs.";
     } else {
-        $stmt = $db->prepare("SELECT * FROM Class WHERE id = :id");
-        $stmt->execute(['id' => $class_id]);
+
+        $stmt = $db->prepare("SELECT * FROM Class WHERE id = ?");
+        $stmt->execute([$class_id]);
         $class = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($class) {
+        if (!$class) {
+            $creation_error = "Classe invalide.";
+        } else {
+
+            $className  = preg_replace('/[^A-Za-z]/', '', $class['name']);
+            $image_path = "img/Hero{$className}{$gender}.png";
+
             $stmt = $db->prepare("
-                INSERT INTO Hero 
+                INSERT INTO Hero
                 (account_id, name, class_id, pv, mana, strength, initiative, xp, current_level, biography, image)
-                VALUES (:account_id, :name, :class_id, :pv, :mana, :strength, :initiative, 0, 1, :biography, :image)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1, ?, ?)
             ");
+
             $stmt->execute([
-                'account_id' => $_SESSION['id'],
-                'name' => $name,
-                'class_id' => $class['id'],
-                'pv' => $class['base_pv'],
-                'mana' => $class['base_mana'],
-                'strength' => $class['strength'],
-                'initiative' => $class['initiative'],
-                'biography' => $biography,
-                'image' => $image_path
+                $_SESSION['id'],
+                $name,
+                $class['id'],
+                $class['base_pv'],
+                $class['base_mana'],
+                $class['strength'],
+                $class['initiative'],
+                $biography,
+                $image_path
             ]);
 
             $heroId = $db->lastInsertId();
 
-            $creation_success = "Héros $name créé avec succès !";
-        } else {
-            $creation_error = "Classe invalide.";
+            $db->prepare("
+                INSERT INTO Inventory (hero_id, item_id, quantity)
+                VALUES (?, 1, 1)
+            ")->execute([$heroId]);
+
+            header("Location: /DungeonXplorer/account");
+            exit;
         }
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_class') {
-    $class_name = $_POST['class_name'] ?? '';
-    $description = $_POST['description'] ?? '';
-    $base_pv = $_POST['base_pv'] ?? 0;
-    $base_mana = $_POST['base_mana'] ?? 0;
-    $strength = $_POST['strength'] ?? 0;
-    $initiative = $_POST['initiative'] ?? 0;
-    $max_items = $_POST['max_items'] ?? 5;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'create_class') {
 
-    if (empty($class_name)) {
-        $class_error = "Le nom de la classe est obligatoire.";
+    if (empty($_POST['class_name'])) {
+        $class_error = "Nom de classe obligatoire.";
     } else {
-        $stmt = $db->prepare("
-            INSERT INTO Class 
-            (name, description, base_pv, base_mana, strength, initiative, max_items)
-            VALUES (:name, :description, :pv, :mana, :strength, :initiative, :max_items)
-        ");
-        $stmt->execute([
-            'name' => $class_name,
-            'description' => $description,
-            'pv' => $base_pv,
-            'mana' => $base_mana,
-            'strength' => $strength,
-            'initiative' => $initiative,
-            'max_items' => $max_items
-        ]);
-        $class_success = "Classe $class_name créée avec succès !";
 
+        $db->prepare("
+            INSERT INTO Class
+            (name, description, base_pv, base_mana, strength, initiative, max_items)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ")->execute([
+            $_POST['class_name'],
+            $_POST['description'] ?? '',
+            $_POST['base_pv'],
+            $_POST['base_mana'],
+            $_POST['strength'],
+            $_POST['initiative'],
+            $_POST['max_items'] ?? 5
+        ]);
+
+        $class_success = "Classe créée avec succès.";
         $classes = $db->query("SELECT * FROM Class")->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>
-<?php if ($creation_success): ?>
-        <div class="alert alert-success mt-3 text-center"><?= $creation_success ?></div>
-        <?php header("Location: /DungeonXplorer/account"); exit; ?>
-    <?php endif; ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <?php require_once 'head.php'; ?>
     <title>Créer un héros - DungeonXplorer</title>
 </head>
+
 <body>
 
 <div class="login-container">
 
-    <h1 class="login-title mb-4">Créer un héros</h1>
+<h1 class="login-title mb-4">Créer un héros</h1>
 
-    <form method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center gap-3 w-100">
-        
-        <label class="texte-principal">Choisir une image :</label>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <?php foreach ($defaultImages as $img): 
-                $isSelected = ($img === $defaultSelected); ?>
-                <label style="cursor: pointer;">
-                    <input type="radio" name="selected_default_image" value="<?= htmlspecialchars($img) ?>" hidden <?= $isSelected ? 'checked' : '' ?>>
-                    <div class="hero-image-wrapper <?= $isSelected ? 'selected-image' : '' ?>">
-                        <img src="<?= htmlspecialchars($img) ?>" class="hero-image-preview" alt="">
-                    </div>
-                </label>
-            <?php endforeach; ?>
-        </div>
+<form method="post" class="d-flex flex-column align-items-center gap-3">
 
-        <script>
-            document.querySelectorAll("input[name='selected_default_image']").forEach(input => {
-                input.addEventListener("change", () => {
-                    document.querySelectorAll(".hero-image-wrapper").forEach(w => w.classList.remove("selected-image"));
-                    const wrapper = input.parentElement.querySelector(".hero-image-wrapper");
-                    if(wrapper) wrapper.classList.add("selected-image");
-                });
-            });
-        </script>
-        
-    
-        <input type="hidden" name="action" value="create_hero">
+    <input type="hidden" name="action" value="create_hero">
+    <input type="hidden" name="gender" id="gender" value="H">
 
-        <div class="input-group w-100">
-            <input type="text" name="hero_name" class="form-control background-secondaire texte-principal" placeholder="Nom du héros" required>
-        </div>
+    <div class="btn-group">
+        <button type="button" id="btn-homme" class="btn btn-primary">Homme</button>
+        <button type="button" id="btn-femme" class="btn btn-outline-primary">Femme</button>
+    </div>
 
-        <div class="input-group w-100">
-            <select name="class_id" class="form-control background-secondaire texte-principal" required>
-                <option value="">-- Choisir une classe --</option>
-                <?php foreach ($classes as $cls): ?>
-                    <option value="<?= $cls['id'] ?>">
-                        <?= htmlspecialchars($cls['name']) ?> (PV <?= $cls['base_pv'] ?> | Mana <?= $cls['base_mana'] ?>)
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+    <div class="hero-image-wrapper selected-image">
+        <img
+            id="heroPreview"
+            src="img/HeroDefault.png"
+            class="hero-image-preview"
+            alt="Aperçu du héros">
+    </div>
 
-        <div class="input-group w-100">
-            <textarea name="biography" class="form-control background-secondaire texte-principal" placeholder="Biographie du héros" rows="4"></textarea>
-        </div>
+    <input  
+        type="text"
+        name="hero_name"
+        class="form-control"
+        placeholder="Nom du héros"
+        required>
 
-        
-        <div class="w-100">
-            <label class="texte-principal">Ou importer une image :</label>
-            <input type="file" name="hero_image" accept="image/*" class="form-control background-secondaire texte-principal">
-        </div>
+    <select
+        name="class_id"
+        id="classSelect"
+        class="form-control"
+        required>
+        <option value="">-- Choisir une classe --</option>
+        <?php foreach ($classes as $cls): ?>
+            <option
+                value="<?= $cls['id'] ?>"
+                data-name="<?= htmlspecialchars($cls['name']) ?>">
+                <?= htmlspecialchars($cls['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
 
+    <textarea
+        name="biography"
+        class="form-control"
+        placeholder="Biographie"></textarea>
 
-        <input type="submit" value="Créer le héros" class="btn btn-primary mt-2 w-50">
-        
+    <input
+        type="submit"
+        value="Créer le héros"
+        class="btn btn-primary w-50">
 
+</form>
 
-    </form>
+<?php if ($creation_error): ?>
+    <div class="alert alert-danger mt-3"><?= $creation_error ?></div>
+<?php endif; ?>
 
-    <!-- Messages -->
-    
+<hr>
 
-    <?php if ($creation_error): ?>
-        <div class="alert alert-danger mt-3 text-center"><?= $creation_error ?></div>
-    <?php endif; ?>
+<h1 class="login-title mb-4">Créer une classe</h1>
 
-    <hr style="border-color: #C4975E; margin: 30px 0;">
+<form method="post" class="d-flex flex-column gap-3">
 
-    <h1 class="login-title mb-4">Créer une nouvelle classe</h1>
+    <input type="hidden" name="action" value="create_class">
 
-    <form method="post" class="d-flex flex-column align-items-center gap-3 w-100">
-        <input type="hidden" name="action" value="create_class">
+    <input type="text" name="class_name" class="form-control" placeholder="Nom" required>
+    <textarea name="description" class="form-control" placeholder="Description"></textarea>
 
-        <div class="input-group w-100">
-            <input type="text" name="class_name" class="form-control background-secondaire texte-principal" placeholder="Nom de la classe" required>
-        </div>
+    <input type="number" name="base_pv" class="form-control" placeholder="PV" required>
+    <input type="number" name="base_mana" class="form-control" placeholder="Mana" required>
+    <input type="number" name="strength" class="form-control" placeholder="Force" required>
+    <input type="number" name="initiative" class="form-control" placeholder="Initiative" required>
+    <input type="number" name="max_items" class="form-control" value="5">
 
-        <div class="input-group w-100">
-            <textarea name="description" class="form-control background-secondaire texte-principal" placeholder="Description de la classe" rows="3"></textarea>
-        </div>
+    <input type="submit" value="Créer la classe" class="btn btn-primary w-50">
 
-        <div class="d-flex gap-2 w-100">
-            <input type="number" name="base_pv" class="form-control background-secondaire texte-principal" placeholder="PV" min="0" required>
-            <input type="number" name="base_mana" class="form-control background-secondaire texte-principal" placeholder="Mana" min="0" required>
-        </div>
+</form>
 
-        <div class="d-flex gap-2 w-100">
-            <input type="number" name="strength" class="form-control background-secondaire texte-principal" placeholder="Force" min="0" required>
-            <input type="number" name="initiative" class="form-control background-secondaire texte-principal" placeholder="Initiative" min="0" required>
-        </div>
+<?php if ($class_success): ?>
+    <div class="alert alert-success mt-3"><?= $class_success ?></div>
+<?php endif; ?>
 
-        <input type="number" name="max_items" class="form-control background-secondaire texte-principal w-100" placeholder="Nombre max d'objets" min="1" value="5">
-
-        <input type="submit" value="Créer la classe" class="btn btn-primary mt-2 w-50">
-
-    </form>
-    <a href="account" class="back-btn mt-2 d-flex justify-content-center">Retour</a>
-
-    <?php if (!empty($class_success)): ?>
-        <div class="alert alert-success mt-3 text-center"><?= htmlspecialchars($class_success) ?></div>
-    <?php endif; ?>
-    <?php if (!empty($class_error)): ?>
-        <div class="alert alert-danger mt-3 text-center"><?= htmlspecialchars($class_error) ?></div>
-    <?php endif; ?>
+<?php if ($class_error): ?>
+    <div class="alert alert-danger mt-3"><?= $class_error ?></div>
+<?php endif; ?>
 
 </div>
+
+<script>
+let gender = 'H';
+
+const btnHomme = document.getElementById('btn-homme');
+const btnFemme = document.getElementById('btn-femme');
+const genderInput = document.getElementById('gender');
+const classSelect = document.getElementById('classSelect');
+const heroPreview = document.getElementById('heroPreview');
+
+function updateImage() {
+    const opt = classSelect.options[classSelect.selectedIndex];
+    if (!opt || !opt.dataset.name) return;
+    const className = opt.dataset.name.replace(/[^A-Za-z]/g, '');
+    heroPreview.src = `img/Hero${className}${gender}.png`;
+}
+
+btnHomme.onclick = () => {
+    gender = 'H';
+    genderInput.value = 'H';
+    btnHomme.classList.add('btn-primary');
+    btnHomme.classList.remove('btn-outline-primary');
+    btnFemme.classList.add('btn-outline-primary');
+    btnFemme.classList.remove('btn-primary');
+    updateImage();
+};
+
+btnFemme.onclick = () => {
+    gender = 'F';
+    genderInput.value = 'F';
+    btnFemme.classList.add('btn-primary');
+    btnFemme.classList.remove('btn-outline-primary');
+    btnHomme.classList.add('btn-outline-primary');
+    btnHomme.classList.remove('btn-primary');
+    updateImage();
+};
+
+classSelect.onchange = updateImage;
+</script>
 
 </body>
 </html>
