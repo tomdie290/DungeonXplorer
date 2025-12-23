@@ -24,7 +24,7 @@ if (!isset($monster)) {
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
 
-    <div class="card p-4">
+    <div class="card p-4 background-secondaire texte-principal">
         <form method="POST" action="/manage_monsters/update" class="d-flex flex-column gap-3">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($monster['id']); ?>">
 
@@ -78,7 +78,7 @@ if (!isset($monster)) {
                 $currentFilename = !empty($currentImage) ? basename($currentImage) : '';
                 ?>
                 <select name="image_path" class="form-select mt-2" id="imageSelector">
-                    <option value="">-- Aucune image --</option>
+                    <option value="">Aucune image</option>
                     <?php foreach ($imageOptions as $opt):
                         $sel = ($currentFilename === $opt) ? ' selected' : '';
                     ?>
@@ -87,7 +87,7 @@ if (!isset($monster)) {
                 </select>
                 <div class="mt-3" id="imagePreview">
                     <?php if (!empty($currentImage)): ?>
-                        <img src="<?php echo htmlspecialchars($currentImage); ?>" alt="Aperçu" style="max-width:150px; height:auto; border:1px solid #ccc; padding:5px;">
+                        <img src="<?php echo "../" . htmlspecialchars($currentImage); ?>" alt="Aperçu" style="max-width:150px; height:auto; border:1px solid #ccc; padding:5px;">
                     <?php endif; ?>
                 </div>
             </div>
