@@ -134,6 +134,24 @@ class CombatController
         if ($result === 'win') {
             header("Location: /DungeonXplorer/chapter");
         } else {
+            // Mark death: clear potions and set a flag so subsequent save is treated as after-death
+            try {
+                $db = getDB();
+                $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL LIMIT 1");
+                $stmtA->execute([$_SESSION['hero_id']]);
+                $adventureId = $stmtA->fetchColumn();
+                if ($adventureId) {
+                    if (!isset($_SESSION['just_died'])) $_SESSION['just_died'] = [];
+                    $_SESSION['just_died'][$adventureId] = true;
+                }
+                // Remove all potions from the hero's inventory
+                $stmtDel = $db->prepare("DELETE FROM Inventory WHERE hero_id = ? AND item_id IN (SELECT id FROM Items WHERE item_type = 'potion')");
+                $stmtDel->execute([$_SESSION['hero_id']]);
+                $_SESSION['flash'] = 'Vous avez perdu toutes vos potions en mourant. Vous pourrez en racheter après avoir quitté et sauvegardé.';
+            } catch (Exception $e) {
+                // ignore DB errors
+            }
+
             // Reset hero to max
             $hero->pv = $hero->pv_max;
             $hero->mana = $hero->mana_max;

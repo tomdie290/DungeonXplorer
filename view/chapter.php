@@ -27,6 +27,12 @@
 
     <p class="description"><?= nl2br(htmlspecialchars($chapter->getDescription() ?? '')) ?></p>
 
+    <?php if (!empty($deathNotice)): ?>
+        <div class="mt-3" style="background:#8c2b2b; border:2px solid #6b1f1f; padding:12px; border-radius:6px; color:white">
+            <?= htmlspecialchars($deathNotice) ?>
+        </div>
+    <?php endif; ?>
+
     <h2>Choisissez votre chemin :</h2>
     <div class="choices">
         <?php foreach ($chapter->getChoices() ?? [] as $choice): ?>

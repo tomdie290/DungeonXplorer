@@ -72,14 +72,44 @@ class InventoryController
         $db = getDB();
 
         // If the hero's most recent adventure progress is 'Saved', block potion modifications.
-        // This prevents re-adding potions after quitting/saving even if the hero currently has no potions.
-        $stmtLast = $db->prepare("SELECT ap.status FROM Adventure_Progress ap JOIN Adventure a ON ap.adventure_id = a.id WHERE a.hero_id = ? ORDER BY ap.visit_date DESC LIMIT 1");
+        // Exception: if the last saved progress is on a death chapter, allow potion changes (player saved after dying).
+        $stmtLast = $db->prepare("SELECT ap.status, ap.chapter_id FROM Adventure_Progress ap JOIN Adventure a ON ap.adventure_id = a.id WHERE a.hero_id = ? ORDER BY ap.visit_date DESC LIMIT 1");
         $stmtLast->execute([$heroId]);
-        $lastStatus = $stmtLast->fetchColumn();
+        $lastRow = $stmtLast->fetch(PDO::FETCH_ASSOC);
+        $lastStatus = $lastRow['status'] ?? null;
+        $lastChapterId = isset($lastRow['chapter_id']) ? (int)$lastRow['chapter_id'] : null;
         if ($lastStatus === 'Saved') {
-            $_SESSION['flash'] = 'Impossible de modifier les potions : l\'aventure a été quittée et sauvegardée.';
-            header('Location: /DungeonXplorer/account');
-            exit;
+            $isDeathSave = false;
+            if ($lastChapterId) {
+                // Check chapter title/description for death keywords
+                $stmtCh = $db->prepare("SELECT title, description FROM Chapter WHERE id = ? LIMIT 1");
+                $stmtCh->execute([$lastChapterId]);
+                $ch = $stmtCh->fetch(PDO::FETCH_ASSOC);
+                $title = $ch['title'] ?? '';
+                $descCh = $ch['description'] ?? '';
+                if (stripos($title, 'mort') !== false || stripos($descCh, 'mort') !== false) {
+                    $isDeathSave = true;
+                }
+
+                // Also check if any link from that chapter explicitly mentions 'mort'
+                if (!$isDeathSave) {
+                    $stmtL = $db->prepare("SELECT description FROM Links WHERE chapter_id = ?");
+                    $stmtL->execute([$lastChapterId]);
+                    $links = $stmtL->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($links as $ln) {
+                        if (isset($ln['description']) && stripos($ln['description'], 'mort') !== false) {
+                            $isDeathSave = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!$isDeathSave) {
+                $_SESSION['flash'] = 'Impossible de modifier les potions : l\'aventure a été quittée et sauvegardée.';
+                header('Location: /DungeonXplorer/account');
+                exit;
+            }
         }
 
         // Count distinct potion types already owned

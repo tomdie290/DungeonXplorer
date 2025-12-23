@@ -192,21 +192,21 @@ CREATE TABLE Adventure_Progress
 -- Insertion Classes
 INSERT INTO Class (name, description, base_pv, base_mana, strength, initiative, max_items)
 VALUES 
-('Guerrier', 'Un combattant robuste et puissant', 100, 0, 18, 5, 5),
-('Voleur', 'Rapide et agile', 80, 10, 12, 15, 5),
-('Magicien', 'Puissant en magie', 60, 20, 10, 10, 5);
+('Guerrier', 'Un combattant robuste et puissant', 100, 0, 13, 5, 5),
+('Voleur', 'Rapide et agile', 80, 10, 10, 15, 5),
+('Magicien', 'Puissant en magie', 60, 20, 8, 10, 5);
 
 -- Monstres
 INSERT INTO Monster (name, pv, mana, strength, initiative, attack_text, xp_reward, image)
 VALUES 
-('Sanglier Enragé', 50, 0, 7, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBoard01.jpg'),
-('Loup Noir', 40, 0, 8, 12, 'Le loup bondit et tente de vous mordre !', 60, 'img/Wolf02.jpg'),
+('Sanglier Enragé', 50, 0, 8, 5, 'Le sanglier charge violemment !', 50, 'img/SavageBoard01.jpg'),
+('Loup Noir', 40, 0, 9, 12, 'Le loup bondit et tente de vous mordre !', 60, 'img/Wolf02.jpg'),
 ('Orc Guerrier', 70, 0, 9, 8, 'L’orc abat sa massue !', 120, 'img/Ork.png'),
-('Squelette', 25, 0, 9, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquelette.jpg'),
-('Gargouille de Pierre', 60, 0, 10, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
-('Ombre Ténébreuse', 80, 20, 11, 10, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
+('Squelette', 30, 0, 10, 3, 'Le squelette claque des os et frappe de son épée rouillée !', 30, 'img/bossSquelette.jpg'),
+('Gargouille de Pierre', 60, 0, 12, 10, 'La gargouille pousse un hurlement rocailleux avant de fondre sur vous !', 150, 'img/bossGargouille.jpg'),
+('Ombre Ténébreuse', 80, 20, 12, 10, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg'),
 ('Esprit Élémentaire', 55, 30, 13, 8, 'L’esprit tourbillonne et lance une salve d’énergie élémentaire !', 120, 'img/bossElementaire.jpg'),
-('Malkor l''Ensorceleur', 100, 80, 15, 12, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
+('Malkor l''Ensorceleur', 100, 80, 18, 12, 'Malkor incante un sort de destruction pure !', 500, 'img/bossSorcier.jpg'),
 ('Ombre Ténébreuse surprise', 60, 20, 10, 8, 'L’ombre murmure des mots interdits et vous attaque depuis les ténèbres !', 200, 'img/bossOmbre.jpg');
 
 -- Chapitres
@@ -288,8 +288,8 @@ VALUES
 (18,19, 'Ignorer la potion de soin'),
 (19,20, 'Suivez le mur de gauche'),
 (19,21, 'Suivez le mur de droite plus rapide'),
-(20,22, 'Si vous êtes voleur et reussissez à forcer le coffre'),
-(20,22, 'Si vous êtes pas voleur ou échouer à ouvrir le coffre'),
+(20,22, 'Vous êtes voleur et reussissez à forcer le coffre'),
+(20,22, 'Vous êtes pas voleur ou échouer à ouvrir le coffre'),
 (21,22, 'Réussir le jet d''agilité'),
 (21,22, 'Echouer le jet d''agilité vous perdez des dégats'),
 (22,23, 'Liberez la fille(elle vous suivra)'),

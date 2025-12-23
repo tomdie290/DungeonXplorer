@@ -76,6 +76,28 @@ class ChapterController {
             return;
         }
 
+        // Si on arrive sur un chapitre de mort et que l'aventure vient d'avoir une mort,
+        // supprimer les potions (une seule fois) et préparer un message affiché sur la page.
+        $deathNotice = null;
+        if ($currentAdventureId && isset($_SESSION['just_died'][$currentAdventureId]) && $_SESSION['just_died'][$currentAdventureId]) {
+            $title = $chapter->getTitle() ?? '';
+            $descCh = $chapter->getDescription() ?? '';
+            $isDeathChapter = (stripos($title, 'mort') !== false) || (stripos($descCh, 'mort') !== false) || in_array($chapter->getId(), [10,2]);
+            if ($isDeathChapter) {
+                if (!isset($_SESSION['potions_deleted'])) $_SESSION['potions_deleted'] = [];
+                if (empty($_SESSION['potions_deleted'][$currentAdventureId])) {
+                    try {
+                        $stmtDel = $db->prepare("DELETE FROM Inventory WHERE hero_id = ? AND item_id IN (SELECT id FROM Items WHERE item_type = 'potion')");
+                        $stmtDel->execute([$hero->id]);
+                    } catch (Exception $e) {
+                        // ignore
+                    }
+                    $_SESSION['potions_deleted'][$currentAdventureId] = true;
+                }
+                $deathNotice = 'Vos potions ont été supprimées en mourant. Quittez et sauvegardez pour en racheter.';
+            }
+        }
+
         include 'view/chapter.php';
     }
 
@@ -177,6 +199,20 @@ class ChapterController {
                 $rD = $stmtD->fetch(PDO::FETCH_ASSOC);
                 if ($rD && isset($rD['next_chapter_id'])) {
                     $deathTarget = (int)$rD['next_chapter_id'];
+                    // Mark that this adventure experienced a death so subsequent saves can be treated as death-saves
+                    $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL");
+                    $stmtA->execute([$_SESSION['hero_id']]);
+                    $adventureId = $stmtA->fetchColumn();
+                    if ($adventureId) {
+                        if (!isset($_SESSION['just_died'])) $_SESSION['just_died'] = [];
+                        $_SESSION['just_died'][$adventureId] = true;
+                    }
+
+                    // Remove all potions from the hero on death so they must re-acquire them after saving
+                    $stmtDel = $db->prepare("DELETE FROM Inventory WHERE hero_id = ? AND item_id IN (SELECT id FROM Items WHERE item_type = 'potion')");
+                    $stmtDel->execute([$hero->id]);
+                    $_SESSION['flash'] = 'Vous avez perdu toutes vos potions en mourant. Vous pourrez en racheter après avoir quitté et sauvegardé.';
+
                     $this->show($deathTarget);
                     return;
                 }
@@ -185,14 +221,42 @@ class ChapterController {
                 $stmtF->execute([$originChapterId]);
                 $rF = $stmtF->fetch(PDO::FETCH_ASSOC);
                 if ($rF && isset($rF['next_chapter_id'])) {
+                    // Mark as death occurrence for this adventure
+                    $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL");
+                    $stmtA->execute([$_SESSION['hero_id']]);
+                    $adventureId = $stmtA->fetchColumn();
+                    if ($adventureId) {
+                        if (!isset($_SESSION['just_died'])) $_SESSION['just_died'] = [];
+                        $_SESSION['just_died'][$adventureId] = true;
+                    }
+
+                    // Remove potions from the hero on death
+                    $stmtDel = $db->prepare("DELETE FROM Inventory WHERE hero_id = ? AND item_id IN (SELECT id FROM Items WHERE item_type = 'potion')");
+                    $stmtDel->execute([$hero->id]);
+                    $_SESSION['flash'] = 'Vous avez perdu toutes vos potions en mourant. Vous pourrez en racheter après avoir quitté et sauvegardé.';
+
                     $this->show((int)$rF['next_chapter_id']);
                     return;
                 }
             }
 
             // Si on n'a pas trouvé de lien de mort spécifique, montrer la page de mort générique (chapter 10 si existante)
+            // Mark as death occurrence for this adventure
+            $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL");
+            $stmtA->execute([$_SESSION['hero_id']]);
+            $adventureId = $stmtA->fetchColumn();
+            if ($adventureId) {
+                if (!isset($_SESSION['just_died'])) $_SESSION['just_died'] = [];
+                $_SESSION['just_died'][$adventureId] = true;
+            }
+
+            // Remove potions from the hero on death
+            $stmtDel = $db->prepare("DELETE FROM Inventory WHERE hero_id = ? AND item_id IN (SELECT id FROM Items WHERE item_type = 'potion')");
+            $stmtDel->execute([$hero->id]);
+            $_SESSION['flash'] = 'Vous avez perdu toutes vos potions en mourant. Vous pourrez en racheter après avoir quitté et sauvegardé.';
+
             $this->show(10);
-            return;
+            return; 
         }
 
         $this->show((int)$next);
@@ -251,8 +315,15 @@ class ChapterController {
         $stmt2->execute([$chapterId, $adventureId]);
 
         // Enregistre un point de progression
-        $stmt3 = $db->prepare("INSERT INTO Adventure_Progress (adventure_id, chapter_id, status) VALUES (?, ?, 'Saved')");
-        $stmt3->execute([$adventureId, $chapterId]);
+        // If this adventure recently had a death, mark the saved progress accordingly so inventory changes are allowed
+        $status = 'Saved';
+        if (isset($_SESSION['just_died']) && isset($_SESSION['just_died'][$adventureId]) && $_SESSION['just_died'][$adventureId]) {
+            $status = 'SavedAfterDeath';
+            // clear the flag once used
+            unset($_SESSION['just_died'][$adventureId]);
+        }
+        $stmt3 = $db->prepare("INSERT INTO Adventure_Progress (adventure_id, chapter_id, status) VALUES (?, ?, ?)");
+        $stmt3->execute([$adventureId, $chapterId, $status]);
 
         // Si le formulaire fournit un état de combat, le sauvegarder en session pour reprise
         $hero_pv = isset($_POST['hero_pv']) ? (int)$_POST['hero_pv'] : null;
