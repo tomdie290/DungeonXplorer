@@ -55,7 +55,7 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
 
     <div class="card hero-card background-secondaire rounded-3 mb-5 p-4">
         <h2 class="text-center mb-4">Ajouter un nouveau chapitre</h2>
-        <form method="POST" action="/DungeonXplorer/admin/manage_chapters/store" class="d-flex flex-column gap-3 w-75 mx-auto">
+        <form method="POST" action="/DungeonXplorer/manage_chapters/store" class="d-flex flex-column gap-3 w-75 mx-auto">
             <div class="input-group">
                 <span class="input-group-text">Titre du chapitre</span>
                 <input type="text" name="title" class="form-control" required>
@@ -106,7 +106,7 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
                         const preview = document.getElementById('imagePreview');
                         sel.addEventListener('change', function(){
                             const v = this.value;
-                            if(v){ preview.src = v; preview.style.display = 'block'; }
+                            if(v){ preview.src = "img" + v; preview.style.display = 'block'; }
                             else { preview.src = ''; preview.style.display = 'none'; }
                         });
                     })();

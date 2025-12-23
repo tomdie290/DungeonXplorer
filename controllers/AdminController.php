@@ -44,7 +44,7 @@ class AdminController
         $q->execute([
             'title' => $title,
             'content' => $content,
-            'image' => $image
+            'image' => "img/" . $image
         ]);
 
         $_SESSION['flash'] = "Chapitre ajouté avec succès.";
@@ -613,103 +613,6 @@ class AdminController
         ]);
 
         $_SESSION['flash'] = 'Trésor ajouté.';
-        header('Location: /manage_treasures');
-        exit;
-    }
-
-    public function editTreasure()
-    {
-        session_start();
-        if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
-            exit;
-        }
-
-        $id = $_GET['id'] ?? null;
-        if (!$id) {
-            $_SESSION['flash'] = 'ID manquant.';
-            header('Location: /manage_treasures');
-            exit;
-        }
-
-        require_once 'core/Database.php';
-        $db = getDB();
-        $q = $db->prepare('SELECT * FROM Treasure WHERE id = :id');
-        $q->execute(['id' => $id]);
-        $treasure = $q->fetch(PDO::FETCH_ASSOC);
-
-        if (!$treasure) {
-            $_SESSION['flash'] = 'Trésor introuvable.';
-            header('Location: /manage_treasures');
-            exit;
-        }
-
-        require 'view/adminEditTreasure.php';
-    }
-
-    public function updateTreasure()
-    {
-        session_start();
-        if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
-            exit;
-        }
-
-        $id = $_POST['id'] ?? null;
-        if (!$id) {
-            $_SESSION['flash'] = 'ID manquant.';
-            header('Location: /manage_treasures');
-            exit;
-        }
-
-        $name = trim($_POST['name'] ?? '');
-        $value = (int)($_POST['value'] ?? 0);
-        $description = trim($_POST['description'] ?? '');
-        $image = !empty($_POST['image_path']) ? trim($_POST['image_path']) : null;
-
-        if ($name === '') {
-            $_SESSION['flash'] = 'Données invalides.';
-            header('Location: /manage_treasures/edit?id=' . urlencode($id));
-            exit;
-        }
-
-        require_once 'core/Database.php';
-        $db = getDB();
-        $q = $db->prepare('UPDATE Treasure SET name = :name, value = :value, description = :description, image = :image WHERE id = :id');
-        $q->execute([
-            'name' => $name,
-            'value' => $value,
-            'description' => $description,
-            'image' => $image,
-            'id' => $id
-        ]);
-
-        $_SESSION['flash'] = 'Trésor mis à jour.';
-        header('Location: /manage_treasures');
-        exit;
-    }
-
-    public function deleteTreasure()
-    {
-        session_start();
-        if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
-            exit;
-        }
-
-        $id = $_POST['id'] ?? null;
-        if (!$id) {
-            $_SESSION['flash'] = 'ID manquant.';
-            header('Location: /manage_treasures');
-            exit;
-        }
-
-        require_once 'core/Database.php';
-        $db = getDB();
-        $q = $db->prepare('DELETE FROM Treasure WHERE id = :id');
-        $q->execute(['id' => $id]);
-
-        $_SESSION['flash'] = 'Trésor supprimé.';
         header('Location: /manage_treasures');
         exit;
     }

@@ -39,9 +39,6 @@ if (!$isAdmin) {
             <a href="/manage_images" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les images
             </a>
-            <a href="/manage_treasures" class="list-group-item list-group-item-action background-secondaire texte-principal">
-                Gérer les trésors
-            </a>
             <a href="/manage_accounts" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les comptes utilisateur
             </a>
