@@ -389,6 +389,7 @@ class ChapterController {
             if (isset($snap['chapter_id']) && (int)$snap['chapter_id'] > 0) {
                 // Mark adventure as resumed so inventory modifications are allowed again
                 try {
+                    $db = getDB();
                     $stmtP = $db->prepare("INSERT INTO Adventure_Progress (adventure_id, chapter_id, status) VALUES (?, ?, 'Resumed')");
                     $stmtP->execute([$adventureId, (int)$snap['chapter_id']]);
                 } catch (Exception $e) {
