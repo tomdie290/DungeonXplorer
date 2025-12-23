@@ -51,12 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
             ]);
 
             $heroId = $db->lastInsertId();
-
+            /* si on veux un potion aux debut
             $db->prepare("
                 INSERT INTO Inventory (hero_id, item_id, quantity)
                 VALUES (?, 1, 1)
             ")->execute([$heroId]);
-
+            */
             header("Location: /DungeonXplorer/account");
             exit;
         }
