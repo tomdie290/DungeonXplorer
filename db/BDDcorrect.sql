@@ -9,7 +9,8 @@ CREATE TABLE Account (
     email VARCHAR(100) UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    current_hero INT DEFAULT NULL
+    current_hero INT DEFAULT NULL,
+    admin TINYINT DEFAULT 0
 );
 
 -- Classes
