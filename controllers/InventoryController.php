@@ -71,45 +71,17 @@ class InventoryController
         // Prepare DB connection early
         $db = getDB();
 
-        // If the hero's most recent adventure progress is 'Saved', block potion modifications.
-        // Exception: if the last saved progress is on a death chapter, allow potion changes (player saved after dying).
+        // Restrict potion modifications: allowed only if the latest progress is 'SavedAfterDeath' (save after a death)
+        // or when there is no previous saved progress (fresh start). All other statuses block potion additions.
         $stmtLast = $db->prepare("SELECT ap.status, ap.chapter_id FROM Adventure_Progress ap JOIN Adventure a ON ap.adventure_id = a.id WHERE a.hero_id = ? ORDER BY ap.visit_date DESC LIMIT 1");
         $stmtLast->execute([$heroId]);
         $lastRow = $stmtLast->fetch(PDO::FETCH_ASSOC);
         $lastStatus = $lastRow['status'] ?? null;
-        $lastChapterId = isset($lastRow['chapter_id']) ? (int)$lastRow['chapter_id'] : null;
-        if ($lastStatus === 'Saved') {
-            $isDeathSave = false;
-            if ($lastChapterId) {
-                // Check chapter title/description for death keywords
-                $stmtCh = $db->prepare("SELECT title, description FROM Chapter WHERE id = ? LIMIT 1");
-                $stmtCh->execute([$lastChapterId]);
-                $ch = $stmtCh->fetch(PDO::FETCH_ASSOC);
-                $title = $ch['title'] ?? '';
-                $descCh = $ch['description'] ?? '';
-                if (stripos($title, 'mort') !== false || stripos($descCh, 'mort') !== false) {
-                    $isDeathSave = true;
-                }
-
-                // Also check if any link from that chapter explicitly mentions 'mort'
-                if (!$isDeathSave) {
-                    $stmtL = $db->prepare("SELECT description FROM Links WHERE chapter_id = ?");
-                    $stmtL->execute([$lastChapterId]);
-                    $links = $stmtL->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($links as $ln) {
-                        if (isset($ln['description']) && stripos($ln['description'], 'mort') !== false) {
-                            $isDeathSave = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!$isDeathSave) {
-                $_SESSION['flash'] = 'Impossible de modifier les potions : l\'aventure a été quittée et sauvegardée.';
-                header('Location: /DungeonXplorer/account');
-                exit;
-            }
+        if ($lastStatus !== null && $lastStatus !== 'SavedAfterDeath') {
+            // If the last save was a normal 'Saved' or any other non-death status, block potion changes
+            $_SESSION['flash'] = 'Impossible de modifier les potions : seules les sauvegardes après une mort permettent de racheter des potions.';
+            header('Location: /DungeonXplorer/account');
+            exit;
         }
 
         // Count distinct potion types already owned
