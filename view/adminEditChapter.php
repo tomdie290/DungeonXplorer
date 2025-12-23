@@ -20,7 +20,7 @@ if (!isset($chapter)) {
     <h1 class="mb-4">Modifier le chapitre #<?php echo htmlspecialchars($chapter['id']); ?></h1>
 
     <div class="card hero-card background-secondaire rounded-3 mb-5 p-4">
-        <form method="POST" action="/manage_chapters/update" class="d-flex flex-column gap-3 w-75 mx-auto">
+        <form method="POST" action="/DungeonXplorer/manage_chapters/update" class="d-flex flex-column gap-3 w-75 mx-auto"> 
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($chapter['id']); ?>">
 
             <div class="input-group">

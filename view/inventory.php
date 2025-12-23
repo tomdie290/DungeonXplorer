@@ -139,8 +139,8 @@ $inventory = $inventoryModel->getInventory($hero->id);
         <?php endif; ?>
 
         <?php if (!$inCombat): ?>
-            <a href="account" class="back-btn">Retour au compte</a>
-        <?php endif; ?>
+            <a href="/DungeonXplorer/account" class="back-btn">Retour au compte</a>
+        <?php endif; ?> 
     </div>
 </body>
 </html>

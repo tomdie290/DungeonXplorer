@@ -28,9 +28,9 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
         <hr>
 
         <h3 class="text-center mb-3">Modifier votre profil</h3>
-        <form id="update-password-form" method="POST" action="/update_password" class="d-flex flex-column gap-3 w-75 mx-auto">
+        <form id="update-password-form" method="POST" action="/DungeonXplorer/update_password" class="d-flex flex-column gap-3 w-75 mx-auto">
             <input type="hidden" name="account_id" value="<?= (int)$account['id'] ?>">
-            <div id="update-password-error" class="alert alert-danger" style="display:none;"></div>
+            <div id="update-password-error" class="alert alert-danger" style="display:none;"></div> 
 
             <div class="input-group">
                 <span class="input-group-text">Nom d'utilisateur</span>
@@ -95,15 +95,15 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
         </div>
     <?php endif; ?>
     <div class="text-center mt-4">
-        <a href="account" class="btn btn-danger">Retour</a>
-    </div>
+        <a href="/DungeonXplorer/account" class="btn btn-danger">Retour</a>
+    </div> 
 
     <div class="text-center mt-4">
-        <a href="logout" class="btn btn-danger">Se déconnecter</a>
-    </div>
+        <a href="/DungeonXplorer/logout" class="btn btn-danger">Se déconnecter</a>
+    </div> 
     
     <div class="text-center mt-4">
-        <form method="POST" action="/delete_account" onsubmit="return confirm('Confirmer la suppression de votre compte ? Cette action est irréversible.');">
+        <form method="POST" action="/DungeonXplorer/delete_account" onsubmit="return confirm('Confirmer la suppression de votre compte ? Cette action est irréversible.');">
             <input type="hidden" name="account_id" value="<?= (int)$account['id'] ?>">
             <button type="submit" class="btn btn-outline-danger">Supprimer mon compte</button>
         </form>

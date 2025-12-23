@@ -104,7 +104,7 @@ if (!$check) {
         Continuer l'aventure
     </a>
 
-    <a href="account" class="back-btn mt-2 d-flex justify-content-center">Retour</a>
+    <a href="/DungeonXplorer/account" class="back-btn mt-2 d-flex justify-content-center">Retour</a> 
 
 
 

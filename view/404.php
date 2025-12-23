@@ -13,7 +13,7 @@
     <div class="d-flex align-items-center justify-content-center min-vh-100 px-2">
         <div class="text-center">
             <h1 class="display-1 fw-bold">404</h1>
-            <a href="/" class="btn btn-light fw-semibold rounded-pill px-4 py-2 custom-btn">
+            <a href="/DungeonXplorer/" class="btn btn-light fw-semibold rounded-pill px-4 py-2 custom-btn">
                 Go Home
             </a>
         </div>

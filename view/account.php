@@ -102,22 +102,22 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="alert alert-warning text-center">
                                 En aventure (Chapitre <?= $hero['current_chapter_id'] ?>)
                             </div>
-                            <a href="adventure?id=<?= $hero['adventure_id'] ?>"
+                            <a href="/DungeonXplorer/adventure?id=<?= $hero['adventure_id'] ?>"
                                class="btn btn-primary w-100">
                                 Continuer l'aventure
-                            </a>
+                            </a> 
                         <?php else: ?>
                             <div class="alert alert-success text-center">
                                 Disponible — Pas en aventure
                             </div>
-                            <a href="start_adventure?hero=<?= $hero['id'] ?>"
+                            <a href="/DungeonXplorer/start_adventure?hero=<?= $hero['id'] ?>"
                                class="btn btn-primary w-100">
                                 Démarrer une aventure
-                            </a>
+                            </a> 
                         <?php endif; ?>
                         </div>
 
-                        <a href="inventory?hero=<?= $hero['id'] ?>" class="btn btn-info w-100 mb-2">Voir inventaire</a>
+                        <a href="/DungeonXplorer/inventory?hero=<?= $hero['id'] ?>" class="btn btn-info w-100 mb-2">Voir inventaire</a> 
 
                         <?php
                         // Compter les types de potions différentes possédées
@@ -126,7 +126,7 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $potionCount = (int)$stmtP->fetchColumn();
                         ?>
 
-                        <form method="POST" action="inventory/add" class="mt-2">
+                        <form method="POST" action="/DungeonXplorer/inventory/add" class="mt-2"> 
                             <input type="hidden" name="hero_id" value="<?= $hero['id'] ?>">
                             <div class="mb-2">
                                 <label for="potion_type_<?= $hero['id'] ?>" class="form-label text-light">Ajouter une potion (max 2 types)</label>

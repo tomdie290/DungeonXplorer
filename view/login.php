@@ -21,7 +21,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
             $_SESSION['admin'] = 1;
         }
         else $_SESSION['admin'] = 0;
-        header("Location: account");
+        header("Location: /DungeonXplorer/account");
         exit();
     } else {
         $login_error = 'Nom d\'utilisateur ou mot de passe incorrect.';
@@ -34,8 +34,8 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     <head>
         <?php require_once 'head.php'; ?>
         <title>Se connecter - DungeonXplorer</title>
-        <link rel="stylesheet" href="styles/styles.css">
-    </head>
+        <link rel="stylesheet" href="/DungeonXplorer/styles/styles.css">
+    </head> 
     <body>
 
         <div class="login-container">
@@ -63,7 +63,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
 
             <input type="submit" value="Se connecter" class="btn btn-primary mt-2 w-50">
 
-            <a href="home" class="back-btn mt-2">Retour</a>
+            <a href="/DungeonXplorer/home" class="back-btn mt-2">Retour</a> 
         </form>
         <?php if(!empty($login_error)): ?>
             <div class="alert alert-danger mt-3 text-center">

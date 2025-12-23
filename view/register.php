@@ -35,7 +35,7 @@ session_start();
             $_SESSION['id'] = $user['id'];
             
             echo "<p class='success'>Inscription réussie pour l'utilisateur : $username</p>";
-            header("Location: home");
+            header("Location: /DungeonXplorer/home");
         }
         catch(Exception $e){
             $register_error = "Erreur lors de l'inscription : Cet utilisateur existe déjà.";
@@ -49,8 +49,8 @@ session_start();
 <head>
     <?php require_once 'head.php'; ?>
     <title>Créer un compte - DungeonXplorer</title>
-    <link rel="stylesheet" href="styles/styles.css">
-</head>
+    <link rel="stylesheet" href="/DungeonXplorer/styles/styles.css">
+</head> 
 <body>
 
 <div class="login-container">
@@ -88,7 +88,7 @@ session_start();
         <div id="register-error" class="alert alert-danger" style="display:none; width:100%;"></div>
 
         <input type="submit" value="S'inscrire" class="btn btn-primary mt-2 w-50">
-        <a href="home" class="back-btn mt-2">Retour</a>
+        <a href="/DungeonXplorer/home" class="back-btn mt-2">Retour</a> 
     </form>
     <?php if (!empty($register_error)): ?>
         <div class="alert alert-danger mt-3 text-center">
