@@ -64,7 +64,7 @@ if (!$check) {
 <div class="adventure-card">
 
     <div class="hero-image-wrapper">
-        <img src="<?= $adventure['hero_image'] ?: 'img/HeroDefault.png' ?>" alt="">
+        <img src="<?= $adventure['hero_image'] ?: '/DungeonXplorer/img/HeroDefault.png' ?>" alt="">
     </div>
 
     <h2><?= htmlspecialchars($adventure['hero_name']) ?></h2>

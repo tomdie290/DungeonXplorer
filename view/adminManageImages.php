@@ -38,7 +38,7 @@ if (!isset($images)) $images = [];
                 <?php foreach ($images as $img): ?>
                     <div class="col-6 col-md-3 mb-3">
                         <div class="card p-2 text-center background-secondaire">
-                            <img src="<?php echo htmlspecialchars('img/' . rawurlencode($img)); ?>" alt="<?php echo htmlspecialchars($img); ?>" style="max-width:100%; height:120px; object-fit:cover;">
+                            <img src="<?php echo htmlspecialchars('/DungeonXplorer/img/' . rawurlencode($img)); ?>" alt="<?php echo htmlspecialchars($img); ?>" style="max-width:100%; height:120px; object-fit:cover;">
                             <div class="mt-2 small text-truncate texte-principal"><?php echo htmlspecialchars($img); ?></div>
                             <div class="mt-2 d-flex justify-content-center gap-2">
                                 <form method="POST" action="/manage_images/delete" onsubmit="return confirm('Supprimer <?php echo htmlspecialchars($img); ?> ?');">

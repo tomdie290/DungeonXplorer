@@ -77,7 +77,7 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
                 <div class="hero-card">
                     <div class="hero-image-wrapper">
-                        <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : 'img/HeroDefault.png' ?>"
+                        <img src="<?= $hero['image'] ? htmlspecialchars($hero['image']) : '/DungeonXplorer/img/HeroDefault.png' ?>"
                              alt="Image du héros">
                     </div>
 

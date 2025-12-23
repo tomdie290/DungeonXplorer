@@ -54,7 +54,7 @@ session_start();
 <body>
 
 <div class="login-container">
-    <img class="mb-4 d-block mx-auto" src="img/LogoVide.png" alt="logo application" width="400" height="400">
+    <img class="mb-4 d-block mx-auto" src="/DungeonXplorer/img/LogoVide.png" alt="logo application" width="400" height="400">
     <h1 class="login-title mb-4">Créer un compte</h1>
     <form id="register-form" method="post" class="d-flex flex-column align-items-center gap-3">
         

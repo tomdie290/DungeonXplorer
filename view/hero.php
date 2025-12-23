@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
         } else {
 
             $className  = preg_replace('/[^A-Za-z]/', '', $class['name']);
-            $image_path = "img/Hero{$className}{$gender}.png";
+            $image_path = "/DungeonXplorer/img/Hero{$className}{$gender}.png";
 
             $stmt = $db->prepare("
                 INSERT INTO Hero
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
     <div class="hero-image-wrapper selected-image">
         <img
             id="heroPreview"
-            src="img/HeroDefault.png"
+            src="/DungeonXplorer/img/HeroDefault.png"
             class="hero-image-preview"
             alt="Aperçu du héros">
     </div>
@@ -202,7 +202,7 @@ function updateImage() {
     const opt = classSelect.options[classSelect.selectedIndex];
     if (!opt || !opt.dataset.name) return;
     const className = opt.dataset.name.replace(/[^A-Za-z]/g, '');
-    heroPreview.src = `img/Hero${className}${gender}.png`;
+    heroPreview.src = `/DungeonXplorer/img/Hero${className}${gender}.png`; 
 }
 
 btnHomme.onclick = () => {

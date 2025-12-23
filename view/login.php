@@ -39,7 +39,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     <body>
 
         <div class="login-container">
-        <img class="mb d-block mx-auto" src="img/LogoVide.png" alt="logo application" width="400" height="400">
+        <img class="mb d-block mx-auto" src="/DungeonXplorer/img/LogoVide.png" alt="logo application" width="400" height="400">
         <h1 class="login-title mb-4">Se connecter</h1>
         <form method="post" class="d-flex flex-column align-items-center gap-3">
             

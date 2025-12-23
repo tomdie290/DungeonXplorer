@@ -9,7 +9,14 @@ if (!isset($_SESSION['hero_id'])) die("Erreur : héros non sélectionné");
 $hero = Hero::loadById($_SESSION['hero_id']);
 if (!$hero) die("Erreur : héros introuvable");
 
-if (!isset($monster)) die("Erreur : monstre introuvable"); 
+if (!isset($monster)) die("Erreur : monstre introuvable");
+
+// Normalize image paths so we don't end up with double "/DungeonXplorer/" prefixes
+function normalizeImagePath($p, $fallback = '') {
+    if (empty($p)) $p = $fallback;
+    return str_starts_with($p, '/') ? $p : '/DungeonXplorer/' . $p;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +34,7 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
         <div class="col-md-6 text-center">
             <h2><?= htmlspecialchars($hero->name ?? 'Héros') ?></h2>
             <img
-                src="/DungeonXplorer/<?= htmlspecialchars($hero->image ?? 'img/HeroDefault.png') ?>"
+                src="<?= htmlspecialchars(normalizeImagePath($hero->image ?? 'img/HeroDefault.png', '/DungeonXplorer/img/HeroDefault.png')) ?>"
                 width="200"
                 alt="Héros"
                 class="mb-3"
@@ -52,7 +59,7 @@ if (!isset($monster)) die("Erreur : monstre introuvable");
         <div class="col-md-6 text-center">
             <h2><?= htmlspecialchars($monster->getName()) ?></h2>
             <img
-                src="/DungeonXplorer/<?= htmlspecialchars($monster->getImage()) ?>"
+                src="<?= htmlspecialchars(normalizeImagePath($monster->getImage(), '/DungeonXplorer/img/HeroDefault.png')) ?>"
                 width="200"
                 alt="Monstre"
                 class="mb-3"
