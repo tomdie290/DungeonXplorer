@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($chapter)) {
-    header('Location: /admin/manage_chapters');
+    header('Location: /DungeonXplorer/manage_chapters');
     exit;
 }
 ?>
@@ -65,6 +65,18 @@ if (!isset($chapter)) {
                 $imageOptions = [];
                 $imgDir = __DIR__ . '/../img';
                 $uploadDir = __DIR__ . '/../uploads/chapters';
+
+                // normalize image path helper to ensure absolute /DungeonXplorer/ URLs
+                function normalizeAdminImagePath($p) {
+                    if (empty($p)) return '';
+                    // if already starts with /DungeonXplorer return as-is
+                    if (str_starts_with($p, '/DungeonXplorer/')) return $p;
+                    // if absolute path (starts with /) prepend /DungeonXplorer
+                    if (str_starts_with($p, '/')) return '/DungeonXplorer' . $p;
+                    // otherwise prepend /DungeonXplorer/
+                    return '/DungeonXplorer/' . ltrim($p, '/');
+                }
+
                 if (is_dir($imgDir)) {
                     $files = glob($imgDir . '/*.{jpg,jpeg,png,gif,webp}', GLOB_BRACE);
                     foreach ($files as $f) {
@@ -83,16 +95,17 @@ if (!isset($chapter)) {
                     <option value="">-- Aucune image sélectionnée --</option>
                     <?php foreach ($imageOptions as $opt):
                         $pathPrefix = $opt['type'] === 'img' ? 'img/' : 'uploads/chapters/';
-                        $url = '/' . $pathPrefix . rawurlencode($opt['file']);
+                        $url = normalizeAdminImagePath('/' . $pathPrefix . rawurlencode($opt['file']));
                         $fullStored = $chapter['image'] ?? '';
-                        $isSelected = ($fullStored === $url) ? ' selected' : '';
+                        // compare normalized forms
+                        $isSelected = ($fullStored !== '' && normalizeAdminImagePath($fullStored) === $url) ? ' selected' : '';
                     ?>
                         <option value="<?php echo htmlspecialchars($url); ?>"<?php echo $isSelected; ?>><?php echo htmlspecialchars($opt['file']); ?></option>
                     <?php endforeach; ?>
                 </select>
 
                 <div class="mt-3 text-center w-100">
-                    <img id="imagePreview" src="<?php echo htmlspecialchars($chapter['image'] ?? ''); ?>" alt="Aperçu" style="max-width:240px; <?php echo empty($chapter['image']) ? 'display:none;' : ''; ?> border:1px solid #ccc; padding:6px;" />
+                    <img id="imagePreview" src="<?php echo htmlspecialchars(normalizeAdminImagePath($chapter['image'] ?? '')); ?>" alt="Aperçu" style="max-width:240px; <?php echo empty($chapter['image']) ? 'display:none;' : ''; ?> border:1px solid #ccc; padding:6px;" />
                 </div>
 
                 <script>
@@ -110,7 +123,7 @@ if (!isset($chapter)) {
 
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                <a href="/manage_chapters" class="btn btn-secondary ms-2">Annuler</a>
+                <a href="/DungeonXplorer/manage_chapters" class="btn btn-secondary ms-2">Annuler</a>
             </div>
         </form>
     </div>

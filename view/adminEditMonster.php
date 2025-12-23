@@ -25,7 +25,7 @@ if (!isset($monster)) {
     <?php endif; ?>
 
     <div class="card p-4 background-secondaire texte-principal">
-        <form method="POST" action="/manage_monsters/update" class="d-flex flex-column gap-3">
+        <form method="POST" action="/DungeonXplorer/manage_monsters/update" class="d-flex flex-column gap-3">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($monster['id']); ?>">
 
             <div class="row g-2">
@@ -94,7 +94,7 @@ if (!isset($monster)) {
 
             <div class="text-center mt-3">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <a href="/manage_monsters" class="btn btn-secondary ms-2">Annuler</a>
+                <a href="/DungeonXplorer/manage_monsters" class="btn btn-secondary ms-2">Annuler</a>
             </div>
         </form>
     </div>

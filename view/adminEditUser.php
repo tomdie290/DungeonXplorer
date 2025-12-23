@@ -18,7 +18,7 @@ if (!isset($account)) {
     <h1 class="mb-4">Modifier l'utilisateur #<?php echo htmlspecialchars($account['id']); ?></h1>
 
     <div class="card hero-card background-secondaire rounded-3 mb-5 p-4">
-        <form method="POST" action="/manage_accounts/update" class="d-flex flex-column gap-3 w-50 mx-auto">
+        <form method="POST" action="/DungeonXplorer/manage_accounts/update" class="d-flex flex-column gap-3 w-50 mx-auto">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($account['id']); ?>">
 
             <div class="input-group">
@@ -33,7 +33,7 @@ if (!isset($account)) {
 
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <a href="/manage_accounts" class="btn btn-secondary ms-2">Annuler</a>
+                <a href="/DungeonXplorer/manage_accounts" class="btn btn-secondary ms-2">Annuler</a>
             </div>
         </form>
     </div>

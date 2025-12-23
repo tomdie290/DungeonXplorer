@@ -47,7 +47,7 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="/manage_chapters/edit?id=<?php echo urlencode($chapter['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="/DungeonXplorer/manage_chapters/edit?id=<?php echo urlencode($chapter['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
                 </td>
             </tr>
         <?php endforeach; ?>

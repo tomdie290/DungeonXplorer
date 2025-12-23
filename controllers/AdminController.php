@@ -19,7 +19,7 @@ class AdminController
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
         require 'view/adminManageChapters.php';
@@ -48,7 +48,7 @@ class AdminController
         ]);
 
         $_SESSION['flash'] = "Chapitre ajouté avec succès.";
-        header('Location: /manage_chapters');
+        header('Location: /DungeonXplorer/manage_chapters');
         exit;
     }
 
@@ -63,7 +63,7 @@ class AdminController
         $id = $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['flash'] = 'ID de chapitre manquant.';
-            header('Location: /manage_chapters');
+            header('Location: /DungeonXplorer/manage_chapters');
             exit;
         }
 
@@ -75,7 +75,7 @@ class AdminController
 
         if (!$chapter) {
             $_SESSION['flash'] = 'Chapitre introuvable.';
-            header('Location: /manage_chapters');
+            header('Location: /DungeonXplorer/manage_chapters');
             exit;
         }
 
@@ -93,14 +93,14 @@ class AdminController
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
 
         $id = $_POST['id'] ?? null;
         if (!$id) {
             $_SESSION['flash'] = 'ID de chapitre manquant.';
-            header('Location: /manage_chapters');
+            header('Location: /DungeonXplorer/manage_chapters');
             exit;
         }
 
@@ -150,7 +150,7 @@ class AdminController
         }
 
         $_SESSION['flash'] = 'Chapitre mis à jour.';
-        header('Location: /manage_chapters');
+        header('Location: /DungeonXplorer/manage_chapters');
         exit;
     }
 
@@ -158,7 +158,7 @@ class AdminController
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
 
@@ -176,7 +176,7 @@ class AdminController
         $id = $_GET['id'] ?? null;
         if (!$id) {
             $_SESSION['flash'] = 'ID de compte manquant.';
-            header('Location: /manage_accounts');
+            header('Location: /DungeonXplorer/manage_accounts');
             exit;
         }
 
@@ -188,7 +188,7 @@ class AdminController
 
         if (!$account) {
             $_SESSION['flash'] = 'Compte introuvable.';
-            header('Location: /manage_accounts');
+            header('Location: /DungeonXplorer/manage_accounts');
             exit;
         }
 
@@ -199,14 +199,14 @@ class AdminController
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
 
         $id = $_POST['id'] ?? null;
         if (!$id) {
             $_SESSION['flash'] = 'ID de compte manquant.';
-            header('Location: /manage_accounts');
+            header('Location: /DungeonXplorer/manage_accounts');
             exit;
         }
 
@@ -215,7 +215,7 @@ class AdminController
 
         if ($username === '') {
             $_SESSION['flash'] = 'Le nom d\'utilisateur ne peut pas être vide.';
-            header('Location: /manage_accounts/edit?id=' . urlencode($id));
+            header('Location: /DungeonXplorer/manage_accounts/edit?id=' . urlencode($id));
             exit;
         }
 
@@ -227,7 +227,7 @@ class AdminController
         $exists = $q->fetchColumn();
         if ($exists) {
             $_SESSION['flash'] = 'Ce nom d\'utilisateur est déjà utilisé.';
-            header('Location: /manage_accounts/edit?id=' . urlencode($id));
+            header('Location: /DungeonXplorer/manage_accounts/edit?id=' . urlencode($id));
             exit;
         }
 
@@ -241,29 +241,29 @@ class AdminController
         }
 
         $_SESSION['flash'] = 'Compte mis à jour.';
-        header('Location: /manage_accounts');
-        exit;
+        header('Location: /DungeonXplorer/manage_accounts');
+        exit; 
     }
 
     public function deleteUser()
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
 
         $id = $_POST['id'] ?? null;
         if (!$id) {
             $_SESSION['flash'] = 'ID de compte manquant.';
-            header('Location: /manage_accounts');
+            header('Location: /DungeonXplorer/manage_accounts');
             exit;
         }
 
         /* permet de ne pas supprimer son propre compte */
         if ((int)$id === (int)($_SESSION['id'] ?? 0)) {
             $_SESSION['flash'] = 'Vous ne pouvez pas supprimer votre propre compte.';
-            header('Location: /manage_accounts');
+            header('Location: /DungeonXplorer/manage_accounts');
             exit;
         }
 
@@ -274,7 +274,7 @@ class AdminController
         $q->execute(['id' => $id]);
 
         $_SESSION['flash'] = 'Compte supprimé.';
-        header('Location: /manage_accounts');
+        header('Location: /DungeonXplorer/manage_accounts');
         exit;
     }
 
@@ -282,7 +282,7 @@ class AdminController
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
 
@@ -310,14 +310,14 @@ class AdminController
 
         if (empty($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
             $_SESSION['flash'] = 'Aucun fichier téléchargé ou erreur lors de la mise en ligne.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
         $imgDir = __DIR__ . '/../img';
         if (!is_dir($imgDir) || !is_writable($imgDir)) {
             $_SESSION['flash'] = 'Le dossier d\'images n\'existe pas ou n\'est pas accessible en écriture.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
@@ -328,14 +328,14 @@ class AdminController
         $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         if (!in_array($ext, $allowed)) {
             $_SESSION['flash'] = 'Type de fichier non autorisé.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
         $info = @getimagesize($tmp);
         if ($info === false) {
             $_SESSION['flash'] = 'Le fichier téléchargé n\'est pas une image valide.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
@@ -350,12 +350,12 @@ class AdminController
 
         if (!move_uploaded_file($tmp, $target)) {
             $_SESSION['flash'] = 'Impossible d\'enregistrer l\'image.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
         $_SESSION['flash'] = 'Image téléchargée.';
-        header('Location: /manage_images');
+        header('Location: /DungeonXplorer/manage_images');
         exit;
     }
 
@@ -363,21 +363,21 @@ class AdminController
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /account');
+            header('Location: /DungeonXplorer/account');
             exit;
         }
 
         $file = $_POST['file'] ?? null;
         if (!$file) {
             $_SESSION['flash'] = 'Fichier manquant.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
         $basename = basename($file);
         if ($basename !== $file) {
             $_SESSION['flash'] = 'Nom de fichier invalide.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
@@ -385,26 +385,26 @@ class AdminController
         $path = $imgDir . '/' . $basename;
         if (!is_file($path)) {
             $_SESSION['flash'] = 'Fichier introuvable.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
         if (!unlink($path)) {
             $_SESSION['flash'] = 'Impossible de supprimer le fichier.';
-            header('Location: /manage_images');
+            header('Location: /DungeonXplorer/manage_images');
             exit;
         }
 
         $_SESSION['flash'] = 'Image supprimée.';
-        header('Location: /manage_images');
-        exit;
+        header('Location: /DungeonXplorer/manage_images');
+        exit; 
     }
 
     public function manageMonsters()
     {
         session_start();
         if ($_SESSION['admin'] != 1) {
-            header('Location: /login');
+            header('Location: /DungeonXplorer/login');
             exit;
         }
 

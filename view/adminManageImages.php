@@ -23,7 +23,7 @@ if (!isset($images)) $images = [];
         <div class="card mb-4 p-3 background-secondaire">
             <h4 class="texte-principal">Ajouter une image</h4>
             <p class="texte-principal">Avant d'ajouter une image, assurez-vous qu'elle porte un nom de fichier clair et non utilisé.</p>
-        <form method="POST" action="/manage_images/upload" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+        <form method="POST" action="/DungeonXplorer/manage_images/upload" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
             <input type="file" class="texte-principal" name="image" accept="image/*" required>
             <button class="btn btn-primary" type="submit">Téléverser</button>
         </form>
@@ -41,7 +41,7 @@ if (!isset($images)) $images = [];
                             <img src="<?php echo htmlspecialchars('/DungeonXplorer/img/' . rawurlencode($img)); ?>" alt="<?php echo htmlspecialchars($img); ?>" style="max-width:100%; height:120px; object-fit:cover;">
                             <div class="mt-2 small text-truncate texte-principal"><?php echo htmlspecialchars($img); ?></div>
                             <div class="mt-2 d-flex justify-content-center gap-2">
-                                <form method="POST" action="/manage_images/delete" onsubmit="return confirm('Supprimer <?php echo htmlspecialchars($img); ?> ?');">
+                                <form method="POST" action="/DungeonXplorer/manage_images/delete" onsubmit="return confirm('Supprimer <?php echo htmlspecialchars($img); ?> ?');">
                                     <input type="hidden" name="file" value="<?php echo htmlspecialchars($img); ?>">
                                     <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
                                 </form>
@@ -54,7 +54,7 @@ if (!isset($images)) $images = [];
     </div>
 
     <div class="mt-3">
-        <a href="/admin" class="btn btn-secondary">Retour admin</a>
+        <a href="/DungeonXplorer/admin" class="btn btn-secondary">Retour admin</a>
     </div>
 </div>
 </body>

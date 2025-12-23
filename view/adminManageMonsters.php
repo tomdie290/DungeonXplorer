@@ -49,14 +49,19 @@ $monsters = $monsters ?? [];
                         <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['xp_reward']); ?></td>
                         <td class="background-secondaire texte-principal">
                             <?php if (!empty($m['image'])): ?>
-                                <img src="<?php echo htmlspecialchars($m['image']); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" class="small-img">
+                                <?php
+                                    // normalize stored image path to absolute /DungeonXplorer/... if needed
+                                    $mi = $m['image'];
+                                    if (!str_starts_with($mi, '/')) $mi = '/DungeonXplorer/' . ltrim($mi, '/');
+                                ?>
+                                <img src="<?php echo htmlspecialchars($mi); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" class="small-img">
                             <?php else: ?>
                                 -
                             <?php endif; ?>
                         </td>
                         <td class="background-secondaire texte-principal">
-                            <a href="/manage_monsters/edit?id=<?php echo urlencode($m['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
-                            <form method="POST" action="/manage_monsters/delete" onsubmit="return confirm('Supprimer <?php echo addslashes(htmlspecialchars($m['name'])); ?> ?');" style="display:inline-block; margin:0 0 0 .25rem;">
+                            <a href="/DungeonXplorer/manage_monsters/edit?id=<?php echo urlencode($m['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
+                            <form method="POST" action="/DungeonXplorer/manage_monsters/delete" onsubmit="return confirm('Supprimer <?php echo addslashes(htmlspecialchars($m['name'])); ?> ?');" style="display:inline-block; margin:0 0 0 .25rem;">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($m['id']); ?>">
                                 <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                             </form>
@@ -69,7 +74,7 @@ $monsters = $monsters ?? [];
 
     <div class="card p-4 mb-4 background-secondaire texte-principal">
         <h3 class="mb-3 texte-principal">Ajouter un monstre</h3>
-        <form method="POST" action="/manage_monsters/store" class="d-flex flex-column gap-2 background-secondaire texte-principal">
+        <form method="POST" action="/DungeonXplorer/manage_monsters/store" class="d-flex flex-column gap-2 background-secondaire texte-principal">
             <div class="row g-2 background-secondaire texte-principal">
                 <div class="col-md-4 background-secondaire texte-principal">
                     <label class="form-label">Nom</label>
@@ -132,7 +137,7 @@ $monsters = $monsters ?? [];
     </div>
 
     <div class="mt-3">
-        <a href="/admin" class="btn btn-secondaire">Retour admin</a>
+        <a href="/DungeonXplorer/admin" class="btn btn-secondaire">Retour admin</a>
     </div>
 </div>
  
@@ -146,7 +151,7 @@ document.getElementById('imageSelector').addEventListener('change', function() {
         return;
     }
     
-    const imgPath = 'img/' + encodeURIComponent(filename);
+    const imgPath = '/DungeonXplorer/img/' + encodeURIComponent(filename);
     preview.innerHTML = '<img src="' + imgPath + '" alt="Aperçu" style="max-width:150px; height:auto; border:1px solid #ccc; padding:5px;">';
 });
 </script>

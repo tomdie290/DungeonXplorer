@@ -44,8 +44,8 @@ $accounts = $q -> fetchAll(PDO::FETCH_ASSOC);
                         <?php endif; ?>
 
                         <?php if ((int)($account['id'] ?? 0) !== (int)($_SESSION['id'] ?? 0)): ?>
-                            <a href="/manage_accounts/edit?id=<?php echo urlencode($account['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
-                            <form method="POST" action="/manage_accounts/delete" onsubmit="return confirm('Confirmer la suppression du compte <?php echo htmlspecialchars($account['username']); ?> ?');" style="display:inline-block; margin:0;">
+                            <a href="/DungeonXplorer/manage_accounts/edit?id=<?php echo urlencode($account['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
+                            <form method="POST" action="/DungeonXplorer/manage_accounts/delete" onsubmit="return confirm('Confirmer la suppression du compte <?php echo htmlspecialchars($account['username']); ?> ?');" style="display:inline-block; margin:0;">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($account['id']); ?>">
                                 <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                             </form>
