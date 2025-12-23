@@ -73,7 +73,7 @@ class AccountController {
         // Set flash message then destroy session and redirect to home/login
         if (session_status() === PHP_SESSION_NONE) session_start();
         $_SESSION['flash'] = 'Votre compte a été supprimé.';
-        header("Location: /DungeonXplorer/home");
+        header("Location: home");
         // Destroy session after redirect (best effort)
         $_SESSION = [];
         if (session_status() !== PHP_SESSION_NONE) session_destroy();

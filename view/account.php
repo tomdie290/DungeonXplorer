@@ -37,8 +37,9 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php require_once 'head.php'; ?>
         <title>Mon compte - DungeonXplorer</title>
     </head>
-    <?php require_once 'navbar.php'; ?>
+    
     <body>
+    <?php require_once 'navbar.php'; ?>
         <?php if (!empty($_SESSION['flash'])): ?>
             <div class="container mt-3">
                 <div class="alert alert-success"><?= htmlspecialchars($_SESSION['flash']) ?></div>

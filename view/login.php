@@ -17,6 +17,10 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     if($user && password_verify($_POST['password'], $user['password_hash'])) {
         $_SESSION['id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
+        if ($user['admin'] == 1) {
+            $_SESSION['admin'] = 1;
+        }
+        else $_SESSION['admin'] = 0;
         header("Location: account");
         exit();
     } else {

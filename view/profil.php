@@ -15,12 +15,12 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
     </script>
 </head>
 
-<body>
-
+<body class="texte-principal">
+<?php require_once 'navbar.php'; ?>
 <div class="container mt-5">
     <h1 class="mb-4 pirata-one-regular">Profil du Compte</h1>
 
-    <div class="card background-secondaire border border-2 border-white rounded-3 mb-5 p-4">
+    <div class="card hero-card background-secondaire rounded-3 mb-5 p-4">
         <h2 class="text-center"><?= htmlspecialchars($account['username'] ?? '') ?></h2>
         <p class="texte-principal"><strong>Email :</strong> <?= htmlspecialchars($account['email'] ?? 'Non renseigné') ?></p>
         <p class="texte-principal"><strong>Créé le :</strong> <?= htmlspecialchars($account['creation_date'] ?? '') ?></p>
@@ -28,7 +28,7 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
         <hr>
 
         <h3 class="text-center mb-3">Modifier votre profil</h3>
-        <form id="update-password-form" method="POST" action="/DungeonXplorer/update_password" class="d-flex flex-column gap-3 w-75 mx-auto">
+        <form id="update-password-form" method="POST" action="/update_password" class="d-flex flex-column gap-3 w-75 mx-auto">
             <input type="hidden" name="account_id" value="<?= (int)$account['id'] ?>">
             <div id="update-password-error" class="alert alert-danger" style="display:none;"></div>
 
@@ -103,7 +103,7 @@ if (!isset($account)) { die("Erreur : aucune donnée de compte."); }
     </div>
     
     <div class="text-center mt-4">
-        <form method="POST" action="/DungeonXplorer/delete_account" onsubmit="return confirm('Confirmer la suppression de votre compte ? Cette action est irréversible.');">
+        <form method="POST" action="/delete_account" onsubmit="return confirm('Confirmer la suppression de votre compte ? Cette action est irréversible.');">
             <input type="hidden" name="account_id" value="<?= (int)$account['id'] ?>">
             <button type="submit" class="btn btn-outline-danger">Supprimer mon compte</button>
         </form>

@@ -43,6 +43,8 @@ class Router
 
 $router = new Router('DungeonXplorer');
 
+define('BASE_URL', __DIR__);
+
 $router->addRoute('', 'HomeController@index');
 $router->addRoute('home', 'HomeController@index');
 $router->addRoute('login', 'LoginController@index');
@@ -66,6 +68,24 @@ $router->addRoute('logout', 'LogoutController@index');
 $router->addRoute('combat', 'CombatController@start');
 $router->addRoute('combat/end', 'CombatController@endCombat');
 $router->addRoute('deconnexion', 'DeconnexionController@index');
+$router->addRoute('admin', 'AdminController@index');
+$router->addRoute('manage_chapters', 'AdminController@manageChapters');
+$router->addRoute('manage_chapters/store',  'AdminController@storeChapter');
+$router->addRoute('manage_chapters/edit',   'AdminController@editChapter');
+$router->addRoute('manage_chapters/update', 'AdminController@updateChapter');
+$router->addRoute('manage_accounts', 'AdminController@manageUsers');
+$router->addRoute('manage_accounts/delete', 'AdminController@deleteUser');
+$router->addRoute('manage_accounts/edit', 'AdminController@editUser');
+$router->addRoute('manage_accounts/update', 'AdminController@updateUser');
+$router->addRoute('manage_images', 'AdminController@manageImages');
+$router->addRoute('manage_images/upload', 'AdminController@uploadImage');
+$router->addRoute('manage_images/delete', 'AdminController@deleteImage');
+$router->addRoute('manage_images', 'AdminController@manageImages');
+$router->addRoute('manage_monsters', 'AdminController@manageMonsters');
+$router->addRoute('manage_monsters/store', 'AdminController@storeMonster');
+$router->addRoute('manage_monsters/edit', 'AdminController@editMonster');
+$router->addRoute('manage_monsters/update', 'AdminController@updateMonster');
+$router->addRoute('manage_monsters/delete', 'AdminController@deleteMonster');
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 

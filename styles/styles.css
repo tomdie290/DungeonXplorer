@@ -37,16 +37,22 @@ button, .btn, .btn-primary, a, a:link, a:visited {
 }
 
 .texte-principal {
-    color: #E5E5E5;
+    color: #E5E5E5 !important;
     text-align: center;
 }
 
 .background-secondaire {
-    background-color: #2E2E2E;
+    background-color: #2E2E2E !important;
 }
 
 .btn-primary {
     background-color: #4A7A66;
+    border-color: #C4975E;
+    border-width: medium;
+}
+
+.btn-primary:hover {
+    background-color: #52b88d;
     border-color: #C4975E;
 }
 
@@ -71,9 +77,28 @@ input.form-control,
     border-color: #C4975E;
 }
 
+/* Style number input spinner arrows to match input background and text */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    color: #E5E5E5;
+    background-color: #2E2E2E;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: textfield;
+}
+
 .login-container {
     max-width: 500px;
-    margin: 80px auto;
+    margin: 1rem auto;
     padding: 30px;
     background-color: #2E2E2E;
     border: 2px solid #C4975E;
@@ -328,4 +353,27 @@ a.next-link {
 
 a.next-link:hover {
     text-decoration: underline;
+}
+
+
+.list-group-item {
+    background-color: #2E2E2E;
+    color: #E5E5E5;
+    border: 1px solid #C4975E;
+}
+
+select{
+    color: #E5E5E5 !important;
+    background-color: #2E2E2E !important;
+    border-color: #C4975E !important;
+}
+
+.table {
+    color: #E5E5E5 !important;
+    background-color: #2E2E2E !important;
+}
+
+.table-responsive {
+    color: #E5E5E5 !important;
+    background-color: #2E2E2E !important;
 }

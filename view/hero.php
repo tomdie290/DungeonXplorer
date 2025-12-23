@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
 </head>
 
 <body>
-
+<?php require_once 'navbar.php'; ?>
 <div class="login-container">
 
 <h1 class="login-title mb-4">Créer un héros</h1>
