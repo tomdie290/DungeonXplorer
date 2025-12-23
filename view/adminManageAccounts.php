@@ -29,11 +29,11 @@ $accounts = $q -> fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php require_once 'navbar.php'; ?>
     <h2 class="login-title mt-5 mb-4">Gestion des comptes</h2>
-    <div class="container mb-5">
-        <div class="list-group">
+    <div class="container background-secondary texte-principal mb-5">
+        <div class="list-group background-secondary texte-principal">
             <?php foreach ($accounts as $account): ?>
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
+                <div class="background-secondary texte-principal list-group-item d-flex justify-content-between align-items-center">
+                    <div class="background-secondary texte-principal">
                         <strong><?php echo htmlspecialchars($account['username']); ?></strong>
                     </div>
                     <div class="d-flex align-items-center gap-2">

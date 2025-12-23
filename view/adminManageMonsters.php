@@ -14,8 +14,8 @@ $monsters = $monsters ?? [];
 </head>
 <body>
 <?php require_once __DIR__ . '/navbar.php'; ?>
-<div class="container mt-5">
-    <h1 class="mb-4">Gestion des monstres</h1>
+<div class="container mt-5 background-secondaire texte-principal">
+    <h1 class="mb-4 texte-principal">Gestion des monstres</h1>
 
     <?php if (!empty($_SESSION['flash'])): ?>
         <div class="alert alert-info"><?php echo htmlspecialchars($_SESSION['flash']); ?></div>
@@ -23,38 +23,38 @@ $monsters = $monsters ?? [];
     <?php endif; ?>
 
     <div class="table-responsive mb-4">
-        <table class="table table-striped">
+        <table class="background-secondaire texte-principal table">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>PV</th>
-                    <th>Mana</th>
-                    <th>Force</th>
-                    <th>Initiative</th>
-                    <th>XP</th>
-                    <th>Image</th>
-                    <th>Actions</th>
+                <tr class="background-secondaire texte-principal">
+                    <th class="background-secondaire texte-principal">ID</th>
+                    <th class="background-secondaire texte-principal">Nom</th>
+                    <th class="background-secondaire texte-principal">PV</th>
+                    <th class="background-secondaire texte-principal">Mana</th>
+                    <th class="background-secondaire texte-principal">Force</th>
+                    <th class="background-secondaire texte-principal">Initiative</th>
+                    <th class="background-secondaire texte-principal">XP</th>
+                    <th class="background-secondaire texte-principal">Image</th>
+                    <th class="background-secondaire texte-principal">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="texte-principal">
                 <?php foreach ($monsters as $m): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($m['id']); ?></td>
-                        <td><?php echo htmlspecialchars($m['name']); ?></td>
-                        <td><?php echo htmlspecialchars($m['pv']); ?></td>
-                        <td><?php echo htmlspecialchars($m['mana']); ?></td>
-                        <td><?php echo htmlspecialchars($m['strength']); ?></td>
-                        <td><?php echo htmlspecialchars($m['initiative']); ?></td>
-                        <td><?php echo htmlspecialchars($m['xp_reward']); ?></td>
-                        <td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['id']); ?></td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['name']); ?></td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['pv']); ?></td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['mana']); ?></td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['strength']); ?></td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['initiative']); ?></td>
+                        <td class="background-secondaire texte-principal"><?php echo htmlspecialchars($m['xp_reward']); ?></td>
+                        <td class="background-secondaire texte-principal">
                             <?php if (!empty($m['image'])): ?>
                                 <img src="<?php echo htmlspecialchars($m['image']); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" class="small-img">
                             <?php else: ?>
                                 -
                             <?php endif; ?>
                         </td>
-                        <td>
+                        <td class="background-secondaire texte-principal">
                             <a href="/manage_monsters/edit?id=<?php echo urlencode($m['id']); ?>" class="btn btn-sm btn-warning">Modifier</a>
                             <form method="POST" action="/manage_monsters/delete" onsubmit="return confirm('Supprimer <?php echo addslashes(htmlspecialchars($m['name'])); ?> ?');" style="display:inline-block; margin:0 0 0 .25rem;">
                                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($m['id']); ?>">
@@ -67,33 +67,33 @@ $monsters = $monsters ?? [];
         </table>
     </div>
 
-    <div class="card p-4 mb-4">
-        <h3 class="mb-3">Ajouter un monstre</h3>
-        <form method="POST" action="/manage_monsters/store" class="d-flex flex-column gap-2">
-            <div class="row g-2">
-                <div class="col-md-4">
+    <div class="card p-4 mb-4 background-secondaire texte-principal">
+        <h3 class="mb-3 texte-principal">Ajouter un monstre</h3>
+        <form method="POST" action="/manage_monsters/store" class="d-flex flex-column gap-2 background-secondaire texte-principal">
+            <div class="row g-2 background-secondaire texte-principal">
+                <div class="col-md-4 background-secondaire texte-principal">
                     <label class="form-label">Nom</label>
                     <input type="text" name="name" class="form-control" required>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 background-secondaire texte-principal">
                     <label class="form-label">PV</label>
                     <input type="number" name="pv" class="form-control" required min="1">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 background-secondaire texte-principal">
                     <label class="form-label">Mana</label>
                     <input type="number" name="mana" class="form-control" min="0" value="0">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 background-secondaire texte-principal">
                     <label class="form-label">Force</label>
                     <input type="number" name="strength" class="form-control" required min="1">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 background-secondaire texte-principal">
                     <label class="form-label">Initiative</label>
                     <input type="number" name="initiative" class="form-control" required min="1">
                 </div>
             </div>
 
-            <div class="row g-2 mt-2">
+            <div class="row g-2 mt-2 background-secondaire texte-principal">
                 <div class="col-md-8">
                     <label class="form-label">Texte d'attaque</label>
                     <input type="text" name="attack_text" class="form-control" placeholder="Ex: Le monstre attaque!">
@@ -132,7 +132,7 @@ $monsters = $monsters ?? [];
     </div>
 
     <div class="mt-3">
-        <a href="/admin" class="btn btn-secondary">Retour admin</a>
+        <a href="/admin" class="btn btn-secondaire">Retour admin</a>
     </div>
 </div>
  

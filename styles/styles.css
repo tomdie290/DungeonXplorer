@@ -31,12 +31,12 @@ body {
 }
 
 .texte-principal {
-    color: #E5E5E5;
+    color: #E5E5E5 !important;
     text-align: center;
 }
 
 .background-secondaire {
-    background-color: #2E2E2E;
+    background-color: #2E2E2E !important;
 }
 
 .btn-primary {
@@ -347,4 +347,27 @@ a.next-link {
 
 a.next-link:hover {
     text-decoration: underline;
+}
+
+
+.list-group-item {
+    background-color: #2E2E2E;
+    color: #E5E5E5;
+    border: 1px solid #C4975E;
+}
+
+select{
+    color: #E5E5E5 !important;
+    background-color: #2E2E2E !important;
+    border-color: #C4975E !important;
+}
+
+.table {
+    color: #E5E5E5 !important;
+    background-color: #2E2E2E !important;
+}
+
+.table-responsive {
+    color: #E5E5E5 !important;
+    background-color: #2E2E2E !important;
 }
