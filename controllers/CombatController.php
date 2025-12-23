@@ -75,6 +75,19 @@ class CombatController
             $deathLinkText = null;
         }
 
+        // Detect if there's an active damage boost for this hero's current adventure
+        $heroDamageBoost = 0;
+        try {
+            $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL LIMIT 1");
+            $stmtA->execute([$hero->id]);
+            $advId = $stmtA->fetchColumn();
+            if ($advId && isset($_SESSION['damage_boost']) && !empty($_SESSION['damage_boost'][$advId])) {
+                $heroDamageBoost = (int)$_SESSION['damage_boost'][$advId];
+            }
+        } catch (Exception $e) {
+            // ignore
+        }
+
         // Passe les variables à la vue
         // Passe le flag de reprise à la vue via $heroTurnResume
         require __DIR__ . '/../view/combat.php';

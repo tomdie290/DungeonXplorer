@@ -74,7 +74,8 @@ class Hero
     public function save(): void
     {
         $db = getDB();
-        $stmt = $db->prepare("UPDATE Hero SET pv = ?, mana = ? WHERE id = ?");
-        $stmt->execute([$this->pv, $this->mana, $this->id]);
+        // Persist pv, mana and strength (others can be added as needed)
+        $stmt = $db->prepare("UPDATE Hero SET pv = ?, mana = ?, strength = ? WHERE id = ?");
+        $stmt->execute([$this->pv, $this->mana, $this->strength, $this->id]);
     }
 }

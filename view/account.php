@@ -40,6 +40,12 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <body>
     <?php require_once 'navbar.php'; ?>
+        <?php if (!empty($_SESSION['flash'])): ?>
+            <div class="container mt-3">
+                <div class="alert alert-success"><?= htmlspecialchars($_SESSION['flash']) ?></div>
+            </div>
+            <?php unset($_SESSION['flash']); ?>
+        <?php endif; ?>
         <div class="container">
         <div>
             <h1 class="login-title mt-5 mb-4">Bienvenue <?= htmlspecialchars($_SESSION['username']) ?> !</h1>
@@ -112,6 +118,48 @@ $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
 
                         <a href="inventory?hero=<?= $hero['id'] ?>" class="btn btn-info w-100 mb-2">Voir inventaire</a>
+
+                        <?php
+                        // Compter les types de potions différentes possédées
+                        $stmtP = $db->prepare("SELECT COUNT(DISTINCT it.id) FROM Inventory i JOIN Items it ON i.item_id = it.id WHERE i.hero_id = ? AND it.item_type = 'potion'");
+                        $stmtP->execute([$hero['id']]);
+                        $potionCount = (int)$stmtP->fetchColumn();
+                        ?>
+
+                        <form method="POST" action="inventory/add" class="mt-2">
+                            <input type="hidden" name="hero_id" value="<?= $hero['id'] ?>">
+                            <div class="mb-2">
+                                <label for="potion_type_<?= $hero['id'] ?>" class="form-label text-light">Ajouter une potion (max 2 types)</label>
+                                <div class="d-flex gap-2">
+                                    <?php if ($potionCount >= 2): ?>
+                                        <?php
+                                            $stmtList = $db->prepare("SELECT it.id, it.name FROM Inventory i JOIN Items it ON i.item_id = it.id WHERE i.hero_id = ? AND it.item_type = 'potion'");
+                                            $stmtList->execute([$hero['id']]);
+                                            $owned = $stmtList->fetchAll(PDO::FETCH_ASSOC);
+                                        ?>
+                                        <select name="potion_type" id="potion_type_<?= $hero['id'] ?>" class="form-select">
+                                            <?php foreach ($owned as $o): ?>
+                                                <option value="<?= (int)$o['id'] ?>"><?= htmlspecialchars($o['name']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div class="form-text text-light">Vous possédez déjà ces potions — la quantité ne peut plus être modifiée une fois ajoutée.</div>
+                                    <?php else: ?>
+                                        <select name="potion_type" id="potion_type_<?= $hero['id'] ?>" class="form-select">
+                                            <option value="small_heal">Petite potion de soin (+10 PV)</option>
+                                            <option value="big_heal">Grosse potion de soin (+25 PV)</option>
+                                            <option value="mana">Potion de mana (+15 Mana)</option>
+                                            <option value="strength">Potion de Force (Inflige 20 dégâts)</option>
+                                            <option value="power_boost">Elixir de Puissance (+10% dégâts, unique)</option>
+                                        </select>
+                                        <input type="number" name="quantity" min="1" max="999" value="1" class="form-control" style="width:120px" title="Quantité">
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Ajouter</button>
+                            <?php if ($potionCount >= 2): ?>
+                                <div class="mt-2 alert alert-info text-center">Vous avez déjà deux types de potions différentes.</div>
+                            <?php endif; ?>
+                        </form>
 
                         <form method="POST" action="delete_hero" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce héros ? Cette action est irréversible.')" class="mt-2">
                             <input type="hidden" name="hero_id" value="<?= $hero['id'] ?>">
