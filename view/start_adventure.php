@@ -21,7 +21,7 @@
 
                     <?php if (!empty($adv['image'])): ?>
                         <img src="/DungeonXplorer/<?= htmlspecialchars($adv['image']) ?>"
-                             class="img-fluid mb-2">
+                             class="img-fluid mb-2" alt="<?= htmlspecialchars($adv['title'] ?? 'Image de l\'aventure') ?>">
                     <?php endif; ?>
 
                     <h3><?= htmlspecialchars($adv['title']) ?></h3>

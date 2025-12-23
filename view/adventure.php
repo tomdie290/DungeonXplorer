@@ -54,7 +54,6 @@ if (!$check) {
 <head>
     <?php require 'head.php'; ?>
     <title>Aventure - DungeonXplorer</title>
-    </style>
 </head>
 
 <body>
@@ -64,7 +63,7 @@ if (!$check) {
 <div class="adventure-card">
 
     <div class="hero-image-wrapper">
-        <img src="<?= $adventure['hero_image'] ?: '/DungeonXplorer/img/HeroDefault.png' ?>" alt="">
+        <img src="<?= $adventure['hero_image'] ?: '/DungeonXplorer/img/HeroDefault.png' ?>" alt="<?= htmlspecialchars($adventure['hero_name'] ?? 'Image du héros') ?>">
     </div>
 
     <h2><?= htmlspecialchars($adventure['hero_name']) ?></h2>
