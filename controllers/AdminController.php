@@ -79,6 +79,15 @@ class AdminController
             exit;
         }
 
+        // load up to 2 existing links for this chapter
+        $q2 = $db->prepare('SELECT * FROM Links WHERE chapter_id = :cid ORDER BY id ASC LIMIT 2');
+        $q2->execute(['cid' => $id]);
+        $links = $q2->fetchAll(PDO::FETCH_ASSOC);
+
+        // load chapters list for choices
+        $q3 = $db->query('SELECT id, title FROM Chapter ORDER BY id ASC');
+        $allChapters = $q3->fetchAll(PDO::FETCH_ASSOC);
+
         require 'view/adminEditChapter.php';
     }
 
