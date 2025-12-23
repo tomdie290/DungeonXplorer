@@ -49,7 +49,7 @@ $monsters = $monsters ?? [];
                         <td><?php echo htmlspecialchars($m['xp_reward']); ?></td>
                         <td>
                             <?php if (!empty($m['image'])): ?>
-                                <img src="<?php echo htmlspecialchars((defined('BASE_URL')?BASE_URL:'/').ltrim($m['image'], '/')); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" class="small-img">
+                                <img src="<?php echo htmlspecialchars($m['image']); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" class="small-img">
                             <?php else: ?>
                                 -
                             <?php endif; ?>
@@ -118,12 +118,11 @@ $monsters = $monsters ?? [];
                 ?>
                 <select name="image_path" class="form-select mt-2" id="imageSelector">
                     <option value="">-- Aucune image --</option>
-                    <?php foreach ($imageOptions as $opt):
-                        $url = (defined('BASE_URL')?BASE_URL:'/').'img/'.rawurlencode($opt);
-                    ?>
-                        <option value="<?php echo htmlspecialchars($url); ?>"><?php echo htmlspecialchars($opt); ?></option>
+                    <?php foreach ($imageOptions as $opt): ?>
+                        <option value="<?php echo htmlspecialchars($opt); ?>"><?php echo htmlspecialchars($opt); ?></option>
                     <?php endforeach; ?>
                 </select>
+                <div class="mt-3" id="imagePreview"></div>
             </div>
 
             <div class="text-center mt-3">
@@ -136,5 +135,21 @@ $monsters = $monsters ?? [];
         <a href="/admin" class="btn btn-secondary">Retour admin</a>
     </div>
 </div>
+ 
+<script>
+document.getElementById('imageSelector').addEventListener('change', function() {
+    const preview = document.getElementById('imagePreview');
+    const filename = this.value;
+    
+    if (!filename) {
+        preview.innerHTML = '';
+        return;
+    }
+    
+    const imgPath = 'img/' + encodeURIComponent(filename);
+    preview.innerHTML = '<img src="' + imgPath + '" alt="Aperçu" style="max-width:150px; height:auto; border:1px solid #ccc; padding:5px;">';
+});
+</script>
+
 </body>
 </html>

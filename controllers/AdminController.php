@@ -395,7 +395,7 @@ class AdminController
         $initiative = (int)($_POST['initiative'] ?? 0);
         $attack_text = trim($_POST['attack_text'] ?? '');
         $xp_reward = (int)($_POST['xp_reward'] ?? 0);
-        $image = $_POST['image_path'] ?? null;
+        $image = !empty($_POST['image_path']) ? 'img/' . trim($_POST['image_path']) : null;
 
         if ($name === '' || $pv <= 0 || $strength <= 0) {
             $_SESSION['flash'] = 'Données invalides.';
@@ -475,7 +475,7 @@ class AdminController
         $initiative = (int)($_POST['initiative'] ?? 0);
         $attack_text = trim($_POST['attack_text'] ?? '');
         $xp_reward = (int)($_POST['xp_reward'] ?? 0);
-        $image = $_POST['image_path'] ?? null;
+        $image = !empty($_POST['image_path']) ? 'img/' . trim($_POST['image_path']) : null;
 
         if ($name === '' || $pv <= 0 || $strength <= 0) {
             $_SESSION['flash'] = 'Données invalides.';

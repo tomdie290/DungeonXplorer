@@ -29,20 +29,20 @@ if (!$isAdmin) {
     <?php require_once 'navbar.php'; ?>
     <h2 class="login-title mt-5 mb-4">Administration</h2>
     <div class="container mb-5">
-        <div class="list-group">
-            <a href="/manage_chapters" class="list-group-item list-group-item-action">
+        <div class="list-group background-secondaire texte-principal">
+            <a href="/manage_chapters" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les chapitres
             </a>
-            <a href="/manage_monsters" class="list-group-item list-group-item-action">
+            <a href="/manage_monsters" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les monstres
             </a>
-            <a href="/manage_images" class="list-group-item list-group-item-action">
+            <a href="/manage_images" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les images
             </a>
-            <a href="/manage_treasures" class="list-group-item list-group-item-action">
+            <a href="/manage_treasures" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les trésors
             </a>
-            <a href="/manage_accounts" class="list-group-item list-group-item-action">
+            <a href="/manage_accounts" class="list-group-item list-group-item-action background-secondaire texte-principal">
                 Gérer les comptes utilisateur
             </a>
         </div>

@@ -75,19 +75,19 @@ if (!isset($monster)) {
                     }
                 }
                 $currentImage = $monster['image'] ?? '';
+                $currentFilename = !empty($currentImage) ? basename($currentImage) : '';
                 ?>
-                <select name="image_path" class="form-select mt-2">
+                <select name="image_path" class="form-select mt-2" id="imageSelector">
                     <option value="">-- Aucune image --</option>
                     <?php foreach ($imageOptions as $opt):
-                        $url = (defined('BASE_URL')?BASE_URL:'/').'img/'.rawurlencode($opt);
-                        $sel = ($currentImage === $url) ? ' selected' : '';
+                        $sel = ($currentFilename === $opt) ? ' selected' : '';
                     ?>
-                        <option value="<?php echo htmlspecialchars($url); ?>"<?php echo $sel; ?>><?php echo htmlspecialchars($opt); ?></option>
+                        <option value="<?php echo htmlspecialchars($opt); ?>"<?php echo $sel; ?>><?php echo htmlspecialchars($opt); ?></option>
                     <?php endforeach; ?>
                 </select>
-                <div class="mt-3">
+                <div class="mt-3" id="imagePreview">
                     <?php if (!empty($currentImage)): ?>
-                        <img src="<?php echo htmlspecialchars($currentImage); ?>" alt="Aperçu" style="max-width:200px; display:block;">
+                        <img src="<?php echo htmlspecialchars($currentImage); ?>" alt="Aperçu" style="max-width:150px; height:auto; border:1px solid #ccc; padding:5px;">
                     <?php endif; ?>
                 </div>
             </div>
@@ -99,5 +99,21 @@ if (!isset($monster)) {
         </form>
     </div>
 </div>
+
+<script>
+document.getElementById('imageSelector').addEventListener('change', function() {
+    const preview = document.getElementById('imagePreview');
+    const filename = this.value;
+    
+    if (!filename) {
+        preview.innerHTML = '';
+        return;
+    }
+    
+    const imgPath = '../img/' + encodeURIComponent(filename);
+    preview.innerHTML = '<img src="' + imgPath + '" alt="Aperçu" style="max-width:150px; height:auto; border:1px solid #ccc; padding:5px;">';
+});
+</script>
+
 </body>
 </html>

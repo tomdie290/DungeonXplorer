@@ -23,7 +23,7 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
     <h1 class="mb-4 pirata-one-regular">Gestion des chapitres</h1>
 
     <h2 class="mb-3">Chapitres existants</h2>
-    <table class="table table-striped">
+    <table class="background-secondaire texte-principal">
         <thead>
         <tr>
             <th>ID</th>
@@ -67,7 +67,7 @@ $chapters = $q -> fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="input-group flex-column align-items-start">
-                <label class="input-group-text mb-2">Sélecteur d'images</label>
+                <label class="input-group-text mb-2">Sélectionner une image</label>
                 <?php
                 // Récupère les images du dossier img/ et uploads/chapters/ pour proposer un choix
                 $imageOptions = [];

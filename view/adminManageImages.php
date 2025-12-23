@@ -20,26 +20,26 @@ if (!isset($images)) $images = [];
         <?php unset($_SESSION['flash']); ?>
         <?php endif; ?>
         
-        <div class="card mb-4 p-3">
-            <h4>Ajouter une image</h4>
-            <p>Avant d'ajouter une image, assurez-vous qu'elle porte un nom de fichier clair et non utilisé.</p>
+        <div class="card mb-4 p-3 background-secondaire">
+            <h4 class="texte-principal">Ajouter une image</h4>
+            <p class="texte-principal">Avant d'ajouter une image, assurez-vous qu'elle porte un nom de fichier clair et non utilisé.</p>
         <form method="POST" action="/manage_images/upload" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
-            <input type="file" name="image" accept="image/*" required>
+            <input type="file" class="texte-principal" name="image" accept="image/*" required>
             <button class="btn btn-primary" type="submit">Téléverser</button>
         </form>
     </div>
 
-    <div class="card p-3">
+    <div class="card p-3 background-secondaire">
         <h4>Images dans le dossier `img/`</h4>
         <?php if (empty($images)): ?>
             <p>Aucune image trouvée.</p>
         <?php else: ?>
-            <div class="row">
+            <div class="row background-secondaire">
                 <?php foreach ($images as $img): ?>
                     <div class="col-6 col-md-3 mb-3">
-                        <div class="card p-2 text-center">
+                        <div class="card p-2 text-center background-secondaire">
                             <img src="<?php echo htmlspecialchars('img/' . rawurlencode($img)); ?>" alt="<?php echo htmlspecialchars($img); ?>" style="max-width:100%; height:120px; object-fit:cover;">
-                            <div class="mt-2 small text-truncate"><?php echo htmlspecialchars($img); ?></div>
+                            <div class="mt-2 small text-truncate texte-principal"><?php echo htmlspecialchars($img); ?></div>
                             <div class="mt-2 d-flex justify-content-center gap-2">
                                 <form method="POST" action="/manage_images/delete" onsubmit="return confirm('Supprimer <?php echo htmlspecialchars($img); ?> ?');">
                                     <input type="hidden" name="file" value="<?php echo htmlspecialchars($img); ?>">
