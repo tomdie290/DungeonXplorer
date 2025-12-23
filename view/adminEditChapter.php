@@ -28,6 +28,32 @@ if (!isset($chapter)) {
                 <input type="text" name="title" class="form-control" required value="<?php echo htmlspecialchars($chapter['title']); ?>">
             </div>
 
+            <div class="input-group flex-column align-items-start mt-3">
+                <label class="input-group-text mb-2">Choix de chapitre (jusqu'à 2)</label>
+                <?php
+                $links = $links ?? [];
+                $allChapters = $allChapters ?? [];
+                for ($ci = 0; $ci < 2; $ci++):
+                    $link = $links[$ci] ?? null;
+                    $selectedNext = $link['next_chapter_id'] ?? '';
+                    $linkText = $link['description'] ?? '';
+                ?>
+                <div class="mb-2 w-100">
+                    <div class="d-flex gap-2">
+                        <select name="choice_next[]" class="form-select w-50">
+                            <option value="">-- Aucun choix --</option>
+                            <?php foreach ($allChapters as $ac): if ($ac['id'] == $chapter['id']) continue; ?>
+                                <option value="<?php echo htmlspecialchars($ac['id']); ?>"<?php echo ($selectedNext !== null && (int)$selectedNext === (int)$ac['id']) ? ' selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($ac['id'] . ' - ' . $ac['title']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <input type="text" name="choice_text[]" class="form-control" placeholder="Texte du choix (optionnel)" value="<?php echo htmlspecialchars($linkText); ?>">
+                    </div>
+                </div>
+                <?php endfor; ?>
+            </div>
+
             <div class="input-group">
                 <span class="input-group-text">Description du chapitre</span>
                 <textarea name="description" class="form-control" rows="5" required><?php echo htmlspecialchars($chapter['description']); ?></textarea>

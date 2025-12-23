@@ -29,11 +29,20 @@ if($currentPage === '') {
 function isActive($page, $currentPage) {
     return $page === $currentPage ? ' active' : '';
 }
+
+function adapterPrefixeURLImage(){
+  $ret = "";
+  for($i = 0; $i < substr_count($_SERVER['REQUEST_URI'], '/') - 1; $i++){
+    $ret .= "../";
+  }
+  return $ret;
+}
+
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark site-navbar">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="account">
-      <img src="img/Logo.png" alt="logo" class="navbar-brand-img" width="36" height="36">
+      <img src="<?php echo adapterPrefixeURLImage(); ?>img/Logo.png" alt="logo" class="navbar-brand-img" width="36" height="36">
       <span class="ms-2 brand-title">DungeonXplorer</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
@@ -63,7 +72,7 @@ function isActive($page, $currentPage) {
         <?php if (isset($_SESSION['id'])): ?>
           <div class="dropdown" >
             <a class="d-flex align-items-center text-decoration-none dropdown-toggle profile-dropdown" href="profil" id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="img/profil.png" alt="Profil" class="profile-icon rounded-circle" width="32" height="32">
+              <img src="<?php echo adapterPrefixeURLImage(); ?>img/profil.png" alt="Profil" class="profile-icon rounded-circle" width="32" height="32">
               <span class="ms-2 profile-name"><?= $username ?></span>
             </a>
 
