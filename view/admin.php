@@ -22,7 +22,7 @@ if (!$isAdmin) {
 
 <head>
     <?php require_once 'head.php'; ?>
-    <title>Mon compte - DungeonXplorer</title>
+    <title>Administration</title>
 </head>
 
 <body>
