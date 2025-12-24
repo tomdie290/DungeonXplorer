@@ -82,7 +82,7 @@ class ChapterController {
         if ($currentAdventureId && isset($_SESSION['just_died'][$currentAdventureId]) && $_SESSION['just_died'][$currentAdventureId]) {
             $title = $chapter->getTitle() ?? '';
             $descCh = $chapter->getDescription() ?? '';
-            $isDeathChapter = (stripos($title, 'mort') !== false) || (stripos($descCh, 'mort') !== false) || in_array($chapter->getId(), [10,2]);
+            $isDeathChapter = (stripos($title, 'mort') !== false) || (stripos($descCh, 'mort') !== false) || in_array($chapter->getId(), [10]);
             if ($isDeathChapter) {
                 if (!isset($_SESSION['potions_deleted'])) $_SESSION['potions_deleted'] = [];
                 if (empty($_SESSION['potions_deleted'][$currentAdventureId])) {
@@ -188,6 +188,47 @@ class ChapterController {
                     $hero->save();
                 }
             }
+
+            // Si la destination du choix est elle-même une page de mort (ex : "Vous êtes mort empoisonné ..."),
+            // traiter le choix comme causant une mort même si les PV n'ont pas été explicitement réduits ci‑dessus.
+            if ($next !== null) {
+                try {
+                    $stmtT = $db->prepare("SELECT title, description FROM Chapter WHERE id = ? LIMIT 1");
+                    $stmtT->execute([$next]);
+                    $tRow = $stmtT->fetch(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {
+                    $tRow = null;
+                }
+
+                $isDeathTarget = false;
+                if ($tRow) {
+                    $tTitle = $tRow['title'] ?? '';
+                    $tDesc = $tRow['description'] ?? '';
+                    if (stripos($tTitle, 'mort') !== false || stripos($tDesc, 'mort') !== false || in_array((int)$next, [10])) {
+                        $isDeathTarget = true;
+                    }
+                }
+
+                if ($isDeathTarget) {
+                    // Marque la mort pour cette aventure et supprime les potions comme dans les autres flux de mort
+                    $stmtA = $db->prepare("SELECT id FROM Adventure WHERE hero_id = ? AND end_date IS NULL");
+                    $stmtA->execute([$_SESSION['hero_id']]);
+                    $adventureId = $stmtA->fetchColumn();
+                    if ($adventureId) {
+                        if (!isset($_SESSION['just_died'])) $_SESSION['just_died'] = [];
+                        $_SESSION['just_died'][$adventureId] = true;
+                    }
+                    try {
+                        $stmtDel = $db->prepare("DELETE FROM Inventory WHERE hero_id = ? AND item_id IN (SELECT id FROM Items WHERE item_type = 'potion')");
+                        $stmtDel->execute([$hero->id]);
+                    } catch (Exception $e) {
+                        // ignore
+                    }
+                    $_SESSION['flash'] = 'Vous avez perdu toutes vos potions en mourant. Vous pourrez en racheter après avoir quitté et sauvegardé.';
+                    $this->show((int)$next);
+                    return;
+                }
+            }
         }
 
         // Si le héros est mort après application des effets, rediriger vers le lien de mort du chapitre d'origine
@@ -217,7 +258,7 @@ class ChapterController {
                     return;
                 }
                 // fallback: cherche un lien pointant vers un chapitre classique de mort (10 ou 2)
-                $stmtF = $db->prepare("SELECT next_chapter_id FROM Links WHERE chapter_id = ? AND next_chapter_id IN (10,2) LIMIT 1");
+                $stmtF = $db->prepare("SELECT next_chapter_id FROM Links WHERE chapter_id = ? AND next_chapter_id IN (10) LIMIT 1");
                 $stmtF->execute([$originChapterId]);
                 $rF = $stmtF->fetch(PDO::FETCH_ASSOC);
                 if ($rF && isset($rF['next_chapter_id'])) {
